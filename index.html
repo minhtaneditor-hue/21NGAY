@@ -345,8 +345,7 @@
                     <li>✓ Tham gia cộng đồng học viên</li>
                     <li>✓ Hỗ trợ trong suốt khóa học</li>
                     <li>✓ Chứng chỉ hoàn thành khóa học</li>
-                </ul>
-                <a href="#" onclick="showPaymentModal(); return false;" class="btn-cta btn-pricing-basic">Đăng ký ngay</a>
+                <a href="#" onclick="selectPackage(1990000, 'VIDEO21DAY'); return false;" class="btn-cta btn-pricing-basic">Đăng ký ngay</a>
             </div>
             
             <!-- Gói 2 Highlight -->
@@ -356,13 +355,12 @@
                 <div class="p-price">2.490.000<span class="p-unit">Một lần</span></div>
                 <ul class="p-features">
                     <li>✓ 21 Day Full Phone-tographer</li>
-                    <li>✓ 13 Day Photobook (Giá trị 1.490.000đ)</li>
+                    <li>✓ Kho Tài Liệu & Âm Thanh Viral (Giá trị 1.490.000đ)</li>
                     <li style="margin-top: 15px;">✓ Tất cả quyền lợi của gói cơ bản</li>
                     <li>✓ Bonus: Template thiết kế độc quyền</li>
                     <li>✓ Ưu tiên hỗ trợ từ Tấn</li>
                     <li>✓ Cập nhật trọn đời cả 2 khóa</li>
-                </ul>
-                <a href="#" onclick="showPaymentModal(); return false;" class="btn-cta btn-pricing-highlight">Chọn combo tiết kiệm</a>
+                <a href="#" onclick="selectPackage(2490000, 'COMBO21DAY'); return false;" class="btn-cta btn-pricing-highlight">Chọn combo tiết kiệm</a>
             </div>
             
             <!-- Gói 3 -->
@@ -375,8 +373,7 @@
                     <li>✓ Thiết lập chuẩn phễu chuyển đổi</li>
                     <li>✓ Xây định hướng nội dung chi tiết</li>
                     <li>✓ Hỗ trợ riêng trọn đời trọn gói</li>
-                </ul>
-                <a href="#" onclick="showPaymentModal(); return false;" class="btn-cta btn-pricing-basic" style="background: rgba(255,255,255,0.05); color: #888; border: 1px solid #333;">Thanh toán ngay</a>
+                <a href="#" onclick="selectPackage(13500000, 'COACHING21DAY'); return false;" class="btn-cta btn-pricing-basic" style="background: rgba(255,255,255,0.05); color: #888; border: 1px solid #333;">Thanh toán ngay</a>
             </div>
         </div>
     </div>
@@ -462,7 +459,6 @@
             
             <div id="success-msg-page" style="display:none; text-align: center; padding: 30px 10px;">
                 <h3 class="text-gold" style="font-size: 1.5rem; margin-bottom: 10px;">🎉 ĐĂNG KÝ THÀNH CÔNG!</h3>
-                <p>Thông tin của bạn đã được lưu lại an toàn. Vui lòng thanh toán để hoàn tất.</p>
                 <button onclick="showPaymentModal()" class="btn-cta" style="padding: 10px 30px; margin-top: 20px;">Thanh Toán Ngay</button>
             </div>
         </div>
@@ -525,22 +521,31 @@
 
     <!-- PAYMENT QR MODAL -->
     <div id="payment-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
-            <div class="modal-header" style="text-align: center;">
-                <h3>THANH TOÁN <span class="text-gold">NGAY</span></h3>
-                <p>Quét mã QR bên dưới để thanh toán</p>
+        <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4);">
+            <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px;">&times;</span>
+            <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 5px;">
+                <h3>THANH TOÁN <span class="text-gold">TỰ ĐỘNG</span></h3>
+                <p style="color: #ccc; font-size: 0.9rem;">Mở App Ngân hàng bất kỳ để quét mã QR</p>
             </div>
-            <div style="text-align: center; padding: 30px 0;">
-                <img src="assets/qr_payment.jpg" alt="QR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 10px;">
-                <p style="margin-top: 20px; font-size: 0.95rem; color: #aaa;">
-                    <strong>Người nhận:</strong> LE MINH TAN<br>
-                    <strong>Số tài khoản:</strong> 221898279<br>
-                    <strong>Ngân hàng:</strong> ACB
-                </p>
-                <p style="margin-top: 15px; font-size: 0.85rem; color: #999;">Sau khi thanh toán, vui lòng zalo <strong>0922255861</strong> để xác nhận</p>
+            <div style="text-align: center; padding: 20px 0;">
+                <img id="sepay-qr" src="" alt="QR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 250px;">
+                
+                <div style="margin-top: 20px; font-size: 0.95rem; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: left; max-width: 300px; margin-left: auto; margin-right: auto;">
+                    <p style="margin-bottom: 8px;"><strong>Ngân hàng:</strong> ACB</p>
+                    <p style="margin-bottom: 8px;"><strong>Chủ tài khoản:</strong> LE MINH TAN</p>
+                    <p style="margin-bottom: 8px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
+                    <p style="margin-bottom: 8px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
+                    <p style="margin-bottom: 0;"><strong>Nội dung CK:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; letter-spacing: 1px; font-weight: bold;"></span></p>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.85rem; color: #aaa; background: rgba(0, 150, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 150, 0, 0.3);">
+                    <p>Hệ thống tự động xác nhận sau khi nhận được tiền.</p>
+                </div>
             </div>
-            <button onclick="closePaymentModal()" class="btn-cta" style="width: 100%; border-radius: 8px;">Đã Thanh Toán</button>
+            
+            <a href="https://www.skool.com/tan-lab-6821/classroom" target="_blank" onclick="alert('Nếu giao dịch đã hoàn tất, hệ thống tự động cấp quyền vào Skool qua Email bạn vừa đăng ký. Hãy kiểm tra Hộp thư/Thư Rác!');" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase;">
+                Đã chuyển khoản - Vào học ngay!
+            </a>
         </div>
     </div>
 
@@ -563,6 +568,16 @@
             document.getElementById('success-msg').style.display = 'block';
         }
 
+        let currentAmount = 2490000;
+        let currentPackage = 'COMBO21DAY';
+        let currentOrderId = '';
+
+        function selectPackage(amount, pkg) {
+            currentAmount = amount;
+            currentPackage = pkg;
+            document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
         const registerForm = document.getElementById('register-form');
         const successBox = document.getElementById('success-msg-page');
         
@@ -578,32 +593,53 @@
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData.entries());
 
-                try {
-                    const response = await fetch('/api/submit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'submit-lead', ...data })
-                    });
-                    
-                    if (response.ok) {
-                        fbq('track', 'Lead', {
-                            content_name: 'Video Course Registration 21 Day',
-                            value: 1.99,
-                            currency: 'VND'
-                        });
+                // Sinh Order ID (Ví dụ: TAN + 4 số cuối SĐT + ngẫu nhiên)
+                const phoneStr = data.phone || "0000";
+                const randomStr = Math.floor(1000 + Math.random() * 9000);
+                currentOrderId = "TAN" + phoneStr.slice(-4) + randomStr;
 
-                        registerForm.style.display = 'none';
-                        successBox.style.display = 'block';
-                        successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    } else {
-                        throw new Error('Submission failed');
-                    }
-                } catch (error) {
-                    alert("Có lỗi xảy ra: " + error.message);
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
+                data.amount = currentAmount;
+                data.package = currentPackage;
+                data.orderId = currentOrderId;
+
+                // URL WEBHOOK MAKE.COM
+                const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/kolv2p1e6t4qanraluuvujv1ab93boc0';
+
+                try {
+                    // Bắn Webhook (Mode no-cors giúp tránh lỗi CORS trên Frontend nếu Make.com cấu hình chưa chuẩn)
+                    await fetch(MAKE_WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                } catch(error) {
+                    console.error("Webhook gửi đi có vấn đề, vẫn tiếp tục flow:", error);
                 }
+                
+                // Track Facebook conversion
+                fbq('track', 'Lead', {
+                    content_name: 'Video Course Registration 21 Day',
+                    value: currentAmount,
+                    currency: 'VND'
+                });
+
+                registerForm.style.display = 'none';
+                successBox.style.display = 'block';
+                successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Chuẩn bị sẵn QR Modal với OrderID động
+                preparePaymentModal(currentAmount, currentOrderId);
             };
+        }
+
+        function preparePaymentModal(amount, description) {
+            document.getElementById("payment-amount").innerText = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
+            document.getElementById("payment-desc").innerText = description;
+            
+            // Dynamic SePay QR Link (Dùng 'description' tức là OrderID)
+            const qrUrl = "https://qr.sepay.vn/img?acc=221898279&bank=ACB&amount=" + amount + "&des=" + description + "&template=compact";
+            document.getElementById("sepay-qr").src = qrUrl;
         }
 
         function showPaymentModal() {
