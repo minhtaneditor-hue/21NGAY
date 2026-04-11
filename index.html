@@ -454,7 +454,7 @@
                     <input type="text" name="goal" placeholder="VD: Xây kênh, bán hàng, kiếm tiền Affiliate..." style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem;">
                 </div>
 
-                <button type="submit" id="submit-btn" class="btn-cta" style="display: block; width: 100%; margin: 10px auto 0; border-radius: 8px;">HOÀN TẤT ĐĂNG KÝ</button>
+                <button type="submit" id="submit-btn" class="btn-cta" style="display: block; width: 100%; margin: 10px auto 0; border-radius: 8px;">Hoàn tất đăng ký</button>
             </form>
             
             <div id="success-msg-page" style="display:none; text-align: center; padding: 30px 10px;">
@@ -609,12 +609,14 @@
                     currency: 'VND'
                 });
 
-                registerForm.style.display = 'none';
-                successBox.style.display = 'block';
-                successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Chuẩn bị sẵn QR Modal với OrderID động
+                // Chuẩn bị sẵn và hiện QR Modal ngay lập tức
                 preparePaymentModal(currentAmount, currentOrderId);
+                showPaymentModal();
+
+                // Ẩn form để khách không bấm lại
+                registerForm.style.opacity = '0.3';
+                registerForm.style.pointerEvents = 'none';
+                submitBtn.innerText = "Đã chuyển hướng thanh toán...";
             };
         }
 
