@@ -587,14 +587,26 @@
                 data.package = currentPackage;
                 data.orderId = currentOrderId;
 
-                // URL WEBHOOK MAKE.COM
-                const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/kolv2p1e6t4qanraluuvujv1ab93boc0';
-
+                // Bắn trực tiếp về Google Sheet (Bypass thẳng lỗi Make.com)
+                const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwX0yiwRqL9GGWuzFBiufuEoa5VyZDNYahnWhyVhwGxlFWqulWwrioOq8MV8Q95-mUFdw/exec';
+                
                 try {
-                    // Bắn Webhook (Mode no-cors giúp tránh lỗi CORS trên Frontend nếu Make.com cấu hình chưa chuẩn)
-                    await fetch(MAKE_WEBHOOK_URL, {
+                    await fetch(GOOGLE_SHEET_URL, {
                         method: 'POST',
                         mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(data)
+                    });
+                    console.log("Đã gửi thẳng Google Sheet thành công!");
+                } catch(error) {
+                    console.error("Gửi Google Sheet lỗi:", error);
+                }
+
+                // Vẫn bắn backup qua Make.com để dự phòng
+                const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/kolv2p1e6t4qanraluuvujv1ab93boc0';
+                try {
+                    await fetch(MAKE_WEBHOOK_URL, {
+                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
