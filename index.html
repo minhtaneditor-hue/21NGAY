@@ -587,31 +587,27 @@
                 data.package = currentPackage;
                 data.orderId = currentOrderId;
 
-                // Bắn trực tiếp về Google Sheet (Bypass thẳng lỗi Make.com)
-                const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwX0yiwRqL9GGWuzFBiufuEoa5VyZDNYahnWhyVhwGxlFWqulWwrioOq8MV8Q95-mUFdw/exec';
-                
-                try {
-                    await fetch(GOOGLE_SHEET_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify(data)
-                    });
-                    console.log("Đã gửi thẳng Google Sheet thành công!");
-                } catch(error) {
-                    console.error("Gửi Google Sheet lỗi:", error);
-                }
+                // Tạo bộ dữ liệu bao phủ mội tên biến để Make.com không bị lỗi Validation
+                const payloadToMake = {
+                    ...data,
+                    name: data.fullname,
+                    Name: data.fullname,
+                    Phone: data.phone,
+                    Email: data.email,
+                    Amount: data.amount
+                };
 
-                // Vẫn bắn backup qua Make.com để dự phòng
+                // URL WEBHOOK MAKE.COM
                 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/kolv2p1e6t4qanraluuvujv1ab93boc0';
                 try {
                     await fetch(MAKE_WEBHOOK_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify(payloadToMake)
                     });
+                    console.log("Đã bắn qua Make.com");
                 } catch(error) {
-                    console.error("Webhook gửi đi có vấn đề, vẫn tiếp tục flow:", error);
+                    console.error("Webhook gửi đi có vấn đề:", error);
                 }
                 
                 // Track Facebook conversion
