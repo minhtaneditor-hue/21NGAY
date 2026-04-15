@@ -30,7 +30,7 @@ export default async function handler(req, res) {
                           `👉 Check Google Sheet & LH khách ngay!`;
 
             // 1. Gửi Telegram phê duyệt (DÀNH CHO TẤN)
-            const telegramUrl = `https://api.telegram.org/bot8753662126:AAHjqwCiSyn50oxIg7ABgebgh_B1tiWNX0E/sendMessage`;
+            const telegramUrl = `https://api.telegram.org/bot8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs/sendMessage`;
             await fetch(telegramUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
