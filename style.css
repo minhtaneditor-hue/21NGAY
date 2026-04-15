@@ -107,12 +107,12 @@ input, select, textarea, button {
 
 /* MINI PRICE CARD */
 .mini-price-card {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(245, 188, 27, 0.5);
   border-radius: 12px;
-  padding: 15px 25px;
-  margin: 30px 0;
-  max-width: 340px;
+  padding: 12px 20px;
+  margin: 20px 0;
+  max-width: 280px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 0 30px rgba(245, 188, 27, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05);
@@ -141,19 +141,19 @@ input, select, textarea, button {
 .price-body {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
 .price-old {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #888;
   text-decoration: line-through;
   font-weight: 600;
 }
 
 .price-new {
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   color: #fff;
   font-weight: 900;
   text-shadow: 0 0 20px var(--gold-glow);
