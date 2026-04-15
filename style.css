@@ -105,69 +105,63 @@ input, select, textarea, button {
   display: block;
 }
 
-/* MINI PRICE CARD */
-.mini-price-card {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(245, 188, 27, 0.5);
-  border-radius: 12px;
-  padding: 12px 20px;
-  margin: 20px 0;
-  max-width: 280px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 0 30px rgba(245, 188, 27, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-
-.mini-price-card::after {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle, rgba(245, 188, 27, 0.1) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.price-header {
-  font-size: 0.7rem;
-  color: var(--gold);
-  font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
+/* PRICE HIGHLIGHT SECTION */
+.price-container {
+  margin: 25px 0;
   font-family: 'Inter', sans-serif;
-  text-shadow: 0 0 10px var(--gold-glow);
 }
 
-.price-body {
+.price-label {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.price-main-row {
   display: flex;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.mini-price-card {
+  background: rgba(245, 188, 27, 0.1);
+  border: 1px solid var(--gold);
+  border-radius: 15px;
+  padding: 10px 25px;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 20px var(--gold-glow);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(245, 188, 27, 0.2);
+  line-height: 1;
+}
+
+.price-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .price-old {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 1rem;
+  color: #666;
   text-decoration: line-through;
   font-weight: 600;
 }
 
-.price-new {
-  font-size: 2.1rem;
-  color: #fff;
-  font-weight: 900;
-  text-shadow: 0 0 20px var(--gold-glow);
-  letter-spacing: -1px;
-}
-
 .price-badge {
-  background: var(--red-cta);
+  background: var(--red);
   color: #fff;
   font-size: 0.75rem;
-  font-weight: 900;
+  font-weight: 800;
   padding: 4px 10px;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(227, 38, 54, 0.3);
+  border-radius: 5px;
+  width: fit-content;
+  box-shadow: 0 4px 10px rgba(227, 38, 54, 0.3);
 }
 
 /* PREMIUM HERO SECTION */
@@ -1197,22 +1191,59 @@ input, select, textarea, button {
 }
 
 .chat-bubble {
-  width: 60px;
-  height: 60px;
+  width: 65px;
+  height: 65px;
   background: var(--gold);
   border-radius: 50%;
+  border: 2px solid var(--gold);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(245, 188, 27, 0.4);
-  font-size: 30px;
-  transition: transform 0.3s;
+  box-shadow: 0 0 30px rgba(245, 188, 27, 0.4);
+  background-image: url('assets/tan.jpg');
+  background-size: cover;
+  background-position: center;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
 }
 
 .chat-bubble:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* CHAT POPUP WELCOME */
+.chat-welcome-popup {
+  position: absolute;
+  bottom: 80px;
+  right: 10px;
+  width: 220px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 15px;
+  border-radius: 15px;
+  border-bottom-right-radius: 2px;
+  font-size: 0.85rem;
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  display: none; /* Controlled by JS */
+  animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 10000;
+}
+
+.chat-welcome-popup::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(255, 255, 255, 0.95);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .chat-window {
