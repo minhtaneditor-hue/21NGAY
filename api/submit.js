@@ -11,13 +11,23 @@ export default async function handler(req, res) {
         // 1. NGƯỜI DÙNG ĐĂNG KÍ (LEAD)
         if (!action || action === 'submit-lead') {
             const vnTime = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+            
+            // Format package name for readability
+            const packageName = data.package === 'COACHING21DAY' ? '💎 PREMIUM COACHING 1:1' : '📚 KHÓA HỌC 21 NGÀY';
+            const amountFormatted = data.amount > 0 ? new Intl.NumberFormat('vi-VN').format(data.amount) + ' VNĐ' : 'Liên hệ tư vấn';
+
             const message = `🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!\n` +
                           `📅 Thời gian: ${vnTime}\n` +
                           `----------------------------\n` +
                           `👤 Họ tên: ${data.fullname || 'Không có'}\n` +
                           `📞 SĐT: ${data.phone || 'Không có'}\n` +
-                          `📧 Email: ${data.email || 'Không có'}\n\n` +
-                          `👉 Check Google Sheet ngay!`;
+                          `📧 Email: ${data.email || 'Không có'}\n` +
+                          `📦 Gói chọn: ${packageName}\n` +
+                          `💰 Giá: ${amountFormatted}\n` +
+                          `📝 Kinh nghiệm: ${data.experience || 'Chưa rõ'}\n` +
+                          `🎯 Mục tiêu: ${data.goal || 'Chưa rõ'}\n` +
+                          `🆔 Mã đơn: ${data.orderId || 'N/A'}\n\n` +
+                          `👉 Check Google Sheet & LH khách ngay!`;
 
             // 1. Gửi Telegram phê duyệt (DÀNH CHO TẤN)
             const telegramUrl = `https://api.telegram.org/bot8753662126:AAHjqwCiSyn50oxIg7ABgebgh_B1tiWNX0E/sendMessage`;
