@@ -1201,7 +1201,7 @@ input, select, textarea, button {
   align-items: center;
   cursor: pointer;
   box-shadow: 0 0 30px rgba(245, 188, 27, 0.4);
-  background-image: url('assets/bot_avatar.jpg');
+  background-image: url('assets/tan.jpg');
   background-size: cover;
   background-position: center;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);

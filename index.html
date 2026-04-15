@@ -520,15 +520,9 @@
         <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4);">
             <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px;">&times;</span>
             <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 5px;">
-                <h3>THANH TOÁN <span class="text-gold">TỰ ĐỘNG</span></h3>
+                <h3>XÁC NHẬN <span class="text-gold">THANH TOÁN</span></h3>
                 <p style="color: #ccc; font-size: 0.9rem;">Mở App Ngân hàng bất kỳ để quét mã QR</p>
             </div>
-            <div style="text-align: center; padding: 20px 0;">
-                <img id="sepay-qr" src="" alt="QR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 250px;">
-                
-                <div style="margin-top: 20px; font-size: 0.95rem; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: left; max-width: 300px; margin-left: auto; margin-right: auto;">
-                    <p style="margin-bottom: 8px;"><strong>Ngân hàng:</strong> ACB</p>
-                    <p style="margin-bottom: 8px;"><strong>Chủ tài khoản:</strong> LE MINH TAN</p>
                     <p style="margin-bottom: 8px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
                     <p style="margin-bottom: 8px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
                     <p style="margin-bottom: 0;"><strong>Nội dung CK:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; letter-spacing: 1px; font-weight: bold;"></span></p>
@@ -742,6 +736,39 @@
             };
         }
 
+        async function sendPaymentConfirmation() {
+            const btn = document.getElementById('confirm-payment-btn');
+            btn.innerText = "Đang gửi báo cáo...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'confirm-payment',
+                        fullname: document.getElementById('fullname').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        orderId: currentOrderId,
+                        amount: currentAmount
+                    })
+                });
+
+                if (response.ok) {
+                    btn.innerText = "Đã thông báo! Vui lòng check Email.";
+                    alert("Cảm ơn bạn! Thông báo chuyển tiền đã được gửi tới hệ thống. Tấn sẽ kiểm tra ngân hàng và cấp quyền vào Skool Pro cho bạn qua Email trong vòng ít phút (Tối đa 2-4h làm việc). Hãy kiểm tra hộp thư/spam sau vài phút nữa nhé!");
+                    closePaymentModal();
+                } else {
+                    throw new Error("Gửi thất bại");
+                }
+            } catch (error) {
+                console.error("Lỗi xác nhận:", error);
+                btn.innerText = "Lỗi gửi, hãy thử lại!";
+                btn.disabled = false;
+            }
+        }
+
         function preparePaymentModal(amount, description) {
             document.getElementById("payment-amount").innerText = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
             document.getElementById("payment-desc").innerText = description;
@@ -832,7 +859,7 @@
         <div class="chat-bubble" onclick="toggleChat()"></div>
         <div id="chat-window" class="chat-window">
             <div class="chat-header">
-                <img src="assets/bot_avatar.jpg" alt="Minh Tấn">
+                <img src="assets/bot_header.jpg" alt="Minh Tấn">
                 <div class="name">Minh Tấn (Advisor)</div>
             </div>
             <div id="chat-body" class="chat-body">
