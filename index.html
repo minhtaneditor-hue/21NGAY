@@ -821,16 +821,80 @@
     </script>
 
     <!-- Messenger Chat Widget -->
+    <!-- AI SALES AGENT CHATBOT -->
+    <div class="chat-widget">
+        <div class="chat-bubble" onclick="toggleChat()">🤖</div>
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <img src="assets/tan.jpg" alt="Minh Tấn">
+                <div class="name">Trợ lý AI - Tanlab</div>
+            </div>
+            <div id="chat-body" class="chat-body">
+                <div class="chat-msg">Chào bạn! Mình là trợ lý AI của Minh Tấn (Tanlab). Rất vui được gặp bạn!</div>
+                <div class="chat-msg">Bạn đang quan tâm đến việc xây dựng kênh video để bán hàng hay muốn nâng tầm kỹ năng quay dựng thế?</div>
+                <div class="chat-menu">
+                    <div class="menu-item" onclick="chooseOption('course')">📚 Tìm hiểu khóa học 21 ngày</div>
+                    <div class="menu-item" onclick="chooseOption('price')">💰 Bảng giá & Ưu đãi</div>
+                    <div class="menu-item" onclick="chooseOption('faq')">❓ Hỏi đáp nhanh</div>
+                    <div class="menu-item" onclick="chooseOption('messenger')">💬 Chat trực tiếp với Minh Tấn</div>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <p style="font-size: 0.7rem; color: #666;">Powered by Tanlab AI Agent</p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        var chatButton = document.createElement('a');
-        chatButton.href = 'https://m.me/61583837884143'; // Dẫn tới Messenger dựa trên Facebook ID đã cung cấp
-        chatButton.target = '_blank';
-        chatButton.id = 'messenger-chat-button';
-        chatButton.innerHTML = '<span style="display: flex; align-items: center; gap: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.36 2 1.81 6.13 1.81 11.23c0 2.86 1.48 5.4 3.8 7.08v3.42l3.47-1.92c.93.26 1.91.4 2.92.4 5.64 0 10.19-4.13 10.19-9.23S17.64 2 12 2zm1.09 12.35l-2.73-2.9-5.32 2.9 5.86-6.22 2.83 2.9 5.21-2.9-5.85 6.22z"/></svg> Chat Messenger</span>';
-        chatButton.style.cssText = 'position: fixed; bottom: 80px; right: 20px; background: #0084FF; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 600; z-index: 9999; box-shadow: 0 4px 15px rgba(0,132,255,0.4); transition: all 0.3s;';
-        chatButton.onmouseover = function() { this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 6px 20px rgba(0,132,255,0.6)'; };
-        chatButton.onmouseout = function() { this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 4px 15px rgba(0,132,255,0.4)'; };
-        document.body.appendChild(chatButton);
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function addMessage(text, isBot = true) {
+            const body = document.getElementById('chat-body');
+            const msg = document.createElement('div');
+            msg.className = 'chat-msg';
+            if (!isBot) msg.style.cssText = 'background: var(--gold); color: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end;';
+            msg.innerText = text;
+            body.appendChild(msg);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function chooseOption(option) {
+            const menu = document.querySelector('.chat-menu');
+            
+            if (option === 'course') {
+                addMessage("📚 Tìm hiểu khóa học 21 ngày", false);
+                setTimeout(() => {
+                    addMessage("Khóa học 21 Ngày giúp bạn bẻ khóa thuật toán đa nền tảng, biến mọi nội dung thành cỗ máy bán hàng bền vững chỉ với Smartphone.");
+                    addMessage("Bạn sẽ học từ cách lên kịch bản, quay dựng đến cách gắn link thu hút khách hàng.");
+                }, 500);
+            } else if (option === 'price') {
+                addMessage("💰 Bảng giá & Ưu đãi", false);
+                setTimeout(() => {
+                    addMessage("Hiện tại khóa học 21 Ngày đang có ưu đãi cực tốt, chỉ 2.500.000 VNĐ (giảm từ giá gốc 10tr).");
+                    addMessage("Ngoài ra còn có các gói Coaching 1:1 (Audit, Sales System, Growth) nếu bạn muốn mình kèm cặp riêng.");
+                }, 500);
+            } else if (option === 'faq') {
+                addMessage("❓ Hỏi đáp nhanh", false);
+                setTimeout(() => {
+                    addMessage("Học smartphone có làm được triệu view không? -> Được nha, quan trọng là tư duy hình ảnh và kịch bản mình dạy trong khóa!");
+                    addMessage("Không biết công nghệ có học được không? -> Có, mình dạy cầm tay chỉ việc cực kỳ dễ hiểu.");
+                }, 500);
+            } else if (option === 'messenger') {
+                addMessage("💬 Chat trực tiếp với Minh Tấn", false);
+                setTimeout(() => {
+                    addMessage("Dạ, bạn đợi chút mình chuyển hướng bạn sang Messenger nhé...");
+                    window.open('https://m.me/tanlab.video', '_blank');
+                }, 500);
+            }
+            
+            // Re-append menu after response to keep it at the bottom
+            setTimeout(() => {
+                document.getElementById('chat-body').appendChild(menu);
+            }, 1000);
+        }
     </script>
 </body>
 </html>

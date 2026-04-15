@@ -1,0 +1,34 @@
+{
+  "course_21day": {
+    "name": "21 Ngày Biến Video Thành Tài Sản",
+    "price": "2.500.000 VNĐ",
+    "description": "Làm chủ quy trình xây dựng cỗ máy thu nhập tự động từ smartphone.",
+    "features": [
+      "21 ngày huấn luyện Phone-tographer",
+      "Kho Tài Liệu & Âm Thanh Viral",
+      "Template thiết kế độc quyền",
+      "Nhận feedback trực tiếp từ Tấn"
+    ]
+  },
+  "coaching_1on1": {
+    "name": "Premium Coaching 1:1",
+    "price": "Liên hệ tư vấn",
+    "sub_packages": [
+      {
+        "id": "audit",
+        "name": "Gói 1: Video Strategy Audit",
+        "ideal_for": "Người mất phương hướng, cần tấm bản đồ rõ ràng."
+      },
+      {
+        "id": "system",
+        "name": "Gói 2: Video Sales System",
+        "ideal_for": "Chuyên gia muốn sở hữu hệ thống video tự động."
+      },
+      {
+        "id": "growth",
+        "name": "Gói 3: Personal Video Growth",
+        "ideal_for": "Scale kênh mạnh mẽ và định vị thương hiệu sắc nét."
+      }
+    ]
+  }
+}
