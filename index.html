@@ -452,6 +452,20 @@
                     <input type="text" name="goal" placeholder="VD: Xây kênh, bán hàng, kiếm tiền Affiliate..." style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem;">
                 </div>
 
+                <!-- MÃ GIẢM GIÁ (PROMO CODE) -->
+                <div id="promo-container" style="margin-bottom: 25px; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed rgba(255, 215, 0, 0.3);">
+                    <label for="promo-code" style="display: block; margin-bottom: 8px; color: var(--gold); font-weight: 700; font-size: 0.9rem;">BẠN CÓ MÃ GIẢM GIÁ?</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="promo-code" placeholder="Nhập mã tại đây..." style="flex: 1; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #111; color: #fff; text-transform: uppercase; font-family: inherit;">
+                        <button type="button" onclick="applyPromoCode()" style="padding: 0 20px; border-radius: 5px; background: var(--gold); color: #000; font-weight: 800; border: none; cursor: pointer; transition: all 0.3s;">ÁP DỤNG</button>
+                    </div>
+                    <p id="promo-status" style="margin-top: 8px; font-size: 0.85rem; display: none;"></p>
+                    <div id="discount-display" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: none;">
+                        <p style="font-size: 0.9rem; color: #aaa;">Giá cũ: <span style="text-decoration: line-through;" id="old-price"></span></p>
+                        <p style="font-size: 1.1rem; color: #fff; font-weight: 800;">Giá sau giảm: <span class="text-gold" id="new-price"></span></p>
+                    </div>
+                </div>
+
                 <button type="submit" id="submit-btn" class="btn-cta" style="display: block; width: 100%; margin: 10px auto 0; border-radius: 8px;">Hoàn tất đăng ký</button>
             </form>
             
@@ -551,13 +565,88 @@
             document.getElementById('success-msg').style.display = 'block';
         }
 
-        let currentAmount = 2490000;
-        let currentPackage = 'COMBO21DAY';
+        let currentAmount = 2500000;
+        let originalAmount = 2500000;
+        let currentPackage = 'VIDEO21DAY';
         let currentOrderId = '';
+        let appliedPromo = null;
+
+        /**
+         * DANH SÁCH MÃ GIẢM GIÁ (PROMO CODES)
+         * - Cách thêm: 'MÃ': giá_trị (Số dương là giảm tiền mặt, Số từ 0-1 là giảm %)
+         */
+        const promoCodes = {
+            'TANLAB': 500000,    // Giảm 500k
+            'GIAM10': 0.1,       // Giảm 10%
+            'CHALLENGE': 1000000 // Giảm 1 triệu
+        };
+
+        function applyPromoCode() {
+            const codeInput = document.getElementById('promo-code').value.trim().toUpperCase();
+            const statusEl = document.getElementById('promo-status');
+            const discountDisplay = document.getElementById('discount-display');
+            
+            if (!codeInput) return;
+
+            // Chỉ áp dụng giảm giá cho gói 21 ngày (giá gốc > 0)
+            if (currentPackage === 'COACHING21DAY') {
+                statusEl.innerText = "Mã giảm giá chỉ áp dụng cho Khóa học 21 Ngày.";
+                statusEl.style.color = "#ff4d4d";
+                statusEl.style.display = "block";
+                return;
+            }
+
+            if (promoCodes[codeInput]) {
+                appliedPromo = codeInput;
+                const discountValue = promoCodes[codeInput];
+                
+                let discountAmount = 0;
+                if (discountValue < 1) {
+                    discountAmount = originalAmount * discountValue;
+                } else {
+                    discountAmount = discountValue;
+                }
+
+                currentAmount = originalAmount - discountAmount;
+                if (currentAmount < 0) currentAmount = 0;
+
+                statusEl.innerText = `Mã hợp lệ! Bạn được giảm ${new Intl.NumberFormat('vi-VN').format(discountAmount)} VNĐ.`;
+                statusEl.style.color = "#4CAF50";
+                statusEl.style.display = "block";
+
+                // Cập nhật giao diện hiển thị giá
+                document.getElementById('old-price').innerText = new Intl.NumberFormat('vi-VN').format(originalAmount) + " VNĐ";
+                document.getElementById('new-price').innerText = new Intl.NumberFormat('vi-VN').format(currentAmount) + " VNĐ";
+                discountDisplay.style.display = "block";
+            } else {
+                appliedPromo = null;
+                currentAmount = originalAmount;
+                statusEl.innerText = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
+                statusEl.style.color = "#ff4d4d";
+                statusEl.style.display = "block";
+                discountDisplay.style.display = "none";
+            }
+        }
 
         function selectPackage(amount, pkg) {
+            originalAmount = amount;
             currentAmount = amount;
             currentPackage = pkg;
+            appliedPromo = null;
+            
+            // Xóa trạng thái mã giảm giá khi chọn lại gói
+            document.getElementById('promo-code').value = '';
+            document.getElementById('promo-status').style.display = 'none';
+            document.getElementById('discount-display').style.display = 'none';
+            
+            // Hiện/Ẩn ô nhập mã (chỉ hiện cho gói 21 ngày)
+            const promoContainer = document.getElementById('promo-container');
+            if (pkg === 'COACHING21DAY') {
+                promoContainer.style.display = 'none';
+            } else {
+                promoContainer.style.display = 'block';
+            }
+
             document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -584,6 +673,7 @@
                 data.amount = currentAmount;
                 data.package = currentPackage;
                 data.orderId = currentOrderId;
+                data.promoCode = appliedPromo || 'None';
 
                 // Tạo bộ dữ liệu bao phủ mội tên biến để Make.com không bị lỗi Validation
                 const payloadToMake = {
@@ -592,7 +682,8 @@
                     Name: data.fullname,
                     Phone: data.phone,
                     Email: data.email,
-                    Amount: data.amount
+                    Amount: data.amount,
+                    Promo: data.promoCode
                 };
 
                 // URL WEBHOOK MAKE.COM & Local API
