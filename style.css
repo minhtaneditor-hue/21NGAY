@@ -107,23 +107,35 @@ input, select, textarea, button {
 
 /* MINI PRICE CARD */
 .mini-price-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-left: 4px solid var(--gold);
-  border-radius: 8px;
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(245, 188, 27, 0.5);
+  border-radius: 12px;
+  padding: 15px 25px;
   margin: 30px 0;
-  max-width: 450px;
-  backdrop-filter: blur(10px);
+  max-width: 340px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 30px rgba(245, 188, 27, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-price-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(245, 188, 27, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .price-header {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--gold);
   font-weight: 800;
-  letter-spacing: 1.5px;
-  margin-bottom: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
   font-family: 'Inter', sans-serif;
+  text-shadow: 0 0 10px var(--gold-glow);
 }
 
 .price-body {
@@ -141,10 +153,11 @@ input, select, textarea, button {
 }
 
 .price-new {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: #fff;
   font-weight: 900;
-  text-shadow: 0 0 15px var(--gold-glow);
+  text-shadow: 0 0 20px var(--gold-glow);
+  letter-spacing: -1px;
 }
 
 .price-badge {
@@ -1207,14 +1220,16 @@ input, select, textarea, button {
   bottom: 80px;
   right: 0;
   width: 350px;
-  background: #111;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  border-radius: 15px;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 20px;
   overflow: hidden;
   display: none;
   flex-direction: column;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-  animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255, 215, 0, 0.1);
+  animation: slideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 @keyframes slideUp {
@@ -1300,4 +1315,26 @@ input, select, textarea, button {
     width: 300px;
     right: -10px;
   }
+}
+/* MENU TOGGLE BUTTON */
+.menu-toggle-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  transition: all 0.3s;
+  color: var(--gold);
+}
+
+.menu-toggle-btn:hover {
+  background: var(--gold);
+  color: #000;
 }

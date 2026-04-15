@@ -445,15 +445,15 @@
                     <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại" required style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem; font-family: inherit;">
                 </div>
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label for="email" style="display: block; margin-bottom: 8px; color: #ddd; font-weight: 600;">Địa chỉ Email</label>
-                    <input type="email" id="email" name="email" placeholder="Nhập email (không bắt buộc)" style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem; font-family: inherit;">
+                    <label for="email" style="display: block; margin-bottom: 8px; color: #ddd; font-weight: 600;">Địa chỉ Email *</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email của bạn" required style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem; font-family: inherit;">
                 </div>
 
                 <!-- MÃ GIẢM GIÁ (PROMO CODE) -->
                 <div id="promo-container" style="margin-bottom: 25px; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed rgba(255, 215, 0, 0.3);">
-                    <label for="promo-code" style="display: block; margin-bottom: 8px; color: var(--gold); font-weight: 700; font-size: 0.9rem;">MÃ GIẢM GIÁ (NẾU CÓ)</label>
+                    <label for="promo-code" style="display: block; margin-bottom: 8px; color: var(--gold); font-weight: 700; font-size: 0.9rem;">MÃ GIẢM GIÁ (BẮT BUỘC)</label>
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="promo-code" placeholder="Nhập mã ưu đãi..." style="flex: 1; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #111; color: #fff; text-transform: uppercase; font-family: inherit;">
+                        <input type="text" id="promo-code" placeholder="Nhập mã ưu đãi..." required style="flex: 1; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #111; color: #fff; text-transform: uppercase; font-family: inherit;">
                         <button type="button" onclick="applyPromoCode()" style="padding: 0 20px; border-radius: 5px; background: var(--gold); color: #000; font-weight: 800; border: none; cursor: pointer; transition: all 0.3s;">ÁP DỤNG</button>
                     </div>
                     <p id="promo-status" style="margin-top: 8px; font-size: 0.85rem; display: none;"></p>
@@ -827,20 +827,23 @@
         <div id="chat-window" class="chat-window">
             <div class="chat-header">
                 <img src="assets/tan.jpg" alt="Minh Tấn">
-                <div class="name">Trợ lý AI - Tanlab</div>
+                <div class="name">Minh Tấn (Advisor)</div>
             </div>
             <div id="chat-body" class="chat-body">
-                <div class="chat-msg">Chào bạn! Mình là trợ lý AI của Minh Tấn (Tanlab). Rất vui được gặp bạn!</div>
+                <div class="chat-msg">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
                 <div class="chat-msg">Bạn đang quan tâm đến việc xây dựng kênh video để bán hàng hay muốn nâng tầm kỹ năng quay dựng thế?</div>
-                <div class="chat-menu">
+                <div id="faq-menu" class="chat-menu">
                     <div class="menu-item" onclick="chooseOption('course')">📚 Tìm hiểu khóa học 21 ngày</div>
                     <div class="menu-item" onclick="chooseOption('price')">💰 Bảng giá & Ưu đãi</div>
                     <div class="menu-item" onclick="chooseOption('faq')">❓ Hỏi đáp nhanh</div>
-                    <div class="menu-item" onclick="chooseOption('messenger')">💬 Chat trực tiếp với Minh Tấn</div>
+                    <div class="menu-item" onclick="chooseOption('messenger')">💬 Chat trực tiếp với mình</div>
                 </div>
             </div>
-            <div class="chat-footer">
-                <p style="font-size: 0.7rem; color: #666;">Powered by Tanlab AI Agent</p>
+            <div class="chat-footer" style="position: relative; padding-bottom: 40px;">
+                <p style="font-size: 0.7rem; color: #888;">Tanlab AI Advisor</p>
+                <div class="menu-toggle-btn" id="menu-toggle" onclick="toggleMenu()" title="Mở danh sách câu hỏi">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </div>
             </div>
         </div>
     </div>
@@ -851,18 +854,24 @@
             win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
         }
 
+        function toggleMenu() {
+            const menu = document.getElementById('faq-menu');
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'flex' : 'none';
+        }
+
         function addMessage(text, isBot = true) {
             const body = document.getElementById('chat-body');
             const msg = document.createElement('div');
             msg.className = 'chat-msg';
-            if (!isBot) msg.style.cssText = 'background: var(--gold); color: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end;';
+            if (!isBot) msg.style.cssText = 'background: var(--gold); color: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end; margin-left: auto;';
             msg.innerText = text;
             body.appendChild(msg);
             body.scrollTop = body.scrollHeight;
         }
 
         function chooseOption(option) {
-            const menu = document.querySelector('.chat-menu');
+            const menu = document.getElementById('faq-menu');
+            menu.style.display = 'none'; // Hide menu after selection
             
             if (option === 'course') {
                 addMessage("📚 Tìm hiểu khóa học 21 ngày", false);
@@ -874,26 +883,21 @@
                 addMessage("💰 Bảng giá & Ưu đãi", false);
                 setTimeout(() => {
                     addMessage("Hiện tại khóa học 21 Ngày đang có ưu đãi cực tốt, chỉ 2.500.000 VNĐ (giảm từ giá gốc 10tr).");
-                    addMessage("Ngoài ra còn có các gói Coaching 1:1 (Audit, Sales System, Growth) nếu bạn muốn mình kèm cặp riêng.");
+                    addMessage("Ngoài ra còn có các gói Coaching 1:1 chuyên sâu nếu bạn muốn mình kèm cặp riêng.");
                 }, 500);
             } else if (option === 'faq') {
                 addMessage("❓ Hỏi đáp nhanh", false);
                 setTimeout(() => {
-                    addMessage("Học smartphone có làm được triệu view không? -> Được nha, quan trọng là tư duy hình ảnh và kịch bản mình dạy trong khóa!");
-                    addMessage("Không biết công nghệ có học được không? -> Có, mình dạy cầm tay chỉ việc cực kỳ dễ hiểu.");
+                    addMessage("Không biết công nghệ có học được không? -> Hoàn toàn được, mình dạy cầm tay chỉ việc rất dễ hiểu.");
+                    addMessage("Để hỏi thêm các câu khác, bạn bấm vào nút ☰ ở góc dưới nhé!");
                 }, 500);
             } else if (option === 'messenger') {
-                addMessage("💬 Chat trực tiếp với Minh Tấn", false);
+                addMessage("💬 Chat trực tiếp với mình", false);
                 setTimeout(() => {
-                    addMessage("Dạ, bạn đợi chút mình chuyển hướng bạn sang Messenger nhé...");
+                    addMessage("Đợi mình chút nhé, mình đang kết nối bạn với Messenger của mình...");
                     window.open('https://m.me/tanlab.video', '_blank');
                 }, 500);
             }
-            
-            // Re-append menu after response to keep it at the bottom
-            setTimeout(() => {
-                document.getElementById('chat-body').appendChild(menu);
-            }, 1000);
         }
     </script>
 </body>

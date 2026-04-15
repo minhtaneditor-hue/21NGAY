@@ -68,14 +68,15 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     from: 'Minh Tấn <challenge@minhtanacademy.com>',
                     to: data.email,
-                    subject: '🎉 Chào mừng bạn đến với Thử thách 7 Ngày Lên Tay Phó Nháy Cho Người Yêu!',
+                    subject: '🎉 Chào mừng bạn đến với Khóa học 21 Ngày Biến Video Thành Tài Sản!',
                     html: `
-                        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                            <h2>Xin chào ${data.fullname || 'bạn'}!</h2>
-                            <p>Chúc mừng bạn đã chính thức tham gia vào hành trình biến chiếc điện thoại thành "vũ khí" chụp ảnh đỉnh cao.</p>
-                            <p><strong>Ngày hôm nay (Day 0):</strong> Hãy chuẩn bị tâm lý và kiểm tra thiết bị của bạn. Bài học chính thức đầu tiên sẽ được gửi vào sáng mai nhé!</p>
-                            <p>Hẹn gặp lại bạn vào sáng mai!</p>
-                            <p>-- <br><strong>Minh Tấn</strong></p>
+                        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333;">
+                            <h2 style="color: #f5bc1b;">Xin chào ${data.fullname || 'bạn'}!</h2>
+                            <p>Chúc mừng bạn đã chính thức gia nhập hành trình <b>21 Ngày Biến Video Thành Tài Sản</b> tại Tanlab.</p>
+                            <p>Đây không chỉ là cuộc dạo chơi, mà là một Trại huấn luyện thực chiến để bạn làm chủ kỹ năng quay dựng và xây dựng dòng tiền từ Video ngắn.</p>
+                            <p><b>Bước tiếp theo:</b> Hãy kiểm tra email thường xuyên. Nội dung bài giảng và hướng dẫn chi tiết sẽ được gửi đến bạn sớm nhất.</p>
+                            <p>Hẹn gặp lại bạn trong hành trình lột xác!</p>
+                            <p>-- <br><b>Minh Tấn | Tanlab Advisor</b></p>
                         </div>
                     `
                 })
@@ -92,10 +93,10 @@ export default async function handler(req, res) {
                           `----------------------------\n` +
                           `👤 Khách: ${data.fullname || 'Không rõ'}\n` +
                           `📞 SĐT: ${data.phone}\n` +
-                          `💵 Số tiền: 199.000đ\n\n` +
+                          `💵 Trạng thái: Khách báo đã chuyển khoản\n\n` +
                           `🔥 Tấn ơi, check ngân hàng ngay nhé!`;
 
-            await fetch(`https://api.telegram.org/bot8753662126:AAHjqwCiSyn50oxIg7ABgebgh_B1tiWNX0E/sendMessage`, {
+            await fetch(`https://api.telegram.org/bot8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: '7384174497', text: message })
