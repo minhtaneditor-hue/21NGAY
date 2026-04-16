@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
     const BOT_TOKEN = '8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs';
     const CHAT_ID = '7384174497';
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxKOFrsrF6AsmHGzXxYDWqEZ0BoOMtfh5aU4tGjbX6Ama_6tL8mIpzFv5rNRMExIv4U/exec';
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwmVkwXNM3ohKMk9exR0ht7l9TwTOBdnueTbbKoXmksDGv4vFsMOn0-OYCfN8Z1Zmw1/exec';
 
     try {
         const body = req.body;

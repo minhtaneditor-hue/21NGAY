@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxKOFrsrF6AsmHGzXxYDWqEZ0BoOMtfh5aU4tGjbX6Ama_6tL8mIpzFv5rNRMExIv4U/exec';
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwmVkwXNM3ohKMk9exR0ht7l9TwTOBdnueTbbKoXmksDGv4vFsMOn0-OYCfN8Z1Zmw1/exec';
         
         // Fetch data from Google Sheet (doGet)
         const response = await fetch(GOOGLE_SHEET_URL);

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ status: 'error', message: 'Missing orderId' });
     }
 
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxKOFrsrF6AsmHGzXxYDWqEZ0BoOMtfh5aU4tGjbX6Ama_6tL8mIpzFv5rNRMExIv4U/exec';
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwmVkwXNM3ohKMk9exR0ht7l9TwTOBdnueTbbKoXmksDGv4vFsMOn0-OYCfN8Z1Zmw1/exec';
 
     try {
         // Gọi Google Apps Script (doGet trả về toàn bộ rows)
