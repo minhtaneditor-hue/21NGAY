@@ -726,6 +726,26 @@
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData.entries());
 
+                // --- TRACKING DATA CAPTURE ---
+                const urlParams = new URLSearchParams(window.location.search);
+                const utmData = {
+                    utm_source: urlParams.get('utm_source') || '',
+                    utm_medium: urlParams.get('utm_medium') || '',
+                    utm_campaign: urlParams.get('utm_campaign') || '',
+                    utm_content: urlParams.get('utm_content') || '',
+                    utm_term: urlParams.get('utm_term') || ''
+                };
+
+                // Get Facebook cookies for CAPI Match Quality
+                const getCookie = (name) => {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                    return '';
+                };
+                const fbp = getCookie('_fbp');
+                const fbc = getCookie('_fbc');
+
                 // Sinh Order ID (Ví dụ: TAN + 4 số cuối SĐT + ngẫu nhiên)
                 const phoneStr = data.phone || "0000";
                 const randomStr = Math.floor(1000 + Math.random() * 9000);
@@ -737,13 +757,18 @@
                 data.promoCode = appliedPromo || 'None';
 
                 try {
-                    // Send to Local API for Telegram & Google Sheet
+                    // Send to Local API for Telegram, Sheet & Facebook CAPI
                     await fetch('/api/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             action: 'submit-lead',
-                            ...data
+                            ...data,
+                            utm: utmData,
+                            fbp: fbp,
+                            fbc: fbc,
+                            userAgent: navigator.userAgent,
+                            eventSourceUrl: window.location.href
                         })
                     });
 

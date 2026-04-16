@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -7,6 +9,15 @@ export default async function handler(req, res) {
     const CHAT_ID = '7384174497';
     const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxKOFrsrF6AsmHGzXxYDWqEZ0BoOMtfh5aU4tGjbX6Ama_6tL8mIpzFv5rNRMExIv4U/exec';
     const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
+    
+    // FACEBOOK CAPI CONFIG
+    const FB_PIXEL_ID = '406021826887893';
+    const FB_ACCESS_TOKEN = 'EAAWZABd207FoBROGHtHJXGZCBOgNchxuLs4azmIZByRRk2oo3mKPkbSjYpKyKgrwKZCFCZCmCxKrMiGjkgqOpSkJjzZCvbz03wHjagQBykddVRTtp6c9FIsLDoECZAqLRRtAye4dvWrmN3rGHIzIlPPtINQQmkzbY6sv9ZCSPJ6sI78paMAZA6LEQMXPi2DK4sQZDZD';
+
+    const hash = (data) => {
+        if (!data) return '';
+        return crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');
+    };
 
     try {
         const body = req.body;
@@ -18,7 +29,9 @@ export default async function handler(req, res) {
             const packageName = data.package === 'COACHING21DAY' ? '💎 PREMIUM COACHING 1:1' : '📚 KHÓA HỌC 21 NGÀY';
             const amountFormatted = data.amount > 0 ? new Intl.NumberFormat('vi-VN').format(data.amount) + ' VNĐ' : 'Liên hệ tư vấn';
 
-            // CHỈ GỬI 1 TIN NHẮN DUY NHẤT
+            const promises = [];
+
+            // Telegram
             const message = `🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!\n` +
                 `📅 Thời gian: ${vnTime}\n` +
                 `----------------------------\n` +
@@ -28,15 +41,11 @@ export default async function handler(req, res) {
                 `📦 ${packageName}\n` +
                 `💰 ${amountFormatted}\n` +
                 `🎟️ Mã ưu đãi: ${data.promoCode || 'None'}\n` +
-                `📝 Kinh nghiệm: ${data.experience || 'Chưa rõ'}\n` +
-                `🎯 Mục tiêu: ${data.goal || 'Chưa rõ'}\n` +
                 `🆔 ${data.orderId || 'N/A'}\n` +
+                `🚀 Source: ${data.utm?.utm_source || 'Direct'}\n` +
                 `----------------------------\n` +
                 `⏳ Trạng thái: CHỜ DUYỆT`;
 
-            const promises = [];
-
-            // Telegram - 1 tin nhắn duy nhất
             promises.push(
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -54,7 +63,7 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Telegram Error:', err))
             );
 
-            // Google Sheet - Gửi data KHÔNG có action (Apps Script tự thêm dòng)
+            // Google Sheet (Including UTMs)
             promises.push(
                 fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
@@ -68,15 +77,18 @@ export default async function handler(req, res) {
                         amount: data.amount,
                         promoCode: data.promoCode,
                         orderId: data.orderId,
-                        experience: data.experience,
-                        goal: data.goal,
                         timestamp: vnTime,
-                        status: 'PENDING'
+                        status: 'PENDING',
+                        utm_source: data.utm?.utm_source || '',
+                        utm_medium: data.utm?.utm_medium || '',
+                        utm_campaign: data.utm?.utm_campaign || '',
+                        utm_content: data.utm?.utm_content || '',
+                        utm_term: data.utm?.utm_term || ''
                     })
                 }).catch(err => console.error('Sheet Error:', err))
             );
 
-            // Email chào mừng
+            // Resend Welcome Email
             promises.push(
                 fetch('https://api.resend.com/emails', {
                     method: 'POST',
@@ -87,25 +99,48 @@ export default async function handler(req, res) {
                     body: JSON.stringify({
                         from: 'Minh Tấn <challenge@minhtanacademy.com>',
                         to: data.email,
-                        subject: '🎉 Chào mừng bạn đến với Khóa học 21 Ngày Biến Video Thành Tài Sản!',
-                        html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;line-height:1.6;color:#333;">
-                            <h2 style="color:#f5bc1b;">Xin chào ${data.fullname || 'bạn'}!</h2>
-                            <p>Chúc mừng bạn đã gia nhập hành trình <b>21 Ngày Biến Video Thành Tài Sản</b> tại Tanlab.</p>
-                            <p><b>Lưu ý:</b> Hoàn tất thanh toán trên website để được kích hoạt Skool Pro.</p>
-                            <p>-- <br><b>Minh Tấn | Tanlab Advisor</b></p>
-                        </div>`
+                        subject: '🎉 Chào mừng bạn đến với Khóa học 21 Ngày!',
+                        html: `<p>Chào ${data.fullname}, Tấn đã nhận được đăng ký của bạn. Hãy hoàn tất thanh toán để bắt đầu hành trình nhé!</p>`
                     })
                 }).catch(err => console.error('Email Error:', err))
             );
 
+            // Facebook Conversions API (CAPI)
+            promises.push(
+                fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        data: [{
+                            event_name: 'Lead',
+                            event_time: Math.floor(Date.now() / 1000),
+                            action_source: 'website',
+                            event_id: data.orderId, // Deduplication
+                            event_source_url: data.eventSourceUrl,
+                            user_data: {
+                                em: [hash(data.email)],
+                                ph: [hash(data.phone)],
+                                client_user_agent: data.userAgent,
+                                client_ip_address: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+                                fbc: data.fbc || null,
+                                fbp: data.fbp || null
+                            },
+                            custom_data: {
+                                content_name: packageName,
+                                currency: 'VND',
+                                value: data.amount || 0
+                            }
+                        }]
+                    })
+                }).catch(err => console.error('Facebook CAPI Error:', err))
+            );
+
             await Promise.allSettled(promises);
-            return res.status(200).json({ success: true, message: 'Lead captured' });
+            return res.status(200).json({ success: true, message: 'Lead captured and tracked' });
         }
 
         // ========== 2. XÁC NHẬN ĐÃ CHUYỂN TIỀN ==========
-        // KHÔNG GỬI TIN NHẮN MỚI - chỉ gửi email cho khách
         if (action === 'confirm-payment') {
-            // Chỉ gửi email xác nhận cho khách hàng
             await fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {
@@ -115,19 +150,12 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     from: 'Minh Tấn <challenge@minhtanacademy.com>',
                     to: data.email,
-                    subject: '📩 Đã nhận thông báo thanh toán - Đang xử lý!',
-                    html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;line-height:1.6;color:#333;">
-                        <h2 style="color:#2e7d32;">Xác nhận nhận thông báo!</h2>
-                        <p>Chào <b>${data.fullname || 'bạn'}</b>,</p>
-                        <p>Tanlab đã nhận thông báo chuyển khoản đơn <b>${data.orderId}</b>.</p>
-                        <p>Admin sẽ đối soát và gửi link Skool Pro qua email này (15 phút - 4h).</p>
-                        <p>Nếu quá 24h chưa nhận, liên hệ Zalo 0962255861.</p>
-                        <p>-- <br><b>Minh Tấn | Tanlab Advisor</b></p>
-                    </div>`
+                    subject: '📩 Đã nhận thông báo thanh toán!',
+                    html: `<p>Tanlab đã nhận thông báo chuyển khoản đơn <b>${data.orderId}</b>. Đang xử lý...</p>`
                 })
             }).catch(err => console.error('Email Error:', err));
 
-            return res.status(200).json({ success: true, message: 'Email sent' });
+            return res.status(200).json({ success: true, message: 'Confirmation email sent' });
         }
 
     } catch (error) {
