@@ -4,6 +4,12 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
+    // ===== CENTRALIZED CONFIG =====
+    const BOT_TOKEN = '8753662126:AAHjqwCiSyn50oxIg7ABgebgh_B1tiWNX0E';
+    const CHAT_ID = '7384174497';
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwX0yiwRqL9GGWuzFBiufuEoa5VyZDNYahnWhyVhwGxlFWqulWwrioOq8MV8Q95-mUFdw/exec';
+    const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
+
     try {
         const body = req.body;
         const { action, ...data } = body;
@@ -30,13 +36,12 @@ export default async function handler(req, res) {
                           `🆔 Mã đơn: ${data.orderId || 'N/A'}\n\n` +
                           `👉 Check Google Sheet & LH khách ngay!`;
 
-            // 1. Gửi Telegram phê duyệt (DÀNH CHO TẤN)
-            const telegramUrl = `https://api.telegram.org/bot8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs/sendMessage`;
-            await fetch(telegramUrl, {
+            // GỬI SONG SONG (không chờ từng cái) để tăng tốc
+            const telegramPromise = fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    chat_id: '7384174497', 
+                    chat_id: CHAT_ID, 
                     text: message,
                     reply_markup: {
                         inline_keyboard: [
@@ -47,20 +52,29 @@ export default async function handler(req, res) {
                         ]
                     }
                 })
-            });
+            }).catch(err => console.error('Telegram Error:', err));
 
-            // Google Sheet
-            const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwX0yiwRqL9GGWuzFBiufuEoa5VyZDNYahnWhyVhwGxlFWqulWwrioOq8MV8Q95-mUFdw/exec';
-            await fetch(GOOGLE_SHEET_URL, {
+            // Google Sheet - Ghi dữ liệu (KHÔNG dùng mode: 'no-cors', đây là server-side)
+            const sheetPromise = fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+                body: JSON.stringify({
+                    action: 'add-lead',
+                    fullname: data.fullname,
+                    phone: data.phone,
+                    email: data.email,
+                    package: data.package,
+                    amount: data.amount,
+                    promoCode: data.promoCode,
+                    orderId: data.orderId,
+                    experience: data.experience,
+                    goal: data.goal,
+                    timestamp: vnTime
+                })
+            }).catch(err => console.error('Google Sheet Error:', err));
 
             // GỬI EMAIL CHÀO MỪNG (DAY 0) QUA RESEND
-            const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
-            await fetch('https://api.resend.com/emails', {
+            const emailPromise = fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +95,10 @@ export default async function handler(req, res) {
                         </div>
                     `
                 })
-            });
+            }).catch(err => console.error('Email Error:', err));
+
+            // Chờ TẤT CẢ cùng lúc (song song) thay vì lần lượt
+            await Promise.allSettled([telegramPromise, sheetPromise, emailPromise]);
 
             return res.status(200).json({ success: true, message: 'Lead captured' });
         }
@@ -101,11 +118,11 @@ export default async function handler(req, res) {
                           `----------------------------\n` +
                           `🔥 Tấn ơi, check ngân hàng ngay nhé!`;
 
-            await fetch(`https://api.telegram.org/bot8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs/sendMessage`, {
+            const telegramPromise = fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    chat_id: '7384174497', 
+                    chat_id: CHAT_ID, 
                     text: message,
                     reply_markup: {
                         inline_keyboard: [
@@ -116,11 +133,10 @@ export default async function handler(req, res) {
                         ]
                     }
                 })
-            });
+            }).catch(err => console.error('Telegram Error:', err));
 
-            // GỬI EMAIL XÁC NHẬN ĐÃ GỬI BÁO CÁO (EMAIL SỐ 2)
-            const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
-            await fetch('https://api.resend.com/emails', {
+            // GỬI EMAIL XÁC NHẬN
+            const emailPromise = fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -147,7 +163,10 @@ export default async function handler(req, res) {
                         </div>
                     `
                 })
-            });
+            }).catch(err => console.error('Email Error:', err));
+
+            // Song song
+            await Promise.allSettled([telegramPromise, emailPromise]);
 
             return res.status(200).json({ success: true, message: 'Payment confirmation sent' });
         }

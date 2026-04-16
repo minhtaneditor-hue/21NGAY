@@ -519,23 +519,32 @@
     <div id="payment-modal" class="modal">
         <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4);">
             <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px;">&times;</span>
-            <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 5px;">
+            <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 15px;">
                 <h3>XÁC NHẬN <span class="text-gold">THANH TOÁN</span></h3>
                 <p style="color: #ccc; font-size: 0.9rem;">Mở App Ngân hàng bất kỳ để quét mã QR</p>
             </div>
-                    <p style="margin-bottom: 8px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
-                    <p style="margin-bottom: 8px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
-                    <p style="margin-bottom: 0;"><strong>Nội dung CK:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; letter-spacing: 1px; font-weight: bold;"></span></p>
-                </div>
-                
-                <div style="margin-top: 15px; font-size: 0.85rem; color: #aaa; background: rgba(0, 150, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 150, 0, 0.3);">
-                    <p>Hệ thống tự động xác nhận sau khi nhận được tiền.</p>
-                </div>
+
+            <!-- QR CODE -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img id="sepay-qr" src="" alt="QR Thanh Toán" style="width: 100%; max-width: 280px; border-radius: 10px; border: 3px solid var(--gold);">
             </div>
-            
-            <a href="https://www.skool.com/tan-lab-6821/classroom" target="_blank" onclick="alert('Nếu giao dịch đã hoàn tất, hệ thống tự động cấp quyền vào Skool qua Email bạn vừa đăng ký. Hãy kiểm tra Hộp thư/Thư Rác!');" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase;">
-                Đã chuyển khoản - Vào học ngay!
-            </a>
+
+            <!-- THÔNG TIN CHUYỂN KHOẢN -->
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <p style="margin-bottom: 8px;"><strong>Ngân hàng:</strong> <span style="color: #fff;">ACB</span></p>
+                <p style="margin-bottom: 8px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
+                <p style="margin-bottom: 8px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
+                <p style="margin-bottom: 0;"><strong>Nội dung CK:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; letter-spacing: 1px; font-weight: bold;"></span></p>
+            </div>
+
+            <div style="margin-bottom: 15px; font-size: 0.85rem; color: #aaa; background: rgba(0, 150, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 150, 0, 0.3);">
+                <p>Hệ thống tự động xác nhận sau khi nhận được tiền.</p>
+            </div>
+
+            <!-- NÚT XÁC NHẬN ĐÃ CHUYỂN KHOẢN -->
+            <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; margin-bottom: 10px;">
+                ĐÃ CHUYỂN KHOẢN - VÀO HỌC NGAY!
+            </button>
         </div>
     </div>
 
