@@ -662,6 +662,7 @@
         let currentPackage = 'VIDEO21DAY';
         let currentOrderId = '';
         let appliedPromo = null;
+        let pollingInterval = null;
 
         /**
          * DANH SÁCH MÃ GIẢM GIÁ (PROMO CODES)
@@ -790,7 +791,7 @@
                     data.promoCode = appliedPromo || 'None';
 
                     // Send to Local API for Telegram, Sheet & Facebook CAPI
-                    await fetch('/api/submit', {
+                    const response = await fetch('/api/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -804,14 +805,21 @@
                         })
                     });
 
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.message || "Lỗi Server (" + response.status + ")");
+                    }
+
                     console.log("Đã lưu Lead thành công");
 
-                    // Track Facebook conversion
-                    fbq('track', 'Lead', {
-                        content_name: 'Video Course Registration 21 Day',
-                        value: currentAmount,
-                        currency: 'VND'
-                    });
+                    // Track Facebook conversion - RESILIENT TO AD-BLOCKERS
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'Lead', {
+                            content_name: 'Video Course Registration 21 Day',
+                            value: currentAmount,
+                            currency: 'VND'
+                        });
+                    }
 
                     // XỬ LÝ CHUYỂN HƯỚNG HOẶC HIỆN MODAL
                     if (currentPackage === 'COACHING21DAY') {
@@ -840,7 +848,7 @@
                     }
                 } catch(error) {
                     console.error("Lỗi hệ thống:", error);
-                    submitBtn.innerText = "Lỗi gửi, hãy thử lại!";
+                    submitBtn.innerText = error.message.includes("Lỗi Server") ? error.message : "Lỗi kết nối, hãy thử lại!";
                     submitBtn.disabled = false;
                 }
             };

@@ -139,23 +139,58 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, message: 'Lead captured and tracked' });
         }
 
-        // ========== 2. XÁC NHẬN ĐÃ CHUYỂN TIỀN ==========
+        // ========== 2. XÁC NHẬN ĐÃ CHUYỂN TIỀN (Thủ công từ Website) ==========
         if (action === 'confirm-payment') {
-            await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${RESEND_API_KEY}`
-                },
-                body: JSON.stringify({
-                    from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                    to: data.email,
-                    subject: '📩 Đã nhận thông báo thanh toán!',
-                    html: `<p>Tanlab đã nhận thông báo chuyển khoản đơn <b>${data.orderId}</b>. Đang xử lý...</p>`
-                })
-            }).catch(err => console.error('Email Error:', err));
+            const vnTime = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+            const promises = [];
 
-            return res.status(200).json({ success: true, message: 'Confirmation email sent' });
+            // 1. Notify Telegram
+            const teleMsg = `📩 KHÁCH BÁO ĐÃ CHUYỂN TIỀN!\n` +
+                `📅 ${vnTime}\n` +
+                `----------------------------\n` +
+                `👤 ${data.fullname || 'N/A'}\n` +
+                `📞 ${data.phone || 'N/A'}\n` +
+                `🆔 Mã đơn: ${data.orderId || 'N/A'}\n` +
+                `💰 Số tiền: ${new Intl.NumberFormat('vi-VN').format(data.amount || 0)} VNĐ\n` +
+                `----------------------------\n` +
+                `🔍 Hãy kiểm tra tài khoản ngân hàng.`;
+
+            promises.push(
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: teleMsg,
+                        reply_markup: {
+                            inline_keyboard: [[
+                                { text: "🚀 KÍCH HOẠT NGAY (ĐÃ THẤY TIỀN)", callback_data: `fullactivate_${data.phone}` },
+                                { text: "❌ CHƯA THẤY TIỀN", callback_data: `payno_${data.orderId}` }
+                            ]]
+                        }
+                    })
+                }).catch(err => console.error('Tele Confirm Error:', err))
+            );
+
+            // 2. Send Feedback Email
+            promises.push(
+                fetch('https://api.resend.com/emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${RESEND_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
+                        to: data.email,
+                        subject: '📩 Đã nhận thông báo thanh toán!',
+                        html: `<p>Tanlab đã nhận thông báo chuyển khoản đơn <b>${data.orderId}</b>. Đang xử lý...</p>`
+                    })
+                }).catch(err => console.error('Email Error:', err))
+            );
+
+            await Promise.allSettled(promises);
+            return res.status(200).json({ success: true, message: 'Confirmation received' });
         }
 
     } catch (error) {
