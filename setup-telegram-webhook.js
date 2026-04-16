@@ -1,60 +1,46 @@
 /**
- * HƯỚNG DẪN: Chạy script này 1 lần sau khi deploy lên Vercel
+ * SETUP TELEGRAM WEBHOOK CHO BOT 21 NGÀY
  * 
- * Cách dùng:
- *   node setup-telegram-webhook.js https://YOUR-VERCEL-DOMAIN.vercel.app
- * 
- * Ví dụ: 
- *   node setup-telegram-webhook.js https://21ngay.vercel.app
+ * Chạy 1 lần sau khi deploy:
+ *   node setup-telegram-webhook.js
  */
 
-const BOT_TOKEN = '8753662126:AAHjqwCiSyn50oxIg7ABgebgh_B1tiWNX0E';
+const BOT_TOKEN = '8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs';
+const WEBHOOK_URL = 'https://ladipagetest-cixf.vercel.app/api/telegram-webhook';
 
-async function setupWebhook() {
-    const domain = process.argv[2];
-    
-    if (!domain) {
-        console.error('❌ Lỗi: Vui lòng cung cấp domain Vercel!');
-        console.error('Cách dùng: node setup-telegram-webhook.js https://YOUR-DOMAIN.vercel.app');
-        process.exit(1);
-    }
+async function setup() {
+    console.log('🔧 Đang cài đặt Telegram Webhook...');
+    console.log(`   Bot: ${BOT_TOKEN.split(':')[0]}`);
+    console.log(`   URL: ${WEBHOOK_URL}`);
 
-    const webhookUrl = `${domain}/api/telegram-webhook`;
-    
-    console.log(`🔧 Đang cài đặt Telegram Webhook...`);
-    console.log(`   URL: ${webhookUrl}`);
-    
     try {
-        // 1. Xóa webhook cũ trước
-        const deleteRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/deleteWebhook`);
-        const deleteData = await deleteRes.json();
-        console.log('🗑️ Xóa webhook cũ:', deleteData.ok ? 'Thành công' : 'Thất bại');
+        // Xóa webhook cũ
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/deleteWebhook`);
+        console.log('🗑️  Đã xóa webhook cũ');
 
-        // 2. Đặt webhook mới
+        // Đặt webhook mới
         const setRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                url: webhookUrl,
+                url: WEBHOOK_URL,
                 allowed_updates: ['callback_query', 'message']
             })
         });
         const setData = await setRes.json();
-        console.log('✅ Cài webhook mới:', setData.ok ? 'Thành công' : 'Thất bại');
-        console.log('   Chi tiết:', setData.description);
+        console.log('✅ Kết quả:', setData.ok ? 'THÀNH CÔNG' : 'THẤT BẠI');
+        console.log('   ', setData.description);
 
-        // 3. Kiểm tra lại
+        // Kiểm tra
         const infoRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getWebhookInfo`);
-        const infoData = await infoRes.json();
-        console.log('\n📊 Thông tin webhook hiện tại:');
-        console.log(`   URL: ${infoData.result.url}`);
-        console.log(`   Pending updates: ${infoData.result.pending_update_count}`);
-        console.log(`   Last error: ${infoData.result.last_error_message || 'Không có lỗi'}`);
-        
-        console.log('\n🎉 Hoàn tất! Hãy thử bấm nút trên Telegram để kiểm tra.');
+        const info = await infoRes.json();
+        console.log('\n📊 Webhook hiện tại:');
+        console.log(`   URL: ${info.result.url}`);
+        console.log(`   Pending: ${info.result.pending_update_count}`);
+        console.log(`   Last error: ${info.result.last_error_message || 'Không có'}`);
     } catch (err) {
         console.error('❌ Lỗi:', err.message);
     }
 }
 
-setupWebhook();
+setup();
