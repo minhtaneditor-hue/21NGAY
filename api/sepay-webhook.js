@@ -32,8 +32,20 @@ export default async function handler(req, res) {
             `----------------------------\n` +
             `⏳ Chờ admin xác nhận...`;
 
+        // Tìm teleMessageId từ Sheet để GOM BOX (Reply vào tin nhắn Lead)
+        let teleMessageId = null;
+        try {
+            const sheetRes = await fetch(GOOGLE_SHEET_URL, { method: 'GET', redirect: 'follow' });
+            const sheetData = await sheetRes.json();
+            if (sheetData.status === 'ok' && sheetData.data) {
+                const row = sheetData.data.find(r => r.orderId === orderId);
+                teleMessageId = row?.teleMessageId;
+            }
+        } catch (e) { console.error('Sheet Fetch Error:', e); }
+
         const promises = [];
 
+        // 1 TIN NHẮN DUY NHẤT với nút xác nhận (GOM BẰNG REPLY)
         promises.push(
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -41,6 +53,7 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     chat_id: CHAT_ID,
                     text: telegramMessage,
+                    reply_to_message_id: teleMessageId, // GOM THEO LEAD
                     reply_markup: {
                         inline_keyboard: [[
                             { text: "✅ KHỚP LỆNH", callback_data: `payok_${orderId}` },

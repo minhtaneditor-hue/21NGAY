@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
             const promises = [];
 
-            // Telegram
+            // 1. Telegram (Gửi trước để lấy Message ID)
             const message = `🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!\n` +
                 `📅 Thời gian: ${vnTime}\n` +
                 `----------------------------\n` +
@@ -46,24 +46,24 @@ export default async function handler(req, res) {
                 `----------------------------\n` +
                 `⏳ Trạng thái: CHỜ DUYỆT`;
 
-            promises.push(
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        reply_markup: {
-                            inline_keyboard: [[
-                                { text: "✅ XÁC NHẬN ĐÃ NHẬN TIỀN (GỬI SKOOL)", callback_data: `fullactivate_${data.phone}` },
-                                { text: "❌ HUỶ ĐƠN", callback_data: `reject_${data.phone}` }
-                            ]]
-                        }
-                    })
-                }).catch(err => console.error('Telegram Error:', err))
-            );
+            const teleRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: "✅ DUYỆT ĐƠN (GỬI LADI)", callback_data: `approve_${data.phone}` },
+                            { text: "❌ HUỶ ĐƠN", callback_data: `reject_${data.phone}` }
+                        ]]
+                    }
+                })
+            });
+            const teleData = await teleRes.json();
+            const teleMessageId = teleData.result?.message_id;
 
-            // Google Sheet (Including UTMs)
+            // 2. Google Sheet (Gửi sau cùng, bao gồm teleMessageId)
             promises.push(
                 fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
@@ -79,6 +79,7 @@ export default async function handler(req, res) {
                         orderId: data.orderId,
                         timestamp: vnTime,
                         status: 'PENDING',
+                        teleMessageId: teleMessageId, // LƯU LẠI ĐỂ GOM BOX NHẮN
                         utm_source: data.utm?.utm_source || '',
                         utm_medium: data.utm?.utm_medium || '',
                         utm_campaign: data.utm?.utm_campaign || '',
@@ -88,7 +89,7 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Sheet Error:', err))
             );
 
-            // Resend Welcome Email
+            // 3. Resend Welcome Email
             promises.push(
                 fetch('https://api.resend.com/emails', {
                     method: 'POST',
@@ -105,7 +106,7 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Email Error:', err))
             );
 
-            // Facebook Conversions API (CAPI)
+            // 4. Facebook Conversions API (CAPI)
             promises.push(
                 fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`, {
                     method: 'POST',
@@ -142,33 +143,45 @@ export default async function handler(req, res) {
         // ========== 2. XÁC NHẬN ĐÃ CHUYỂN TIỀN (Thủ công từ Website) ==========
         if (action === 'confirm-payment') {
             const vnTime = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+            
+            // Tìm teleMessageId từ Sheet để GOM BOX
+            let teleMessageId = null;
+            try {
+                const sheetRes = await fetch(GOOGLE_SHEET_URL, { method: 'GET', redirect: 'follow' });
+                const sheetData = await sheetRes.json();
+                if (sheetData.status === 'ok' && sheetData.data) {
+                    const row = sheetData.data.find(r => r.orderId === data.orderId);
+                    teleMessageId = row?.teleMessageId;
+                }
+            } catch (e) { console.error('Sheet Fetch Error:', e); }
+
             const promises = [];
 
-            // 1. Notify Telegram
+            // 1. Notify Telegram (Gom bằng cách Reply hoặc Edit)
             const teleMsg = `📩 KHÁCH BÁO ĐÃ CHUYỂN TIỀN!\n` +
                 `📅 ${vnTime}\n` +
-                `----------------------------\n` +
-                `👤 ${data.fullname || 'N/A'}\n` +
-                `📞 ${data.phone || 'N/A'}\n` +
                 `🆔 Mã đơn: ${data.orderId || 'N/A'}\n` +
                 `💰 Số tiền: ${new Intl.NumberFormat('vi-VN').format(data.amount || 0)} VNĐ\n` +
                 `----------------------------\n` +
-                `🔍 Hãy kiểm tra tài khoản ngân hàng.`;
+                `🔍 Hãy kiểm tra ngân hàng.`;
+
+            const teleBody = {
+                chat_id: CHAT_ID,
+                text: teleMsg,
+                reply_to_message_id: teleMessageId, // GOM THEO LEAD
+                reply_markup: {
+                    inline_keyboard: [[
+                        { text: "🚀 KÍCH HOẠT NGAY", callback_data: `fullactivate_${data.phone}` },
+                        { text: "❌ CHƯA THẤY", callback_data: `payno_${data.orderId}` }
+                    ]]
+                }
+            };
 
             promises.push(
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: teleMsg,
-                        reply_markup: {
-                            inline_keyboard: [[
-                                { text: "🚀 KÍCH HOẠT NGAY (ĐÃ THẤY TIỀN)", callback_data: `fullactivate_${data.phone}` },
-                                { text: "❌ CHƯA THẤY TIỀN", callback_data: `payno_${data.orderId}` }
-                            ]]
-                        }
-                    })
+                    body: JSON.stringify(teleBody)
                 }).catch(err => console.error('Tele Confirm Error:', err))
             );
 

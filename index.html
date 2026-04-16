@@ -619,12 +619,16 @@
     <!-- REAL-TIME SUCCESS MODAL -->
     <div id="success-modal" class="success-modal">
         <div class="success-content">
-            <span class="success-icon">🎉</span>
-            <h2 class="success-title">CHÚC MỪNG BẠN!</h2>
-            <div class="success-message">
-                <p id="success-text">Chúc mừng bạn đã sở hữu chiếc vé 21 ngày biến video thành tài sản. <br><br> Mail của bạn sẽ được kích họat truy cập khóa học ở Skool. <br><br> <strong>Lưu ý:</strong> Nếu sau 24h chưa được nhận email kích hoạt liên hệ page để được hỗ trợ.</p>
+            <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
+            <h2 class="success-title text-gold" style="font-size: 2.2rem; margin-bottom: 15px;">XÁC NHẬN THÀNH CÔNG!</h2>
+            <div class="success-message" style="font-size: 1.1rem; color: #eee; margin-bottom: 30px;">
+                <p>Chào mừng bạn đã chính thức gia nhập hành trình <b>21 Ngày Biến Video Thành Tài Sản</b>.</p>
+                <div style="background: rgba(245, 188, 27, 0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px dashed var(--gold);">
+                    <p style="margin-bottom: 10px;">📩 <b>Kiểm tra Email:</b> Tấn đang khởi tạo quyền truy cập cho bạn. Một email chứa link tham gia Skool Pro sẽ được gửi đến bạn trong ít phút (Tối đa 2-4h).</p>
+                    <p style="font-size: 0.9rem; color: #aaa;">(Hãy kiểm tra cả hòm thư Spam nếu không thấy nhé!)</p>
+                </div>
             </div>
-            <a href="https://www.skool.com/tan-lab-6821/about" class="btn-cta" style="padding: 15px 40px; border-radius: 30px; display: inline-block;">TRUY CẬP SKOOL PRO NGAY</a>
+            <a href="https://www.skool.com/tan-lab-6821/about" class="btn-cta" style="padding: 18px 50px; border-radius: 50px; display: inline-block; box-shadow: 0 10px 30px rgba(227, 38, 54, 0.4);">TRUY CẬP SKOOL PRO NGAY</a>
         </div>
     </div>
 
@@ -873,9 +877,9 @@
                 });
 
                 if (response.ok) {
-                    btn.innerText = "Đã thông báo! Vui lòng check Email.";
-                    alert("Cảm ơn bạn! Thông báo chuyển tiền đã được gửi tới hệ thống. Tấn sẽ kiểm tra ngân hàng và cấp quyền vào Skool Pro cho bạn qua Email trong vòng ít phút (Tối đa 2-4h làm việc). Hãy kiểm tra hộp thư/spam sau vài phút nữa nhé!");
-                    closePaymentModal();
+                    btn.innerText = "Đã gửi thông báo thành công!";
+                    // Hiện Modal Thành Công chuyên nghiệp thay vì alert đơn giản
+                    showSuccessModal();
                 } else {
                     throw new Error("Gửi thất bại");
                 }
