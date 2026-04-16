@@ -1514,3 +1514,88 @@ input, select, textarea, button {
   font-size: 0.9rem;
   margin-left: 5px;
 }
+
+/* REAL-TIME POLLING & SUCCESS MODAL */
+.status-polling-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(46, 125, 50, 0.1);
+    border: 1px dashed rgba(76, 175, 80, 0.3);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.checking-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.95);
+    z-index: 20000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(15px);
+}
+
+.success-content {
+    background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+    border: 1px solid var(--gold);
+    padding: 50px 30px;
+    border-radius: 25px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 100px rgba(245, 188, 27, 0.2);
+    animation: slideUpFade 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: var(--gold);
+    margin-bottom: 25px;
+    display: block;
+}
+
+.success-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.success-message {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .success-content {
+        padding: 40px 20px;
+    }
+    .success-title {
+        font-size: 1.5rem;
+    }
+}
