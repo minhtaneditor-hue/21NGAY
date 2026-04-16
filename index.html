@@ -642,46 +642,55 @@
     <script>
         // FACEBOOK ADVANCED TRACKING (Scroll, Time, Clicks)
         (function() {
-            // 1. ViewContent on Load
-            fbq('track', 'ViewContent', { content_name: '21 Day Landing Page' });
-
-            // 2. ClickButton tracking
-            document.addEventListener('click', function(e) {
-                const target = e.target.closest('button, .btn, a.cta-btn');
-                if (target) {
-                    fbq('trackCustom', 'ClickButton', {
-                        button_text: target.innerText.trim(),
-                        button_id: target.id || 'none',
-                        page_location: window.location.href
-                    });
+            try {
+                if (typeof fbq === 'undefined') {
+                    console.log("Facebook Pixel is blocked or not loaded. Tracking disabled.");
+                    return;
                 }
-            }, true);
 
-            // 3. Scroll Depth Tracking
-            const scrollMarks = [25, 50, 75, 100];
-            const scrolled = new Set();
-            window.addEventListener('scroll', function() {
-                const h = document.documentElement, 
-                      b = document.body,
-                      st = 'scrollTop',
-                      sh = 'scrollHeight';
-                const percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                // 1. ViewContent on Load
+                fbq('track', 'ViewContent', { content_name: '21 Day Landing Page' });
 
-                scrollMarks.forEach(mark => {
-                    if (percent >= mark && !scrolled.has(mark)) {
-                        scrolled.add(mark);
-                        fbq('trackCustom', `ScrollDepth_${mark}_percent`);
+                // 2. ClickButton tracking
+                document.addEventListener('click', function(e) {
+                    const target = e.target.closest('button, .btn, a.cta-btn');
+                    if (target) {
+                        fbq('trackCustom', 'ClickButton', {
+                            button_text: target.innerText.trim(),
+                            button_id: target.id || 'none',
+                            page_location: window.location.href
+                        });
                     }
-                });
-            }, { passive: true });
+                }, true);
 
-            // 4. Time on Page Tracking
-            const timeMarks = [10, 30, 60, 120, 300, 600];
-            timeMarks.forEach(sec => {
-                setTimeout(() => {
-                    fbq('trackCustom', `TimeOnPage_${sec}_seconds`);
-                }, sec * 1000);
-            });
+                // 3. Scroll Depth Tracking
+                const scrollMarks = [25, 50, 75, 100];
+                const scrolled = new Set();
+                window.addEventListener('scroll', function() {
+                    const h = document.documentElement, 
+                          b = document.body,
+                          st = 'scrollTop',
+                          sh = 'scrollHeight';
+                    const percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+
+                    scrollMarks.forEach(mark => {
+                        if (percent >= mark && !scrolled.has(mark)) {
+                            scrolled.add(mark);
+                            fbq('trackCustom', `ScrollDepth_${mark}_percent`);
+                        }
+                    });
+                }, { passive: true });
+
+                // 4. Time on Page Tracking
+                const timeMarks = [10, 30, 60, 120, 300, 600];
+                timeMarks.forEach(sec => {
+                    setTimeout(() => {
+                        fbq('trackCustom', `TimeOnPage_${sec}_seconds`);
+                    }, sec * 1000);
+                });
+            } catch (err) {
+                console.error("Tracking Error:", err);
+            }
         })();
 
         let pollingInterval = null;
