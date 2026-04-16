@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khóa học 21 Ngày Biến Video Thành Tài Sản</title>
+    <meta name="facebook-domain-verification" content="lh3p1666kd1dr524m76dqjif1isvt9" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- SEO & Social Sharing (Open Graph) -->
@@ -413,7 +414,7 @@
                 <p class="p-desc">Làm chủ quy trình xây dựng cỗ máy thu nhập tự động từ smartphone</p>
                 <div class="p-price">2.500.000<span class="p-unit"> VNĐ</span></div>
                 <ul class="p-features">
-                    <li>✓ 21 ngày huấn luyện Phone-tographer</li>
+                    <li>✓ Sở hữu 50 videos hướng dẫn tạo video bán hàng kiếm tiền từ điện thoại và bài học được update liên tục</li>
                     <li>✓ Kho Tài Liệu & Âm Thanh Viral</li>
                     <li>✓ Template thiết kế độc quyền</li>
                     <li>✓ Nhận feedback trực tiếp từ Tấn</li>
@@ -466,7 +467,7 @@
                 </details>
                 <details class="faq-item">
                     <summary class="faq-question">Học xong chưa ra tiền thì sao?</summary>
-                    <div class="faq-answer">Chúng tôi cam kết hoàn tiền 100% không hỏi thêm một lời nào nếu kết thúc 21 ngày làm đúng bài tập mà kênh không chuyển biến. Rủi ro của bạn là 0.</div>
+                    <div class="faq-answer">Chúng tôi cam kết đồng hành và hỗ trợ cho đến khi bạn làm ra kết quả, với điều kiện bạn thực hiện đầy đủ các bài tập trong lộ trình 21 ngày. Nếu sau 21 ngày làm đúng quy trình mà không có sự chuyển biến, Tấn sẽ trực tiếp 1-1 hỗ trợ bạn tìm ra nút thắt.</div>
                 </details>
             </div>
         </div>
@@ -497,7 +498,7 @@
                 <p style="color: #aaa; margin-top: 10px;">Điền thông tin của bạn để bắt đầu hành trình 21 ngày</p>
             </div>
             
-            <form id="register-form" class="register-form" method="POST" onsubmit="return false;">
+            <form id="register-form" class="register-form" method="POST">
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label for="fullname" style="display: block; margin-bottom: 8px; color: #ddd; font-weight: 600;">Họ và tên đầy đủ *</label>
                     <input type="text" id="fullname" name="fullname" placeholder="Nhập họ tên của bạn" required style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem; font-family: inherit;">
@@ -740,43 +741,44 @@
                 
                 const submitBtn = document.getElementById('submit-btn');
                 const originalBtnText = submitBtn.innerText;
-                submitBtn.innerText = "Đang xử lý...";
-                submitBtn.disabled = true;
-
-                const formData = new FormData(this);
-                const data = Object.fromEntries(formData.entries());
-
-                // --- TRACKING DATA CAPTURE ---
-                const urlParams = new URLSearchParams(window.location.search);
-                const utmData = {
-                    utm_source: urlParams.get('utm_source') || '',
-                    utm_medium: urlParams.get('utm_medium') || '',
-                    utm_campaign: urlParams.get('utm_campaign') || '',
-                    utm_content: urlParams.get('utm_content') || '',
-                    utm_term: urlParams.get('utm_term') || ''
-                };
-
-                // Get Facebook cookies for CAPI Match Quality
-                const getCookie = (name) => {
-                    const value = `; ${document.cookie}`;
-                    const parts = value.split(`; ${name}=`);
-                    if (parts.length === 2) return parts.pop().split(';').shift();
-                    return '';
-                };
-                const fbp = getCookie('_fbp');
-                const fbc = getCookie('_fbc');
-
-                // Sinh Order ID (Ví dụ: TAN + 4 số cuối SĐT + ngẫu nhiên)
-                const phoneStr = data.phone || "0000";
-                const randomStr = Math.floor(1000 + Math.random() * 9000);
-                currentOrderId = "TAN" + phoneStr.slice(-4) + randomStr;
-
-                data.amount = currentAmount;
-                data.package = currentPackage;
-                data.orderId = currentOrderId;
-                data.promoCode = appliedPromo || 'None';
-
+                
                 try {
+                    submitBtn.innerText = "Đang xử lý...";
+                    submitBtn.disabled = true;
+
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+
+                    // --- TRACKING DATA CAPTURE ---
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const utmData = {
+                        utm_source: urlParams.get('utm_source') || '',
+                        utm_medium: urlParams.get('utm_medium') || '',
+                        utm_campaign: urlParams.get('utm_campaign') || '',
+                        utm_content: urlParams.get('utm_content') || '',
+                        utm_term: urlParams.get('utm_term') || ''
+                    };
+
+                    // Get Facebook cookies for CAPI Match Quality
+                    const getCookie = (name) => {
+                        const value = `; ${document.cookie}`;
+                        const parts = value.split(`; ${name}=`);
+                        if (parts.length === 2) return parts.pop().split(';').shift();
+                        return '';
+                    };
+                    const fbp = getCookie('_fbp');
+                    const fbc = getCookie('_fbc');
+
+                    // Sinh Order ID (Ví dụ: TAN + 4 số cuối SĐT + ngẫu nhiên)
+                    const phoneStr = data.phone || "0000";
+                    const randomStr = Math.floor(1000 + Math.random() * 9000);
+                    currentOrderId = "TAN" + phoneStr.slice(-4) + randomStr;
+
+                    data.amount = currentAmount;
+                    data.package = currentPackage;
+                    data.orderId = currentOrderId;
+                    data.promoCode = appliedPromo || 'None';
+
                     // Send to Local API for Telegram, Sheet & Facebook CAPI
                     await fetch('/api/submit', {
                         method: 'POST',
@@ -793,48 +795,46 @@
                     });
 
                     console.log("Đã lưu Lead thành công");
+
+                    // Track Facebook conversion
+                    fbq('track', 'Lead', {
+                        content_name: 'Video Course Registration 21 Day',
+                        value: currentAmount,
+                        currency: 'VND'
+                    });
+
+                    // XỬ LÝ CHUYỂN HƯỚNG HOẶC HIỆN MODAL
+                    if (currentPackage === 'COACHING21DAY') {
+                        submitBtn.innerText = "Đang chuyển sang Zalo...";
+                        setTimeout(() => {
+                            window.open('https://zalo.me/0962255861', '_blank');
+                            // Reset form
+                            registerForm.style.opacity = '1';
+                            registerForm.style.pointerEvents = 'auto';
+                            submitBtn.innerText = originalBtnText;
+                            submitBtn.disabled = false;
+                            registerForm.reset();
+                        }, 1000);
+                    } else {
+                        // Chuẩn bị sẵn và hiện QR Modal ngay lập tức
+                        preparePaymentModal(currentAmount, currentOrderId);
+                        showPaymentModal();
+                        
+                        // BẮT ĐẦU CHECK STATUS TỰ ĐỘNG
+                        startStatusPolling(currentOrderId);
+
+                        // Ẩn form để khách không bấm lại
+                        registerForm.style.opacity = '0.3';
+                        registerForm.style.pointerEvents = 'none';
+                        submitBtn.innerText = "Đã chuyển hướng thanh toán...";
+                    }
                 } catch(error) {
-                    console.error("Gửi dữ liệu có vấn đề:", error);
+                    console.error("Lỗi hệ thống:", error);
+                    submitBtn.innerText = "Lỗi gửi, hãy thử lại!";
+                    submitBtn.disabled = false;
                 }
-                
-                // Track Facebook conversion
-                fbq('track', 'Lead', {
-                    content_name: 'Video Course Registration 21 Day',
-                    value: currentAmount,
-                    currency: 'VND'
-                });
-
-                // XỬ LÝ CHUYỂN HƯỚNG HOẶC HIỆN MODAL
-                if (currentPackage === 'COACHING21DAY') {
-                    submitBtn.innerText = "Đang chuyển sang Zalo...";
-                    setTimeout(() => {
-                        window.open('https://zalo.me/0962255861', '_blank');
-                        // Reset form
-                        registerForm.style.opacity = '1';
-                        registerForm.style.pointerEvents = 'auto';
-                        submitBtn.innerText = originalBtnText;
-                        submitBtn.disabled = false;
-                        registerForm.reset();
-                    }, 1000);
-                } else {
-                    // Chuẩn bị sẵn và hiện QR Modal ngay lập tức
-                    preparePaymentModal(currentAmount, currentOrderId);
-                    showPaymentModal();
-                    
-                    // BẮT ĐẦU CHECK STATUS TỰ ĐỘNG
-                    startStatusPolling(currentOrderId);
-
-                    // Ẩn form để khách không bấm lại
-                    registerForm.style.opacity = '0.3';
-                    registerForm.style.pointerEvents = 'none';
-                    submitBtn.innerText = "Đã chuyển hướng thanh toán...";
-                }
-            } catch(error) {
-                console.error("Gửi dữ liệu có vấn đề:", error);
-                submitBtn.innerText = "Lỗi gửi, hãy thử lại!";
-                submitBtn.disabled = false;
-            }
-        });
+            };
+        }
 
         async function sendPaymentConfirmation() {
             const btn = document.getElementById('confirm-payment-btn');
