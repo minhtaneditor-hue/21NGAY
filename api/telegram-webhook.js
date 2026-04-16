@@ -110,8 +110,10 @@ export default async function handler(req, res) {
 
             // 3. Update Tele
             const finalText = originalText
+                .replace('⏳ Trạng thái: CHỜ DUYỆT', `✅ ĐÃ HOÀN TẤT - ${vnTime}`)
                 .replace('✅ ĐÃ DUYỆT INFO', `✅ ĐÃ HOÀN TẤT - ${vnTime}`)
                 .replace('💳 Chờ SePay xác nhận thanh toán...', '✨ Đã gửi link Skool cho khách!')
+                .replace('🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!', '🎉 ĐƠN HÀNG THÀNH CÔNG')
                 .replace('✅ KHÁCH ĐÃ ĐƯỢC DUYỆT!', '🎉 ĐƠN HÀNG THÀNH CÔNG');
 
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`, {

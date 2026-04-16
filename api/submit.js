@@ -55,7 +55,7 @@ export default async function handler(req, res) {
                         text: message,
                         reply_markup: {
                             inline_keyboard: [[
-                                { text: "✅ DUYỆT (PAID)", callback_data: `approve_${data.phone}` },
+                                { text: "✅ XÁC NHẬN ĐÃ NHẬN TIỀN (GỬI SKOOL)", callback_data: `fullactivate_${data.phone}` },
                                 { text: "❌ HUỶ ĐƠN", callback_data: `reject_${data.phone}` }
                             ]]
                         }
