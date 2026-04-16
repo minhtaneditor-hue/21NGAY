@@ -505,7 +505,8 @@ function missionBox(day, task, hashtag) {
 function communityButton() {
     return `
         <div style="text-align: center; margin-top: 20px;">
-            <a href="${COMMUNITY_LINK}" style="display: inline-block; background: #FFD700; color: #000; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(218, 165, 32, 0.3);">KHOE THÀNH QUẢ TRÊN GROUP →</a>
+            <p style="font-size: 14px; margin-bottom: 10px; color: #666;">Bạn có thể gia nhập Group hoặc yêu cầu hỗ trợ trực tiếp tại đây:</p>
+            <a href="${COMMUNITY_LINK}" style="display: inline-block; background: #1877F2; color: #fff; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);">👥 THAM GIA GROUP FB HỖ TRỢ →</a>
         </div>
     `;
 }
