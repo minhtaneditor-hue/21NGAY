@@ -628,7 +628,7 @@
                     <p style="font-size: 0.9rem; color: #aaa;">(Hãy kiểm tra cả hòm thư Spam nếu không thấy nhé!)</p>
                 </div>
             </div>
-            <a href="https://www.skool.com/tan-lab-6821/about" class="btn-cta" style="padding: 18px 50px; border-radius: 50px; display: inline-block; box-shadow: 0 10px 30px rgba(227, 38, 54, 0.4);">TRUY CẬP SKOOL PRO NGAY</a>
+            <a href="https://www.skool.com/tan-lab-6821/classroom" class="btn-cta" style="padding: 18px 50px; border-radius: 50px; display: inline-block; box-shadow: 0 10px 30px rgba(227, 38, 54, 0.4);">TRUY CẬP SKOOL PRO NGAY</a>
         </div>
     </div>
 
@@ -815,13 +815,13 @@
 
                     console.log("Đã lưu Lead thành công");
 
-                    // Track Facebook conversion - RESILIENT TO AD-BLOCKERS
+                    // Track Facebook conversion - RESILIENT TO AD-BLOCKERS + DEDUPLICATION
                     if (typeof fbq !== 'undefined') {
                         fbq('track', 'Lead', {
                             content_name: 'Video Course Registration 21 Day',
                             value: currentAmount,
                             currency: 'VND'
-                        });
+                        }, { eventID: currentOrderId });
                     }
 
                     // XỬ LÝ CHUYỂN HƯỚNG HOẶC HIỆN MODAL

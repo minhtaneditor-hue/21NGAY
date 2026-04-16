@@ -79,12 +79,12 @@ export default async function handler(req, res) {
                         orderId: data.orderId,
                         timestamp: vnTime,
                         status: 'PENDING',
-                        teleMessageId: teleMessageId, // LƯU LẠI ĐỂ GOM BOX NHẮN
                         utm_source: data.utm?.utm_source || '',
                         utm_medium: data.utm?.utm_medium || '',
                         utm_campaign: data.utm?.utm_campaign || '',
                         utm_content: data.utm?.utm_content || '',
-                        utm_term: data.utm?.utm_term || ''
+                        utm_term: data.utm?.utm_term || '',
+                        teleMessageId: teleMessageId // Đưa xuống cuối để không lệch cột Sheet cũ
                     })
                 }).catch(err => console.error('Sheet Error:', err))
             );
@@ -116,11 +116,12 @@ export default async function handler(req, res) {
                             event_name: 'Lead',
                             event_time: Math.floor(Date.now() / 1000),
                             action_source: 'website',
-                            event_id: data.orderId, // Deduplication
+                            event_id: data.orderId, // Deduplication (Same as browser eventID)
                             event_source_url: data.eventSourceUrl,
                             user_data: {
                                 em: [hash(data.email)],
                                 ph: [hash(data.phone)],
+                                external_id: [hash(data.phone)], // Better matching
                                 client_user_agent: data.userAgent,
                                 client_ip_address: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
                                 fbc: data.fbc || null,
@@ -131,7 +132,8 @@ export default async function handler(req, res) {
                                 currency: 'VND',
                                 value: data.amount || 0
                             }
-                        }]
+                        }],
+                        test_event_code: 'TEST73427' // Real-time verification
                     })
                 }).catch(err => console.error('Facebook CAPI Error:', err))
             );

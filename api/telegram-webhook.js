@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxKOFrsrF6AsmHGzXxYDWqEZ0BoOMtfh5aU4tGjbX6Ama_6tL8mIpzFv5rNRMExIv4U/exec';
 
     const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
-    const SKOOL_LINK = 'https://www.skool.com/tan-lab-6821/about';
+    const SKOOL_LINK = 'https://www.skool.com/tan-lab-6821/classroom';
 
     try {
         if (!update.callback_query) {
