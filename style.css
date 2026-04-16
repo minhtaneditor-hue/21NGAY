@@ -1413,26 +1413,104 @@ input, select, textarea, button {
   border: none;
 }
 
-/* MOBILE OPTIMIZATION FOR CHAT */
+/* MOBILE OPTIMIZATION ENHANCEMENTS */
 @media (max-width: 600px) {
+  .container {
+    padding: 0 5px !important;
+  }
+  
+  h1, h2, h3 {
+    text-align: center !important;
+    text-wrap: balance;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* Hero Section Mobile Polish */
+  .hero-premium {
+      flex-direction: column;
+      text-align: center;
+      padding: 40px 5px !important;
+  }
+  .hero-title {
+      font-size: 2.2rem !important;
+      line-height: 1.1;
+      margin-bottom: 20px;
+  }
+  .hero-desc {
+      font-size: 0.95rem;
+      margin: 0 auto 30px;
+  }
+  .hero-actions {
+      justify-content: center;
+  }
+  .price-container {
+      margin: 30px auto;
+  }
+
+  /* Grid Centering */
+  .grid-advantages, .target-grid, .student-cards-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+  }
+  .adv-box, .target-col, .student-card {
+      width: 100% !important;
+      max-width: 350px;
+      margin: 0 auto;
+      text-align: center;
+  }
+  
+  .checklist li {
+      justify-content: center;
+      text-align: center;
+  }
+
+  /* Video Frame Scaling */
+  .video-frame-wrapper {
+      padding: 5px;
+      border-radius: 12px;
+  }
+  
+  /* Chat Widget Small Tweaks */
   .chat-widget {
     bottom: 15px;
     right: 15px;
   }
   .chat-bubble {
-    width: 55px;
-    height: 55px;
-  }
-  .chat-welcome-popup {
-    width: 180px;
-    bottom: 70px;
-    font-size: 0.75rem;
-    padding: 10px 12px;
+    width: 60px;
+    height: 60px;
   }
   .chat-window {
-    width: 320px;
+    width: calc(100vw - 30px);
     right: 0;
-    bottom: 70px;
-    height: 450px;
+    bottom: 80px;
+    height: 70vh;
   }
+}
+
+/* STUDENT LINKS */
+.student-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border: 1px solid rgba(245, 188, 27, 0.3);
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.student-link:hover {
+  background: var(--gold);
+  color: #000;
+  border-color: var(--gold);
+}
+
+.student-link span {
+  font-size: 0.9rem;
+  margin-left: 5px;
 }
