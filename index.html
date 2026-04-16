@@ -629,22 +629,32 @@
     </div>
 
     <script>
-        var submitted = false;
-        
-        function handleFormSubmit(event) {
-            submitted = true;
-            // Track Facebook conversion
-            fbq('track', 'Lead', {
-                content_name: 'Video Course Registration',
-                value: 1.99,
-                currency: 'VND'
-            });
+        let pollingInterval = null;
+
+        function showSuccessModal() {
+            closePaymentModal();
+            const successModal = document.getElementById("success-modal");
+            if (successModal) {
+                successModal.style.display = "flex";
+            }
         }
-        
-        function showSuccessMsg() {
-            document.getElementById('lead-form').style.display = 'none';
-            document.querySelector('.modal-header').style.display = 'none';
-            document.getElementById('success-msg').style.display = 'block';
+
+        function startStatusPolling(orderId) {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`/api/check-status?orderId=${orderId}`);
+                    const data = await res.json();
+                    
+                    // Kiểm tra nếu status trả về là PAID (từ Google Sheet)
+                    if (data.orderStatus === 'PAID') {
+                        clearInterval(pollingInterval);
+                        showSuccessModal();
+                    }
+                } catch (e) {
+                    console.error("Lỗi kiểm tra trạng thái:", e);
+                }
+            }, 5000); // Check mỗi 5 giây
         }
 
         let currentAmount = 2500000;
