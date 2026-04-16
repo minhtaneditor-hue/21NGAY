@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         const body = req.body;
 
         if (body.transferType !== 'in') {
-            return res.status(200).json({ success: true, message: 'Not an incoming transaction' });
+            return res.status(200).json({ success: true });
         }
 
         const content = body.content || '';
@@ -21,35 +21,42 @@ export default async function handler(req, res) {
         const orderId = orderIdMatch ? orderIdMatch[0].toUpperCase() : 'KHÔNG RÕ MÃ';
         const vnTime = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 
-        const telegramMessage = `✅ TIỀN ĐÃ VỀ! (XÁC THỰC AUTO)\n` +
-            `📅 Thời gian: ${vnTime}\n` +
+        // 1 TIN NHẮN DUY NHẤT với nút xác nhận
+        const telegramMessage = `💰 TIỀN ĐÃ VỀ TỰ ĐỘNG!\n` +
+            `📅 ${vnTime}\n` +
             `----------------------------\n` +
-            `💰 Số tiền: ${amountFormatted}\n` +
-            `🆔 Mã đơn: ${orderId}\n` +
-            `🏦 Ngân hàng: ${body.gateway || 'N/A'} (${body.accountNumber || 'N/A'})\n` +
+            `💵 ${amountFormatted}\n` +
+            `🆔 ${orderId}\n` +
+            `🏦 ${body.gateway || 'N/A'} (${body.accountNumber || 'N/A'})\n` +
             `📝 Nội dung: ${content}\n` +
             `----------------------------\n` +
-            `🚀 Tấn ơi, check Skool và mời học viên ngay nhé!`;
+            `⏳ Chờ admin xác nhận...`;
 
         const promises = [];
 
-        // Telegram
         promises.push(
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: CHAT_ID,
-                    text: telegramMessage
+                    text: telegramMessage,
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: "✅ KHỚP LỆNH", callback_data: `payok_${orderId}` },
+                            { text: "❌ KHÔNG KHỚP", callback_data: `payno_${orderId}` }
+                        ]]
+                    }
                 })
             }).catch(err => console.error('Telegram Error:', err))
         );
 
-        // Ghi vào Google Sheet
+        // Ghi vào Sheet
         promises.push(
             fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                redirect: 'follow',
                 body: JSON.stringify({
                     action: 'payment-received',
                     orderId: orderId,
@@ -62,10 +69,10 @@ export default async function handler(req, res) {
         );
 
         await Promise.allSettled(promises);
-        return res.status(200).json({ success: true, message: 'Webhook processed' });
+        return res.status(200).json({ success: true });
 
     } catch (error) {
-        console.error('Sepay Webhook Error:', error);
-        return res.status(200).json({ success: false, error: 'Internal Error' });
+        console.error('Sepay Error:', error);
+        return res.status(200).json({ success: false });
     }
 }
