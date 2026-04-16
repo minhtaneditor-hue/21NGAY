@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
     
     // FACEBOOK CAPI CONFIG
-    const FB_PIXEL_ID = '406021826887893';
+    const FB_PIXEL_ID = '922937023887248';
     const FB_ACCESS_TOKEN = 'EAAWZABd207FoBROGHtHJXGZCBOgNchxuLs4azmIZByRRk2oo3mKPkbSjYpKyKgrwKZCFCZCmCxKrMiGjkgqOpSkJjzZCvbz03wHjagQBykddVRTtp6c9FIsLDoECZAqLRRtAye4dvWrmN3rGHIzIlPPtINQQmkzbY6sv9ZCSPJ6sI78paMAZA6LEQMXPi2DK4sQZDZD';
 
     const hash = (data) => {
