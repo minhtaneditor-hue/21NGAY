@@ -677,34 +677,14 @@
                 data.orderId = currentOrderId;
                 data.promoCode = appliedPromo || 'None';
 
-                // Tạo bộ dữ liệu bao phủ mội tên biến để Make.com không bị lỗi Validation
-                const payloadToMake = {
-                    ...data,
-                    name: data.fullname,
-                    Name: data.fullname,
-                    Phone: data.phone,
-                    Email: data.email,
-                    Amount: data.amount,
-                    Promo: data.promoCode
-                };
-
-                // URL WEBHOOK MAKE.COM & Local API
-                const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/k5d5kdj8tu7b5cmbefjwvv1a7psg74wa';
                 try {
-                    // Send to Make.com
-                    fetch(MAKE_WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payloadToMake)
-                    });
-
-                    // Send to Local API for Telegram
+                    // Send to Local API for Telegram & Google Sheet
                     await fetch('/api/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             action: 'submit-lead',
-                            ...payloadToMake
+                            ...data
                         })
                     });
 
