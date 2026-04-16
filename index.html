@@ -820,14 +820,21 @@
                     // Chuẩn bị sẵn và hiện QR Modal ngay lập tức
                     preparePaymentModal(currentAmount, currentOrderId);
                     showPaymentModal();
+                    
+                    // BẮT ĐẦU CHECK STATUS TỰ ĐỘNG
+                    startStatusPolling(currentOrderId);
 
                     // Ẩn form để khách không bấm lại
                     registerForm.style.opacity = '0.3';
                     registerForm.style.pointerEvents = 'none';
                     submitBtn.innerText = "Đã chuyển hướng thanh toán...";
                 }
-            };
-        }
+            } catch(error) {
+                console.error("Gửi dữ liệu có vấn đề:", error);
+                submitBtn.innerText = "Lỗi gửi, hãy thử lại!";
+                submitBtn.disabled = false;
+            }
+        });
 
         async function sendPaymentConfirmation() {
             const btn = document.getElementById('confirm-payment-btn');
