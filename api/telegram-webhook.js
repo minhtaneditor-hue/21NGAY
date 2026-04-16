@@ -23,8 +23,47 @@ export default async function handler(req, res) {
         const messageId = message?.message_id;
 
         // Helper to get user info from message text
-        const getEmail = (text) => text.match(/📧\s+([^\n]+)/)?.[1]?.trim();
-        const getName = (text) => text.match(/👤\s+([^\n]+)/)?.[1]?.trim();
+        const getEmailFromText = (text) => text.match(/📧\s+([^\n]+)/)?.[1]?.trim();
+        const getNameFromText = (text) => text.match(/👤\s+([^\n]+)/)?.[1]?.trim();
+
+        // Helper to send the Premium Skool Link Email
+        const sendSuccessEmail = async (email, name) => {
+            if (!email) return;
+            return fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_API_KEY}` },
+                body: JSON.stringify({
+                    from: 'Minh Tấn <challenge@minhtanacademy.com>',
+                    to: email,
+                    subject: '🎉 [QUAN TRỌNG] Link kích hoạt khóa học 21 Ngày Biến Video Thành Tài Sản',
+                    html: `<div style="font-family:sans-serif;max-width:600px;line-height:1.6;color:#111;margin:0 auto;border:1px solid #eee;padding:20px;border-radius:15px;">
+                        <h2 style="color:#f5bc1b;">Chào ${name || 'bạn'}! Chúc mừng bạn đã sở hữu chiếc vé thành công!</h2>
+                        <p>Tấn đã xác nhận thanh toán thành công cho đơn hàng của bạn. Rất vui vì bạn đã quyết tâm đầu tư vào bản thân.</p>
+                        <div style="background:#fff9c4;padding:20px;border-radius:10px;text-align:center;margin:25px 0;border:2px dashed #fbc02d;">
+                            <p style="margin-top:0;"><b>Bước tiếp theo: Bấm vào nút dưới đây để tham gia Cộng đồng & Khóa học (Skool Pro):</b></p>
+                            <a href="${SKOOL_LINK}" style="background:#f5bc1b;color:#000;padding:15px 30px;text-decoration:none;font-weight:bold;border-radius:50px;display:inline-block;font-size:1.1rem;">TRUY CẬP SKOOL PRO NGAY</a>
+                        </div>
+                        <p style="font-size:0.9rem;color:#666;"><b>Lưu ý:</b> Nếu sau 24h bạn gặp khó khăn khi truy cập, hãy phản hồi lại email này hoặc nhắn tin qua Zalo 0962255861 để được hỗ trợ kỹ thuật 24/7.</p>
+                        <hr style="border:none;border-top:1px solid #eee;margin:20px 0;">
+                        <p style="text-align:center;font-weight:bold;color:#f5bc1b;">Hẹn gặp lại bạn trong hành trình 21 ngày sắp tới!<br>Minh Tấn | Tanlab Founder</p>
+                    </div>`
+                })
+            }).catch(err => console.error('Resend Error:', err));
+        };
+
+        // Helper to find user data from Sheet
+        const fetchUserFromSheet = async (matchId) => {
+            try {
+                const res = await fetch(GOOGLE_SHEET_URL, { method: 'GET', redirect: 'follow' });
+                const result = await res.json();
+                if (result.status === 'ok' && result.data) {
+                    return result.data.find(row => row.orderId == matchId || row.phone == matchId);
+                }
+            } catch (e) {
+                console.error('Fetch User Error:', e);
+            }
+            return null;
+        };
 
         // ========== DUYỆT ĐƠN ==========
         if (action === 'approve') {
@@ -58,7 +97,8 @@ export default async function handler(req, res) {
                     text: newText,
                     reply_markup: {
                         inline_keyboard: [[
-                            { text: "🚀 KÍCH HOẠT NGAY (BỎ QUA SEPAY)", callback_data: `fullactivate_${identifier}` }
+                            { text: "🚀 KÍCH HOẠT NGAY (BỎ QUA SEPAY)", callback_data: `fullactivate_${identifier}` },
+                            { text: "❌ HUỶ ĐƠN", callback_data: `reject_${identifier}` }
                         ]]
                     }
                 })
@@ -67,14 +107,23 @@ export default async function handler(req, res) {
 
         // ========== KÍCH HOẠT TOÀN DIỆN (Bypass SePay) ==========
         if (action === 'fullactivate') {
-            const email = getEmail(originalText);
-            const name = getName(originalText);
+            let email = getEmailFromText(originalText);
+            let name = getNameFromText(originalText);
 
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ callback_query_id: callbackId, text: '🚀 Đang kích hoạt & gửi Skool...' })
             });
+
+            // Nếu thiếu thông tin (do bấm từ nguồn khác), tra cứu Sheet
+            if (!email || !name) {
+                const user = await fetchUserFromSheet(identifier);
+                if (user) {
+                    email = user.email;
+                    name = user.fullname;
+                }
+            }
 
             // 1. Sheet PAID
             await fetch(GOOGLE_SHEET_URL, {
@@ -85,28 +134,7 @@ export default async function handler(req, res) {
             }).catch(() => {});
 
             // 2. Email Skool
-            if (email) {
-                await fetch('https://api.resend.com/emails', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_API_KEY}` },
-                    body: JSON.stringify({
-                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                        to: email,
-                        subject: '🎉 [QUAN TRỌNG] Link kích hoạt khóa học 21 Ngày Biến Video Thành Tài Sản',
-                        html: `<div style="font-family:sans-serif;max-width:600px;line-height:1.6;color:#111;">
-                            <h2>Chào ${name || 'bạn'}! Chúc mừng bạn đã chính thức gia nhập!</h2>
-                            <p>Tấn đã xác nhận thanh toán thành công cho đơn hàng của bạn.</p>
-                            <p style="background:#fff9c4;padding:15px;border-left:5px solid #fbc02d;">
-                                <b>👉 Link tham gia Cộng đồng & Khóa học (Skool Pro):</b><br>
-                                <a href="${SKOOL_LINK}" style="font-size:1.2rem;color:#f5bc1b;font-weight:bold;">BẤM VÀO ĐÂY ĐỂ THAM GIA NGAY</a>
-                            </p>
-                            <p><b>Lưu ý:</b> Nếu sau 24h bạn gặp khó khăn khi truy cập, hãy phản hồi lại email này hoặc nhắn tin qua Fanpage để được hỗ trợ kỹ thuật 24/7.</p>
-                            <p>Hẹn gặp lại bạn trong hành trình 21 ngày sắp tới!</p>
-                            <p>--<br><b>Minh Tấn | Tanlab Founder</b></p>
-                        </div>`
-                    })
-                }).catch(() => {});
-            }
+            await sendSuccessEmail(email, name);
 
             // 3. Update Tele
             const finalText = originalText
@@ -140,7 +168,8 @@ export default async function handler(req, res) {
 
             const newText = originalText
                 .replace('⏳ Trạng thái: CHỜ DUYỆT', `❌ ĐÃ HUỶ - ${vnTime}`)
-                .replace('🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!', '❌ ĐƠN ĐÃ BỊ HUỶ');
+                .replace('🔔 CÓ KHÁCH MỚI ĐĂNG KÝ!', '❌ ĐƠN ĐÃ BỊ HUỶ')
+                .replace('✅ KHÁCH ĐÃ ĐƯỢC DUYỆT!', '❌ ĐƠN ĐÃ BỊ HUỶ');
 
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`, {
                 method: 'POST',
@@ -151,35 +180,25 @@ export default async function handler(req, res) {
 
         // ========== XÁC NHẬN ĐÃ NHẬN TIỀN (từ SePay hoặc từ Tin nhắn SePay) ==========
         if (action === 'payok') {
-            const email = getEmail(originalText);
-            const name = getName(originalText);
-
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ callback_query_id: callbackId, text: '✅ Đã khớp lệnh & Gửi Skool!' })
             });
 
-            // 1. Sheet PAID
-            await fetch(GOOGLE_SHEET_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                redirect: 'follow',
-                body: JSON.stringify({ action: 'update-status', orderId: identifier, status: 'PAID' })
-            }).catch(() => {});
-
-            // 2. Email Skool
-            if (email) {
-                await fetch('https://api.resend.com/emails', {
+            // Tra cứu Sheet để lấy thông tin khách theo OrderId
+            const user = await fetchUserFromSheet(identifier);
+            if (user) {
+                // 1. Sheet PAID
+                fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_API_KEY}` },
-                    body: JSON.stringify({
-                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                        to: email,
-                        subject: '🎉 [CHÀO MỪNG] Link tham gia khóa học 21 Ngày Biến Video Thành Tài Sản',
-                        html: `<p>Chào ${name || 'bạn'}, thanh toán của bạn đã khớp lệnh thành công!</p><p>👉 Link Skool: <a href="${SKOOL_LINK}">${SKOOL_LINK}</a></p>`
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    redirect: 'follow',
+                    body: JSON.stringify({ action: 'update-status', orderId: identifier, status: 'PAID' })
                 }).catch(() => {});
+
+                // 2. Email Skool
+                await sendSuccessEmail(user.email, user.fullname);
             }
 
             const newText = originalText
