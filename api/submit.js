@@ -106,37 +106,56 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Email Error:', err))
             );
 
-            // 4. Facebook Conversions API (CAPI)
-            promises.push(
-                fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+            // 4. Facebook Conversions API (CAPI) - ROBUST VERSION
+            const fbPromises = async () => {
+                try {
+                    const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+                    const userData = {
+                        client_user_agent: data.userAgent,
+                        client_ip_address: clientIp,
+                        fbc: data.fbc || null,
+                        fbp: data.fbp || null
+                    };
+
+                    // Only add if hashed data exists
+                    const hashedEmail = hash(data.email);
+                    const hashedPhone = hash(data.phone);
+                    if (hashedEmail) userData.em = [hashedEmail];
+                    if (hashedPhone) {
+                        userData.ph = [hashedPhone];
+                        userData.external_id = [hashedPhone];
+                    }
+
+                    const fbBody = {
                         data: [{
                             event_name: 'Lead',
                             event_time: Math.floor(Date.now() / 1000),
                             action_source: 'website',
-                            event_id: data.orderId, // Deduplication (Same as browser eventID)
+                            event_id: data.orderId,
                             event_source_url: data.eventSourceUrl,
-                            user_data: {
-                                em: [hash(data.email)],
-                                ph: [hash(data.phone)],
-                                external_id: [hash(data.phone)], // Better matching
-                                client_user_agent: data.userAgent,
-                                client_ip_address: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-                                fbc: data.fbc || null,
-                                fbp: data.fbp || null
-                            },
+                            user_data: userData,
                             custom_data: {
                                 content_name: packageName,
                                 currency: 'VND',
                                 value: data.amount || 0
                             }
                         }],
-                        test_event_code: 'TEST73427' // Real-time verification
-                    })
-                }).catch(err => console.error('Facebook CAPI Error:', err))
-            );
+                        test_event_code: 'TEST73427'
+                    };
+
+                    const fbRes = await fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fbBody)
+                    });
+                    
+                    const fbResult = await fbRes.json();
+                    console.log('FB CAPI Result:', JSON.stringify(fbResult));
+                } catch (err) {
+                    console.error('Facebook CAPI Error:', err);
+                }
+            };
+            promises.push(fbPromises());
 
             await Promise.allSettled(promises);
             return res.status(200).json({ success: true, message: 'Lead captured and tracked' });
