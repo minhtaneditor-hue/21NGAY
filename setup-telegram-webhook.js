@@ -6,7 +6,7 @@
  */
 
 const BOT_TOKEN = '8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs';
-const WEBHOOK_URL = 'https://ladipagetest-cixf.vercel.app/api/telegram-webhook';
+const WEBHOOK_URL = 'https://khoahoc.minhtanacademy.com/api/telegram-webhook';
 
 async function setup() {
     console.log('🔧 Đang cài đặt Telegram Webhook...');
