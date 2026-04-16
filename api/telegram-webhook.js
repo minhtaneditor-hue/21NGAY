@@ -21,11 +21,15 @@ export default async function handler(req, res) {
 
         // ========== DUYỆT ĐƠN ==========
         if (action === 'approve') {
-            // 1. Phản hồi nút bấm ngay
+            // 1. Phản hồi nút bấm ngay với POPUP thông báo
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ callback_query_id: callbackId, text: '✅ Đã duyệt!' })
+                body: JSON.stringify({ 
+                    callback_query_id: callbackId, 
+                    text: 'Chúc mừng bạn đã sở hữu chiếc vé 21 ngày biến video thành tài sản. Mail của bạn sẽ được kích họat truy cập khóa học ở Skool. Lưu ý: Nếu sau 24h chưa được nhận email kích hoạt liên hệ page để được hỗ trợ',
+                    show_alert: true 
+                })
             });
 
             // 2. Cập nhật Sheet
