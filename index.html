@@ -906,12 +906,19 @@
     </div>
 
     <script>
-        // Tự động hiện popup chào mừng sau 2 giây
+        // Tự động hiện popup chào mừng sau 2 giây và ẩn sau 8 giây
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                const welcome = document.getElementById('chat-welcome');
-                if (welcome) welcome.style.display = 'block';
-            }, 2000);
+            const welcome = document.getElementById('chat-welcome');
+            if (welcome) {
+                setTimeout(() => {
+                    welcome.style.display = 'block';
+                    // Tự động ẩn sau 6 giây kể từ khi hiện (tổng 8 giây)
+                    setTimeout(() => {
+                        welcome.style.opacity = '0';
+                        setTimeout(() => welcome.style.display = 'none', 500);
+                    }, 6000);
+                }, 2000);
+            }
         });
 
         function toggleChat() {

@@ -1412,3 +1412,27 @@ input, select, textarea, button {
   height: 100%;
   border: none;
 }
+
+/* MOBILE OPTIMIZATION FOR CHAT */
+@media (max-width: 600px) {
+  .chat-widget {
+    bottom: 15px;
+    right: 15px;
+  }
+  .chat-bubble {
+    width: 55px;
+    height: 55px;
+  }
+  .chat-welcome-popup {
+    width: 180px;
+    bottom: 70px;
+    font-size: 0.75rem;
+    padding: 10px 12px;
+  }
+  .chat-window {
+    width: 320px;
+    right: 0;
+    bottom: 70px;
+    height: 450px;
+  }
+}
