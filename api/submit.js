@@ -89,7 +89,8 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Sheet Error:', err))
             );
 
-            // 3. Resend Welcome Email (Urgency Marketing Email)
+            // 3. Resend Welcome Email - REMOVED (Handled by CRON after 30 mins)
+            /*
             promises.push(
                 fetch('https://api.resend.com/emails', {
                     method: 'POST',

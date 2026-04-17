@@ -40,7 +40,7 @@ const templates = {
                     <b>Nội dung:</b> Thanh toan 7Day ${phone}
                 </p>
                 <div style="margin-top: 25px;">
-                    <a href="https://7day.minhtanacademy.com/#register-form-section" style="display: inline-block; background: #06403D; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; text-transform: uppercase; font-size: 14px;">HOÀN TẤT THANH TOÁN NGAY →</a>
+                    <a href="https://7day.minhtanacademy.com/#register-section" style="display: inline-block; background: #06403D; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; text-transform: uppercase; font-size: 14px;">HOÀN TẤT THANH TOÁN NGAY →</a>
                 </div>
             </div>
 
