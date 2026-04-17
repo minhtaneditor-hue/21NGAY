@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- SEO & Social Sharing (Open Graph) -->
     <meta name="description" content="Đừng làm video chỉ để giải trí. Trại huấn luyện 21 ngày giúp bạn xây dựng cỗ máy thu nhập tự động từ smartphone.">
-    <meta property="og:title" content="21 Ngày Biến Video Thành Tài Sản | Minh Tấn Tanlab">
+    <meta property="og:title" content="21 Ngày Biến Video Thành Tài Sản | Minh Tấn Video Advisor">
     <meta property="og:description" content="Khóa học thực chiến giúp bạn bẻ khóa thuật toán đa nền tảng và xây dựng phễu bán hàng tự động chỉ với Smartphone.">
     <meta property="og:image" content="https://khoahoc.minhtanacademy.com/assets/seo_share.jpg">
     <meta property="og:url" content="https://khoahoc.minhtanacademy.com">
@@ -271,7 +271,7 @@
             <div class="student-cards-grid">
                 <!-- Card 1 -->
                 <div class="student-card">
-                    <img src="assets/tan.jpg" alt="Trần Thanh Tân">
+                    <img src="assets/bot_header.jpg" alt="Trần Thanh Tân">
                     <div class="student-info">
                         <h4>Trần Thanh Tân</h4>
                         <p>Cinematographer | Visual Artist</p>
@@ -536,11 +536,11 @@
         </div>
     </div>
 
-    <!-- MAIN FOOTER (7DAY FORMAT) -->
+    <!-- MAIN FOOTER -->
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-left">
-                <h3 class="footer-title">21 Ngày Biến Video Thành Tài Sản</h3>
+                <h3 class="footer-title">Minh Tấn | Video Advisor</h3>
                 <p class="footer-contact">
                     Hotline/Zalo: <a href="https://zalo.me/0922255861" target="_blank">0922255861</a> | 
                     Email: <a href="mailto:minhtaneditor@gmail.com">minhtaneditor@gmail.com</a>
@@ -559,7 +559,6 @@
                     <a href="#" onclick="showPolicy('refund'); return false;">Hoàn tiền</a>
                 </div>
                 <p class="footer-copyright">&copy; 2026. Thiết kế bởi Tanlab.</p>
-                <p style="font-size: 0.75rem; opacity: 0.5; margin-top: 10px; font-weight: 400;">* Sự hiệu quả phụ thuộc vào mức độ nghiêm túc và đầu tư thời gian của bạn.</p>
             </div>
         </div>
     </footer>
@@ -579,45 +578,43 @@
 
     <!-- PAYMENT QR MODAL -->
     <div id="payment-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4);">
-            <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px;">&times;</span>
-            <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 15px;">
+        <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4); position: relative;">
+            <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px; cursor: pointer;">&times;</span>
+            <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 5px;">
                 <h3>XÁC NHẬN <span class="text-gold">THANH TOÁN</span></h3>
                 <p style="color: #ccc; font-size: 0.9rem;">Mở App Ngân hàng bất kỳ để quét mã QR</p>
             </div>
-
-            <!-- QR CODE -->
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img id="sepay-qr" src="" alt="QR Thanh Toán" style="width: 100%; max-width: 280px; border-radius: 10px; border: 3px solid var(--gold);">
+            
+            <div style="text-align: center; padding: 15px 0;">
+                <img id="sepay-qr" src="" alt="QR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;">
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; text-align: left; max-width: 280px; margin-left: auto; margin-right: auto;">
+                    <p style="margin-bottom: 6px;"><strong>Ngân hàng:</strong> ACB</p>
+                    <p style="margin-bottom: 6px;"><strong>Chủ tài khoản:</strong> LE MINH TAN</p>
+                    <p style="margin-bottom: 6px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
+                    <p style="margin-bottom: 6px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
+                    <p style="margin-bottom: 0;"><strong>Nội dung:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; font-weight: bold;"></span></p>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 0.8rem; color: #aaa; background: rgba(0, 150, 0, 0.05); padding: 8px; border-radius: 8px; border: 1px dashed rgba(0, 150, 0, 0.2);">
+                    <p>💡 <b>Tự động xác nhận:</b> Hệ thống sẽ gửi tin nhắn báo tiền về cho Admin ngay lập tức sau khi bạn chuyển khoản thành công. Tấn sẽ mời bạn vào Skool Pro qua Email chỉ sau ít phút.</p>
+                </div>
             </div>
 
-            <!-- THÔNG TIN CHUYỂN KHOẢN -->
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <p style="margin-bottom: 8px;"><strong>Ngân hàng:</strong> <span style="color: #fff;">ACB</span></p>
-                <p style="margin-bottom: 8px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
-                <p style="margin-bottom: 8px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
-                <p style="margin-bottom: 0;"><strong>Nội dung CK:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; letter-spacing: 1px; font-weight: bold;"></span></p>
-            </div>
-
-            <div style="margin-bottom: 15px; font-size: 0.85rem; color: #aaa; background: rgba(0, 150, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 150, 0, 0.3);">
-                <p>Hệ thống tự động xác nhận sau khi nhận được tiền.</p>
-            </div>
-
-            <!-- NÚT XÁC NHẬN ĐÃ CHUYỂN KHOẢN -->
-            <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; margin-bottom: 10px;">
-                ĐÃ CHUYỂN KHOẢN - VÀO HỌC NGAY!
-            </button>
-
-            <!-- REAL-TIME STATUS BOX -->
-            <div id="polling-box" class="status-polling-box">
+            <!-- SUCCESS STATUS / POLLING (FROM REMOTE) -->
+            <div id="polling-box" class="status-polling-box" style="display:none; margin-top: 15px; background: rgba(255,165,0,0.1); padding: 10px; border-radius: 8px; font-size: 0.85rem; border: 1px solid rgba(255,165,0,0.3); text-align: center;">
                 <span class="checking-indicator"></span>
                 <span>Hệ thống đang chờ xác nhận thanh toán...</span>
             </div>
+            
+            <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; font-size: 0.9rem; border: none; cursor: pointer; margin-top: 10px;">
+                Đã chuyển khoản - Vào học ngay!
+            </button>
         </div>
     </div>
 
-    <!-- REAL-TIME SUCCESS MODAL -->
-    <div id="success-modal" class="success-modal">
+    <!-- REAL-TIME SUCCESS MODAL (FROM REMOTE) -->
+    <div id="success-modal" class="success-modal" style="display:none;">
         <div class="success-content">
             <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
             <h2 class="success-title text-gold" style="font-size: 2.2rem; margin-bottom: 15px;">XÁC NHẬN THÀNH CÔNG!</h2>
@@ -639,6 +636,7 @@
         </div>
     </div>
 
+    <script src="script.js"></script>
     <script>
         // FACEBOOK ADVANCED TRACKING (Scroll, Time, Clicks)
         (function() {
@@ -705,6 +703,9 @@
 
         function startStatusPolling(orderId) {
             if (pollingInterval) clearInterval(pollingInterval);
+            const pollingBox = document.getElementById("polling-box");
+            if (pollingBox) pollingBox.style.display = "block";
+
             pollingInterval = setInterval(async () => {
                 try {
                     const res = await fetch(`/api/check-status?orderId=${orderId}`);
@@ -720,426 +721,6 @@
                 }
             }, 5000); // Check mỗi 5 giây
         }
-
-        let currentAmount = 2500000;
-        let originalAmount = 2500000;
-        let currentPackage = 'VIDEO21DAY';
-        let currentOrderId = '';
-        let appliedPromo = null;
-
-        /**
-         * DANH SÁCH MÃ GIẢM GIÁ (PROMO CODES)
-         * - Cách thêm: 'MÃ': giá_trị (Số dương là giảm tiền mặt, Số từ 0-1 là giảm %)
-         */
-        const promoCodes = {
-            'TANLAB': 500000,    // Giảm 500k
-            'GIAM10': 0.1,       // Giảm 10%
-            'CHALLENGE': 1000000 // Giảm 1 triệu
-        };
-
-        function applyPromoCode() {
-            const codeInput = document.getElementById('promo-code').value.trim().toUpperCase();
-            const statusEl = document.getElementById('promo-status');
-            const discountDisplay = document.getElementById('discount-display');
-            
-            if (!codeInput) return;
-
-            // Chỉ áp dụng giảm giá cho gói 21 ngày (giá gốc > 0)
-            if (currentPackage === 'COACHING21DAY') {
-                statusEl.innerText = "Mã giảm giá chỉ áp dụng cho Khóa học 21 Ngày.";
-                statusEl.style.color = "#ff4d4d";
-                statusEl.style.display = "block";
-                return;
-            }
-
-            if (promoCodes[codeInput]) {
-                appliedPromo = codeInput;
-                const discountValue = promoCodes[codeInput];
-                
-                let discountAmount = 0;
-                if (discountValue < 1) {
-                    discountAmount = originalAmount * discountValue;
-                } else {
-                    discountAmount = discountValue;
-                }
-
-                currentAmount = originalAmount - discountAmount;
-                if (currentAmount < 0) currentAmount = 0;
-
-                statusEl.innerText = `Mã hợp lệ! Bạn được giảm ${new Intl.NumberFormat('vi-VN').format(discountAmount)} VNĐ.`;
-                statusEl.style.color = "#4CAF50";
-                statusEl.style.display = "block";
-
-                // Cập nhật giao diện hiển thị giá
-                document.getElementById('old-price').innerText = new Intl.NumberFormat('vi-VN').format(originalAmount) + " VNĐ";
-                document.getElementById('new-price').innerText = new Intl.NumberFormat('vi-VN').format(currentAmount) + " VNĐ";
-                discountDisplay.style.display = "block";
-            } else {
-                appliedPromo = null;
-                currentAmount = originalAmount;
-                statusEl.innerText = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
-                statusEl.style.color = "#ff4d4d";
-                statusEl.style.display = "block";
-                discountDisplay.style.display = "none";
-            }
-        }
-
-        function selectPackage(amount, pkg) {
-            originalAmount = amount;
-            currentAmount = amount;
-            currentPackage = pkg;
-            appliedPromo = null;
-            
-            // Xóa trạng thái mã giảm giá khi chọn lại gói
-            document.getElementById('promo-code').value = '';
-            document.getElementById('promo-status').style.display = 'none';
-            document.getElementById('discount-display').style.display = 'none';
-            
-            // Hiện/Ẩn ô nhập mã (chỉ hiện cho gói 21 ngày)
-            const promoContainer = document.getElementById('promo-container');
-            if (pkg === 'COACHING21DAY') {
-                promoContainer.style.display = 'none';
-            } else {
-                promoContainer.style.display = 'block';
-            }
-
-            document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        const registerForm = document.getElementById('register-form');
-        const successBox = document.getElementById('success-msg-page');
-        
-        if (registerForm) {
-            registerForm.onsubmit = async function(e) {
-                e.preventDefault();
-                
-                const submitBtn = document.getElementById('submit-btn');
-                const originalBtnText = submitBtn.innerText;
-                
-                try {
-                    submitBtn.innerText = "Đang xử lý...";
-                    submitBtn.disabled = true;
-
-                    const formData = new FormData(this);
-                    const data = Object.fromEntries(formData.entries());
-
-                    // --- TRACKING DATA CAPTURE ---
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const utmData = {
-                        utm_source: urlParams.get('utm_source') || '',
-                        utm_medium: urlParams.get('utm_medium') || '',
-                        utm_campaign: urlParams.get('utm_campaign') || '',
-                        utm_content: urlParams.get('utm_content') || '',
-                        utm_term: urlParams.get('utm_term') || ''
-                    };
-
-                    // Get Facebook cookies for CAPI Match Quality
-                    const getCookie = (name) => {
-                        const value = `; ${document.cookie}`;
-                        const parts = value.split(`; ${name}=`);
-                        if (parts.length === 2) return parts.pop().split(';').shift();
-                        return '';
-                    };
-                    const fbp = getCookie('_fbp');
-                    const fbc = getCookie('_fbc');
-
-                    // Sinh Order ID (Ví dụ: TAN + 4 số cuối SĐT + ngẫu nhiên)
-                    const phoneStr = data.phone || "0000";
-                    const randomStr = Math.floor(1000 + Math.random() * 9000);
-                    currentOrderId = "TAN" + phoneStr.slice(-4) + randomStr;
-
-                    data.amount = currentAmount;
-                    data.package = currentPackage;
-                    data.orderId = currentOrderId;
-                    data.promoCode = appliedPromo || 'None';
-
-                    // Send to Local API for Telegram, Sheet & Facebook CAPI
-                    const response = await fetch('/api/submit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'submit-lead',
-                            ...data,
-                            utm: utmData,
-                            fbp: fbp,
-                            fbc: fbc,
-                            userAgent: navigator.userAgent,
-                            eventSourceUrl: window.location.href
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({}));
-                        throw new Error(errData.message || "Lỗi Server (" + response.status + ")");
-                    }
-
-                    console.log("Đã lưu Lead thành công");
-
-                    // Track Facebook conversion - RESILIENT TO AD-BLOCKERS + DEDUPLICATION
-                    if (typeof fbq !== 'undefined') {
-                        fbq('track', 'Lead', {
-                            content_name: 'Video Course Registration 21 Day',
-                            value: currentAmount,
-                            currency: 'VND'
-                        }, { eventID: currentOrderId });
-                    }
-
-                    // XỬ LÝ CHUYỂN HƯỚNG HOẶC HIỆN MODAL
-                    if (currentPackage === 'COACHING21DAY') {
-                        submitBtn.innerText = "Đang chuyển sang Zalo...";
-                        setTimeout(() => {
-                            window.open('https://zalo.me/0962255861', '_blank');
-                            // Reset form
-                            registerForm.style.opacity = '1';
-                            registerForm.style.pointerEvents = 'auto';
-                            submitBtn.innerText = originalBtnText;
-                            submitBtn.disabled = false;
-                            registerForm.reset();
-                        }, 1000);
-                    } else {
-                        // Chuẩn bị sẵn và hiện QR Modal ngay lập tức
-                        preparePaymentModal(currentAmount, currentOrderId);
-                        showPaymentModal();
-                        
-                        // BẮT ĐẦU CHECK STATUS TỰ ĐỘNG
-                        startStatusPolling(currentOrderId);
-
-                        // Ẩn form để khách không bấm lại
-                        registerForm.style.opacity = '0.3';
-                        registerForm.style.pointerEvents = 'none';
-                        submitBtn.innerText = "Đã chuyển hướng thanh toán...";
-                    }
-                } catch(error) {
-                    console.error("Lỗi hệ thống:", error);
-                    submitBtn.innerText = error.message.includes("Lỗi Server") ? error.message : "Lỗi kết nối, hãy thử lại!";
-                    submitBtn.disabled = false;
-                }
-            };
-        }
-
-        async function sendPaymentConfirmation() {
-            const btn = document.getElementById('confirm-payment-btn');
-            btn.innerText = "Đang gửi báo cáo...";
-            btn.disabled = true;
-
-            try {
-                const response = await fetch('/api/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'confirm-payment',
-                        fullname: document.getElementById('fullname').value,
-                        phone: document.getElementById('phone').value,
-                        email: document.getElementById('email').value,
-                        orderId: currentOrderId,
-                        amount: currentAmount
-                    })
-                });
-
-                if (response.ok) {
-                    btn.innerText = "Đã gửi thông báo thành công!";
-                    // Hiện Modal Thành Công chuyên nghiệp thay vì alert đơn giản
-                    showSuccessModal();
-                } else {
-                    throw new Error("Gửi thất bại");
-                }
-            } catch (error) {
-                console.error("Lỗi xác nhận:", error);
-                btn.innerText = "Lỗi gửi, hãy thử lại!";
-                btn.disabled = false;
-            }
-        }
-
-        function preparePaymentModal(amount, description) {
-            document.getElementById("payment-amount").innerText = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
-            document.getElementById("payment-desc").innerText = description;
-            
-            // Dynamic SePay QR Link (Dùng 'description' tức là OrderID)
-            const qrUrl = "https://qr.sepay.vn/img?acc=221898279&bank=ACB&amount=" + amount + "&des=" + description + "&template=compact";
-            document.getElementById("sepay-qr").src = qrUrl;
-        }
-
-        function showPaymentModal() {
-            const paymentModal = document.getElementById("payment-modal");
-            paymentModal.style.display = "flex";
-            setTimeout(() => {
-                paymentModal.classList.add("show");
-            }, 10);
-        }
-
-        function closePaymentModal() {
-            const paymentModal = document.getElementById("payment-modal");
-            paymentModal.classList.remove("show");
-            setTimeout(() => {
-                paymentModal.style.display = "none";
-            }, 300);
-        }
-
-        const policies = {
-            terms: {
-                title: "ĐIỀU KHOẢN SỬ DỤNG",
-                body: "<p>1. <strong>Chấp thuận:</strong> Bằng việc truy cập nội dung, bạn đồng ý tuân thủ các quy định của chúng tôi. Nếu không đồng ý, vui lòng ngừng sử dụng dịch vụ.</p><br><p>2. <strong>Quyền sở hữu trí tuệ:</strong> Toàn bộ tài liệu, video, kịch bản mẫu trong khóa học là tài sản độc quyền. Nghiêm cấm sao chép, phân phối hoặc bán lại để trục lợi.</p><br><p>3. <strong>Trách nhiệm:</strong> Học viên có nghĩa vụ hoàn thành bài tập. Chúng tôi không đảm bảo kết quả nếu bạn thiếu sự kỷ luật và không hành động.</p><br><p>4. <strong>Cập nhật:</strong> Chúng tôi có quyền tự động thay đổi nội dung khóa học để phù hợp thuật toán mới của các nền tảng mạng xã hội mà không cần báo trước.</p>"
-            },
-            privacy: {
-                title: "CHÍNH SÁCH BẢO MẬT & QUYỀN RIÊNG TƯ",
-                body: "<p>1. <strong>Ghi nhận thông tin:</strong> Chúng tôi chỉ thu thập họ tên, SĐT và email nhằm mục đích định danh và cấp quyền truy cập để hỗ trợ khóa học chuyên sâu.</p><br><p>2. <strong>Bảo vệ dữ liệu:</strong> Mọi thông tin cá nhân của bạn lưu trữ an toàn trong nội bộ. Bộ phận CSKH Tuyệt đối KHÔNG chia sẻ hay bán thông tin của bạn cho bên thứ ba.</p><br><p>3. <strong>An ninh hệ thống:</strong> Website áp dụng biện pháp mã hóa SSL mới nhất nhằm ngăn chặn sự đánh cắp, tiếp cận trái phép đối với dữ liệu người dùng.</p>"
-            },
-            refund: {
-                title: "CHÍNH SÁCH BẢO HÀNH & HOÀN TIỀN",
-                body: "<p>Để thu hẹp ranh giới chần chừ và loại bỏ mọi rủi ro về phía bạn, chúng tôi cung cấp chính sách hoàn trả 100% học phí vô cùng minh bạch:</p><br><p>1. <strong>Điều kiện áp dụng:</strong> Chỉ có hiệu lực khi bạn đã TỰ CHỨNG MINH hoàn thành 100% khối lượng bài tập trong 21 ngày, áp dụng đúng toàn bộ chiến lược cốt lõi vào kênh xây dựng nhưng kênh hoàn toàn KHÔNG có sự cải thiện nào.</p><br><p>2. <strong>Quy trình xử lý:</strong> Mọi yêu cầu tranh chấp xin gửi thẳng qua Zalo Hotline tư vấn (kèm bằng chứng). Kể từ lúc tiếp nhận, chúng tôi sẽ đối chiếu đối soát và chuyển khoản hoàn trả đầy đủ trong tối đa 48 giờ làm việc.</p><br><p>3. <strong>Miễn trừ trách nhiệm:</strong> Chúng tôi TỪ CHỐI hoàn tiền toàn bộ mọi trường hợp: Ghi danh theo cảm xúc nhưng lười nhác không chịu học tập, làm sai quy trình chiến lược đã giao rõ, cố tình sao chép nội dung bên khác, hoặc bất ngờ thay đổi ý định sau khi hệ thống đã cấp quyền đăng nhập vào kho tài nguyên mật.</p>"
-            }
-        };
-
-        function showPolicy(type) {
-            document.getElementById('policy-title').innerHTML = policies[type].title;
-            document.getElementById('policy-body').innerHTML = policies[type].body;
-            const pm = document.getElementById("policy-modal");
-            pm.style.display = "flex";
-            setTimeout(() => { pm.classList.add("show"); }, 10);
-        }
-
-        function closePolicy() {
-            const pm = document.getElementById("policy-modal");
-            pm.classList.remove("show");
-            setTimeout(() => { pm.style.display = "none"; }, 300);
-        }
-
-        // Smooth scroll cho các nút gọi Form đăng ký và liên kết menu
-        const scrollButtons = document.querySelectorAll("a[href^='#']");
-        scrollButtons.forEach(btn => {
-            btn.addEventListener("click", function(event) {
-                event.preventDefault();
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    return;
-                }
-                const target = document.querySelector(targetId);
-                if(target) target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Đóng Popup khi click chuột ra ngoài vùng nền đen
-        window.onclick = function(event) {
-            if (event.target == document.getElementById("payment-modal")) {
-                closePaymentModal();
-            }
-            if (event.target == document.getElementById("policy-modal")) {
-                closePolicy();
-            }
-        }
-    </script>
-
-    <!-- Messenger Chat Widget -->
-    <!-- AI SALES AGENT CHATBOT -->
-    <div class="chat-widget">
-        <!-- POPUP CHÀO MỪNG -->
-        <div id="chat-welcome" class="chat-welcome-popup">
-            Xin chào! Mình là trợ lý Tanlab cần gì cứ nhắn mình.
-        </div>
-        <div class="chat-bubble" onclick="toggleChat()"></div>
-        <div id="chat-window" class="chat-window">
-            <div class="chat-header">
-                <img src="assets/bot_header.jpg" alt="Minh Tấn">
-                <div class="name">Minh Tấn (Advisor)</div>
-            </div>
-            <div id="chat-body" class="chat-body">
-                <div class="chat-msg">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
-                <div class="chat-msg">Bạn đang quan tâm đến việc xây dựng kênh video để bán hàng hay muốn nâng tầm kỹ năng quay dựng thế?</div>
-                <div id="faq-menu" class="chat-menu">
-                    <div class="menu-item" onclick="chooseOption('course')">📚 Tìm hiểu khóa học 21 ngày</div>
-                    <div class="menu-item" onclick="chooseOption('price')">💰 Bảng giá & Ưu đãi</div>
-                    <div class="menu-item" onclick="chooseOption('faq')">❓ Hỏi đáp nhanh</div>
-                    <div class="menu-item" onclick="chooseOption('messenger')">💬 Chat trực tiếp với mình</div>
-                </div>
-            </div>
-            <div class="chat-footer" style="position: relative; padding-bottom: 40px;">
-                <p style="font-size: 0.7rem; color: #888;">Tanlab AI Advisor</p>
-                <div class="menu-toggle-btn" id="menu-toggle" onclick="toggleMenu()" title="Mở danh sách câu hỏi">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Tự động hiện popup chào mừng sau 2 giây và ẩn sau 8 giây
-        window.addEventListener('load', () => {
-            const welcome = document.getElementById('chat-welcome');
-            if (welcome) {
-                setTimeout(() => {
-                    welcome.style.display = 'block';
-                    // Tự động ẩn sau 6 giây kể từ khi hiện (tổng 8 giây)
-                    setTimeout(() => {
-                        welcome.style.opacity = '0';
-                        setTimeout(() => welcome.style.display = 'none', 500);
-                    }, 6000);
-                }, 2000);
-            }
-        });
-
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            const welcome = document.getElementById('chat-welcome');
-            
-            const isOpening = win.style.display !== 'flex';
-            win.style.display = isOpening ? 'flex' : 'none';
-            
-            // Ẩn popup khi mở chat
-            if (isOpening && welcome) welcome.style.display = 'none';
-        }
-
-        function toggleMenu() {
-            const menu = document.getElementById('faq-menu');
-            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'flex' : 'none';
-        }
-
-        function addMessage(text, isBot = true) {
-            const body = document.getElementById('chat-body');
-            const msg = document.createElement('div');
-            msg.className = 'chat-msg';
-            if (!isBot) msg.style.cssText = 'background: var(--gold); color: #000; border-bottom-left-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end; margin-left: auto;';
-            msg.innerText = text;
-            body.appendChild(msg);
-            body.scrollTop = body.scrollHeight;
-        }
-
-        function chooseOption(option) {
-            const menu = document.getElementById('faq-menu');
-            menu.style.display = 'none'; // Hide menu after selection
-            
-            if (option === 'course') {
-                addMessage("📚 Tìm hiểu khóa học 21 ngày", false);
-                setTimeout(() => {
-                    addMessage("Khóa học 21 Ngày giúp bạn bẻ khóa thuật toán đa nền tảng, biến mọi nội dung thành cỗ máy bán hàng bền vững chỉ với Smartphone.");
-                    addMessage("Bạn sẽ học từ cách lên kịch bản, quay dựng đến cách gắn link thu hút khách hàng.");
-                }, 500);
-            } else if (option === 'price') {
-                addMessage("💰 Bảng giá & Ưu đãi", false);
-                setTimeout(() => {
-                    addMessage("Hiện tại khóa học 21 Ngày đang có ưu đãi cực tốt, chỉ 2.500.000 VNĐ (giảm từ giá gốc 10tr).");
-                    addMessage("Ngoài ra còn có các gói Coaching 1:1 chuyên sâu nếu bạn muốn mình kèm cặp riêng.");
-                }, 500);
-            } else if (option === 'faq') {
-                addMessage("❓ Hỏi đáp nhanh", false);
-                setTimeout(() => {
-                    addMessage("Không biết công nghệ có học được không? -> Hoàn toàn được, mình dạy cầm tay chỉ việc rất dễ hiểu.");
-                    addMessage("Để hỏi thêm các câu khác, bạn bấm vào nút ☰ ở góc dưới nhé!");
-                }, 500);
-            } else if (option === 'messenger') {
-                addMessage("💬 Chat trực tiếp với mình", false);
-                setTimeout(() => {
-                    addMessage("Đợi mình chút nhé, mình đang kết nối bạn với Messenger của mình...");
-                    window.open('https://m.me/tanlab.video', '_blank');
-                }, 500);
-            }
-        }
     </script>
 </body>
 </html>
-
-
-
-
-
-
