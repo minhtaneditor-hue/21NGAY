@@ -153,6 +153,7 @@ export default async function handler(req, res) {
                     })
                 }).catch(err => console.error('Email Error:', err))
             );
+            */
 
             // 4. Facebook Conversions API (CAPI) - ROBUST VERSION
             const fbPromises = async () => {
