@@ -498,7 +498,7 @@
                 <p style="color: #aaa; margin-top: 10px;">Điền thông tin của bạn để bắt đầu hành trình 21 ngày</p>
             </div>
             
-            <form id="register-form" class="register-form" method="POST">
+            <form id="register-form" class="register-form" method="POST" onsubmit="return handleRegistration(event)">
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label for="fullname" style="display: block; margin-bottom: 8px; color: #ddd; font-weight: 600;">Họ và tên đầy đủ *</label>
                     <input type="text" id="fullname" name="fullname" placeholder="Nhập họ tên của bạn" required style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 1rem; font-family: inherit;">
@@ -586,7 +586,7 @@
             </div>
             
             <div style="text-align: center; padding: 15px 0;">
-                <img id="sepay-qr" src="" alt="QR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;">
+                <img id="vietqr-qr" src="" alt="VietQR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;">
                 
                 <div style="margin-top: 15px; font-size: 0.9rem; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; text-align: left; max-width: 280px; margin-left: auto; margin-right: auto;">
                     <p style="margin-bottom: 6px;"><strong>Ngân hàng:</strong> ACB</p>
@@ -608,7 +608,7 @@
             </div>
             
             <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; font-size: 0.9rem; border: none; cursor: pointer; margin-top: 10px;">
-                Đã chuyển khoản - Vào học ngay!
+                Xác nhận mở khóa lộ trình.
             </button>
         </div>
     </div>
@@ -636,7 +636,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script>
         // FACEBOOK ADVANCED TRACKING (Scroll, Time, Clicks)
         (function() {
@@ -720,6 +719,241 @@
                     console.error("Lỗi kiểm tra trạng thái:", e);
                 }
             }, 5000); // Check mỗi 5 giây
+        }
+
+        let currentAmount = 2500000;
+        let originalAmount = 2500000;
+        let currentPackage = 'VIDEO21DAY';
+        let currentOrderId = '';
+        let appliedPromo = null;
+
+        const promoCodes = {
+            'TANLAB': 500000,
+            'GIAM10': 0.1,
+            'CHALLENGE': 1000000
+        };
+
+        function applyPromoCode() {
+            const codeInput = document.getElementById('promo-code').value.trim().toUpperCase();
+            const statusEl = document.getElementById('promo-status');
+            const discountDisplay = document.getElementById('discount-display');
+            
+            if (!codeInput) return;
+
+            if (currentPackage === 'COACHING21DAY') {
+                statusEl.innerText = "Mã giảm giá chỉ áp dụng cho Khóa học 21 Ngày.";
+                statusEl.style.color = "#ff4d4d";
+                statusEl.style.display = "block";
+                return;
+            }
+
+            if (promoCodes[codeInput]) {
+                appliedPromo = codeInput;
+                const discountValue = promoCodes[codeInput];
+                let discountAmount = discountValue < 1 ? originalAmount * discountValue : discountValue;
+
+                currentAmount = originalAmount - discountAmount;
+                if (currentAmount < 0) currentAmount = 0;
+
+                statusEl.innerText = `Mã hợp lệ! Bạn được giảm ${new Intl.NumberFormat('vi-VN').format(discountAmount)} VNĐ.`;
+                statusEl.style.color = "#4CAF50";
+                statusEl.style.display = "block";
+
+                document.getElementById('old-price').innerText = new Intl.NumberFormat('vi-VN').format(originalAmount) + " VNĐ";
+                document.getElementById('new-price').innerText = new Intl.NumberFormat('vi-VN').format(currentAmount) + " VNĐ";
+                discountDisplay.style.display = "block";
+            } else {
+                appliedPromo = null;
+                currentAmount = originalAmount;
+                statusEl.innerText = "Mã giảm giá không hợp lệ.";
+                statusEl.style.color = "#ff4d4d";
+                statusEl.style.display = "block";
+                discountDisplay.style.display = "none";
+            }
+        }
+
+        function selectPackage(amount, pkg) {
+            originalAmount = amount;
+            currentAmount = amount;
+            currentPackage = pkg;
+            appliedPromo = null;
+            
+            document.getElementById('promo-code').value = '';
+            document.getElementById('promo-status').style.display = 'none';
+            document.getElementById('discount-display').style.display = 'none';
+            
+            const promoContainer = document.getElementById('promo-container');
+            if (pkg === 'COACHING21DAY') {
+                promoContainer.style.display = 'none';
+            } else {
+                promoContainer.style.display = 'block';
+            }
+
+            document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function handleRegistration(e) {
+            if (e) e.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            const originalBtnText = submitBtn.innerText;
+            
+            try {
+                submitBtn.innerText = "Đang xử lý...";
+                submitBtn.disabled = true;
+
+                const registerForm = document.getElementById('register-form');
+                const formData = new FormData(registerForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const utmData = {
+                    utm_source: urlParams.get('utm_source') || '',
+                    utm_medium: urlParams.get('utm_medium') || '',
+                    utm_campaign: urlParams.get('utm_campaign') || '',
+                    utm_content: urlParams.get('utm_content') || '',
+                    utm_term: urlParams.get('utm_term') || ''
+                };
+
+                const phoneStr = data.phone || "0000";
+                const randomStr = Math.floor(1000 + Math.random() * 9000);
+                currentOrderId = "TAN" + phoneStr.slice(-4) + randomStr;
+
+                data.amount = currentAmount;
+                data.package = currentPackage;
+                data.orderId = currentOrderId;
+                data.promoCode = appliedPromo || 'None';
+
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submit-lead',
+                        ...data,
+                        utm: utmData,
+                        userAgent: navigator.userAgent,
+                        eventSourceUrl: window.location.href
+                    })
+                });
+
+                if (!response.ok) throw new Error("Lỗi Server");
+
+                if (currentPackage === 'COACHING21DAY') {
+                    submitBtn.innerText = "Đang chuyển hướng sang Zalo...";
+                    setTimeout(() => {
+                        window.open('https://zalo.me/0962255861', '_blank');
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                    }, 1000);
+                } else {
+                    preparePaymentModal(currentAmount, currentOrderId);
+                    showPaymentModal();
+                    startStatusPolling(currentOrderId);
+                    registerForm.style.opacity = '0.3';
+                    registerForm.style.pointerEvents = 'none';
+                    submitBtn.innerText = "Đang chờ thanh toán...";
+                }
+            } catch(error) {
+                console.error("Lỗi:", error);
+                submitBtn.innerText = "Lỗi hệ thống!";
+                submitBtn.disabled = false;
+            }
+            return false;
+        }
+
+        async function sendPaymentConfirmation() {
+            const btn = document.getElementById('confirm-payment-btn');
+            btn.innerText = "Đang gửi báo cáo...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'confirm-payment',
+                        fullname: document.getElementById('fullname').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        orderId: currentOrderId,
+                        amount: currentAmount
+                    })
+                });
+
+                if (response.ok) {
+                    btn.innerText = "Đã gửi thông báo!";
+                    showSuccessModal();
+                } else {
+                    throw new Error("Gửi thất bại");
+                }
+            } catch (error) {
+                console.error("Lỗi xác nhận:", error);
+                btn.innerText = "Lỗi gửi, hãy thử lại!";
+                btn.disabled = false;
+            }
+        }
+
+        function preparePaymentModal(amount, description) {
+            document.getElementById("payment-amount").innerText = new Intl.NumberFormat('vi-VN').format(amount) + " VNĐ";
+            document.getElementById("payment-desc").innerText = description;
+            const qrUrl = "https://qr.sepay.vn/img?acc=221898279&bank=ACB&amount=" + amount + "&des=" + description + "&template=compact";
+            document.getElementById("vietqr-qr").src = qrUrl;
+        }
+
+        function showPaymentModal() {
+            document.getElementById("payment-modal").style.display = "flex";
+        }
+
+        function closePaymentModal() {
+            document.getElementById("payment-modal").style.display = "none";
+        }
+
+        function showPolicy(type) {
+            // Hiển thị policy đơn giản
+            alert("Đang cập nhật nội dung chính sách...");
+        }
+
+        function closePolicy() {
+            document.getElementById("policy-modal").style.display = "none";
+        }
+
+        // Smooth scroll
+        document.querySelectorAll("a[href^='#']").forEach(btn => {
+            btn.addEventListener("click", function(event) {
+                event.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if(target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("payment-modal")) {
+                closePaymentModal();
+            }
+        }
+    </script>
+    
+    <!-- AI SALES AGENT CHATBOT -->
+    <div class="chat-widget">
+        <div id="chat-welcome" class="chat-welcome-popup">
+            Xin chào! Mình là trợ lý Video Advisor cần gì cứ nhắn mình.
+        </div>
+        <div class="chat-bubble" onclick="toggleChat()"></div>
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <img src="assets/bot_header.jpg" alt="Minh Tấn">
+                <div class="name">Minh Tấn | Video Advisor</div>
+            </div>
+            <div id="chat-body" class="chat-body">
+                <div class="chat-msg">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
         }
     </script>
 </body>
