@@ -90,7 +90,7 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Sheet Error:', err))
             );
 
-            // 3. Resend Welcome Email (Gửi ngay lập tức khi đăng ký)
+            // 3. Resend Welcome Email (MAIL 2 - Gửi ngay lập tức khi đăng ký)
             if (data.email && RESEND_API_KEY) {
                 const emailData = templates.welcome(data.fullname);
                 promises.push(
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
                             subject: emailData.subject,
                             html: emailData.html
                         })
-                    }).catch(err => console.error('Immediate Email Error:', err))
+                    }).catch(err => console.error('Welcome Email Error:', err))
                 );
             }
 
@@ -186,7 +186,8 @@ export default async function handler(req, res) {
                 })
             });
 
-            // B. Gửi Email chứa link quà tặng (Email 3: Gift Magnet)
+            // B. Bỏ gửi Email quà tặng theo yêu cầu khách (Chỉ thông báo Telegram)
+            /*
             const emailData = templates.giftMagnet(data.fullname);
             await fetch('https://api.resend.com/emails', {
                 method: 'POST',
@@ -201,6 +202,7 @@ export default async function handler(req, res) {
                     html: emailData.html
                 })
             });
+            */
 
             return res.status(200).json({ success: true, skool_url: SKOOL_URL });
         }
