@@ -40,7 +40,7 @@ Nếu bạn dùng Domain, hãy tạo file config Nginx trỏ vào cổng `3000`:
 ```nginx
 server {
     listen 80;
-    server_name yourdomain.com;
+    server_name srv-gulrj.server.tld;
 
     location / {
         proxy_pass http://localhost:3000;

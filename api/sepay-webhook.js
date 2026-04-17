@@ -1,3 +1,5 @@
+import templates from './emails.js';
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -32,18 +34,46 @@ export default async function handler(req, res) {
             `----------------------------\n` +
             `⏳ Chờ admin xác nhận...`;
 
-        // Tìm teleMessageId từ Sheet để GOM BOX (Reply vào tin nhắn Lead)
+        // Tìm thông tin khách từ Sheet để gửi Email & Tele
         let teleMessageId = null;
+        let customerEmail = null;
+        let customerName = null;
+        
         try {
             const sheetRes = await fetch(GOOGLE_SHEET_URL, { method: 'GET', redirect: 'follow' });
             const sheetData = await sheetRes.json();
             if (sheetData.status === 'ok' && sheetData.data) {
                 const row = sheetData.data.find(r => r.orderId === orderId);
-                teleMessageId = row?.teleMessageId;
+                if (row) {
+                    teleMessageId = row.teleMessageId;
+                    customerEmail = row.email;
+                    customerName = row.fullname;
+                }
             }
         } catch (e) { console.error('Sheet Fetch Error:', e); }
 
         const promises = [];
+        const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+        // 1. Gửi Email Xác nhận tự động (Email 2)
+        if (customerEmail && RESEND_API_KEY) {
+            const emailData = templates.paymentConfirmation(customerName, orderId);
+            promises.push(
+                fetch('https://api.resend.com/emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${RESEND_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
+                        to: customerEmail,
+                        subject: emailData.subject,
+                        html: emailData.html
+                    })
+                }).catch(err => console.error('Auto Email Error:', err))
+            );
+        }
 
         // 1 TIN NHẮN DUY NHẤT với nút xác nhận (GOM BẰNG REPLY)
         promises.push(

@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import templates from './emails.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -91,68 +92,9 @@ export default async function handler(req, res) {
 
             // 3. Resend Welcome Email - REMOVED (Handled by CRON after 30 mins)
             /*
-            promises.push(
-                fetch('https://api.resend.com/emails', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${RESEND_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                        to: data.email,
-                        subject: '⏰ Đừng để sự trì hoãn lặng lẽ lấy mất cơ hội lớn nhất của bạn!',
-                        html: `
-                            <div style="background-color: #f9f9f9; padding: 20px; font-family: 'Inter', Arial, sans-serif;">
-                                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
-                                    <tr>
-                                        <td style="padding: 40px 40px; background-color: #000000; text-align: left;">
-                                            <h1 style="color: #f5bc1b; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px;">VIDEO ADVISOR</h1>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 40px 40px; background-color: #ffffff;">
-                                            <p style="color: #333333; font-size: 16px; margin-top: 0;">Chào ${data.fullname || 'bạn'},</p>
-                                            <p style="color: #444444; font-size: 17px; line-height: 1.7;">
-                                                Tấn muốn nói với bạn một chuyện rất thật. Trong hàng ngàn người đăng ký làm Video, phần lớn không bỏ cuộc vì kỹ thuật khó hay vì họ không đủ giỏi. 
-                                            </p>
-                                            <p style="color: #d32f2f; font-size: 17px; line-height: 1.7; font-weight: 700;">
-                                                Họ dừng lại... chỉ vì họ TRÌ HOÃN bước đầu tiên quá lâu.
-                                            </p>
-                                            <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                                                Ban đầu ai cũng nghĩ đơn giản lắm: "Để lát nữa", "Mai học cũng được", "Cuối tuần làm luôn cho tiện". Nhưng bạn biết không, càng để lâu, việc bắt đầu càng trở nên nặng nề. Và rồi một cơ hội đầy kỳ vọng lại trở thành một việc dang dở.
-                                            </p>
-                                            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 600;">
-                                                Video là kỹ năng có thể thay đổi hoàn toàn thu nhập và hướng đi sự nghiệp của bạn.
-                                            </p>
-                                            <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                                                Tấn chỉ mong bạn dành vài phút ngay lúc này, hoàn tất bước thanh toán để cho bản thân một cơ hội bắt đầu thật sự. Vì nếu bạn bỏ qua hôm nay, rất có thể tuần sau bạn vẫn <strong>đứng nguyên ở vạch xuất phát</strong>, trong khi người khác đã đi được những bước tiến xa rồi.
-                                            </p>
-                                            <div style="text-align: center; margin: 40px 0;">
-                                                <a href="https://minhtanacademy.com#register-section" style="background-color: #f5bc1b; color: #000000; padding: 20px 45px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 17px; display: inline-block; transition: all 0.3s;">TÔI MUỐN BẮT ĐẦU NGAY</a>
-                                            </div>
-                                            <p style="color: #777777; font-size: 15px; font-style: italic;">
-                                                Đừng để việc trì hoãn âm thầm lấy mất cơ hội của mình.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 35px 40px; background-color: #fbfbfb; border-top: 1px solid #eeeeee;">
-                                            <p style="color: #333333; font-size: 15px; margin: 0; line-height: 1.5;">
-                                                Trân trọng,<br>
-                                                <strong>Minh Tấn | Video Advisor</strong>
-                                            </p>
-                                            <p style="color: #999999; font-size: 13px; margin-top: 15px;">
-                                                P/S: Bạn có thắc mắc gì cứ reply email này, Tấn luôn ở đây hỗ trợ bạn.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        `
-                    })
-                }).catch(err => console.error('Email Error:', err))
-            );
+            if (RESEND_API_KEY) {
+                // Email 1 is now handled by api/cron.js after 30 mins
+            }
             */
 
             // 4. Facebook Conversions API (CAPI) - ROBUST VERSION
@@ -214,7 +156,6 @@ export default async function handler(req, res) {
         if (action === 'submit-freebie') {
             const vnTime = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
             const SKOOL_URL = 'https://www.skool.com/tan-lab-6821/classroom';
-            const GAMMA_LINK = 'https://25-hook-cuc-manh-cho-chu-h2ik8ou.gamma.site/';
 
             // A. Gửi Telegram thông báo
             const telegramUrl = `https://api.telegram.org/bot8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs/sendMessage`;
@@ -232,8 +173,8 @@ export default async function handler(req, res) {
                 })
             });
 
-            // B. Gửi Email chứa link quà tặng (Email Marketing Chuẩn)
-            const RESEND_API_KEY = process.env.RESEND_API_KEY;
+            // B. Gửi Email chứa link quà tặng (Email 3: Gift Magnet)
+            const emailData = templates.giftMagnet(data.fullname);
             await fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {
@@ -243,43 +184,8 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     from: 'Minh Tấn <challenge@minhtanacademy.com>',
                     to: data.email,
-                    subject: '🎁 Gửi bạn: 25 Hooks Cực Mạnh giúp bứt phá doanh thu!',
-                    html: `
-                        <div style="background-color: #f4f4f4; padding: 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                                <tr>
-                                    <td style="padding: 40px 30px; background-color: #f5bc1b; text-align: center;">
-                                        <h1 style="color: #000000; margin: 0; font-size: 24px; text-transform: uppercase;">QUÀ TẶNG TỪ TẤN</h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 40px 30px; background-color: #ffffff;">
-                                        <h2 style="color: #333333; font-size: 20px; margin-top: 0;">Chào ${data.fullname || 'bạn'},</h2>
-                                        <p style="color: #555555; font-size: 16px; line-height: 1.6;">
-                                            Chúc mừng bạn đã sở hữu bộ tài liệu <strong>"25 Hook cực mạnh cho chủ kênh"</strong>. Đây là những công thức Tấn đã chắt lọc để giúp video của bạn thu hút ngay từ 3 giây đầu tiên.
-                                        </p>
-                                        <p style="color: #333333; font-size: 16px; line-height: 1.6; font-weight: bold;">
-                                            Bạn có thể truy cập tài liệu ngay tại đây:
-                                        </p>
-                                        <div style="text-align: center; margin: 30px 0;">
-                                            <a href="${GAMMA_LINK}" style="background-color: #000000; color: #f5bc1b; padding: 18px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; display: inline-block;">TRUY CẬP BỘ HOOKS (GAMMA)</a>
-                                        </div>
-                                        <p style="color: #555555; font-size: 16px; line-height: 1.6;">
-                                            Ngoài ra, Tấn cũng đang chia sẻ rất nhiều kiến thức sâu hơn về xây dựng nhân hiệu và tối ưu video tại cộng đồng <strong>Skool Classroom</strong>. Hãy tham gia cùng Tấn nhé!
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 30px; background-color: #fafafa; border-top: 1px solid #eeeeee; text-align: center;">
-                                        <p style="color: #999999; font-size: 14px; margin: 0;">
-                                            <strong>Minh Tấn | Video Advisor</strong><br>
-                                            Biến Video thành Tài sản bền vững
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    `
+                    subject: emailData.subject,
+                    html: emailData.html
                 })
             });
 
@@ -331,7 +237,8 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Tele Confirm Error:', err))
             );
 
-            // 2. Send Feedback Email (Reassurance Email)
+            // 2. Send Feedback Email (Email 2: Payment Confirmation)
+            const emailData = templates.paymentConfirmation(data.fullname, data.orderId);
             promises.push(
                 fetch('https://api.resend.com/emails', {
                     method: 'POST',
@@ -342,52 +249,8 @@ export default async function handler(req, res) {
                     body: JSON.stringify({
                         from: 'Minh Tấn <challenge@minhtanacademy.com>',
                         to: data.email,
-                        subject: '⚡ XÁC NHẬN: Email quan trọng về hành trình Video của bạn!',
-                        html: `
-                            <div style="background-color: #f4f7f4; padding: 20px; font-family: 'Inter', Arial, sans-serif;">
-                                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                                    <tr>
-                                        <td style="padding: 40px 40px; background-color: #2e7d32; text-align: left;">
-                                            <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px;">WELCOME TO VIDEO ADVISOR</h1>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 40px 40px; background-color: #ffffff;">
-                                            <h2 style="color: #1b5e20; font-size: 20px; margin-top: 0;">Chúc mừng bạn đã có một quyết định đúng đắn!</h2>
-                                            <p style="color: #333333; font-size: 16px; line-height: 1.7;">Chào <b>${data.fullname || 'bạn'}</b>,</p>
-                                            <p style="color: #444444; font-size: 16px; line-height: 1.7;">
-                                                Hệ thống đã ghi nhận thông báo thanh toán của bạn cho đơn hàng <strong>${data.orderId}</strong>. Bạn vừa chính thức mở ra một chương mới cho sự nghiệp của mình.
-                                            </p>
-                                            
-                                            <div style="background-color: #f1f8e9; border: 1px solid #c8e6c9; padding: 25px; border-radius: 8px; margin: 30px 0;">
-                                                <p style="margin: 0; font-weight: bold; color: #2e7d32; font-size: 17px;">🚀 Bạn đang rất gần vạch xuất phát:</p>
-                                                <p style="margin: 10px 0 0 0; font-size: 16px; color: #444444;">
-                                                    Đội ngũ Admin đang đối soát giao dịch cuối cùng để kích hoạt quyền truy cập cho bạn. <strong>Trong vòng 2-4 giờ tới, một email chứa link tham gia khóa học chính thức sẽ được gửi đến bạn.</strong>
-                                                </p>
-                                            </div>
-
-                                            <p style="color: #333333; font-size: 17px; line-height: 1.7; font-weight: 600; font-style: italic;">
-                                                "Mỗi giây phút bạn chờ đợi lúc này chính là sự chuẩn bị cho sự bứt phá rực rỡ sắp tới."
-                                            </p>
-                                            <p style="color: #444444; font-size: 16px; line-height: 1.7;">
-                                                Tấn vô cùng phấn chấn khi biết rằng chỉ ít giờ nữa thôi, chúng ta sẽ bắt đầu biến mỗi Video của bạn thành một tài sản thực thụ mang lại giá trị bền vững. Hãy sẵn sàng để mở ra con đường mới cho chính mình!
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 35px 40px; background-color: #fbfbfb; border-top: 1px solid #eeeeee;">
-                                            <p style="color: #333333; font-size: 15px; margin: 0; line-height: 1.5;">
-                                                Hẹn gặp bạn trong bài học đầu tiên!<br>
-                                                <strong>Minh Tấn | Video Advisor</strong>
-                                            </p>
-                                            <p style="color: #999999; font-size: 13px; margin-top: 15px;">
-                                                Hotline hỗ trợ: 0962255861 (Zalo)
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        `
+                        subject: emailData.subject,
+                        html: emailData.html
                     })
                 }).catch(err => console.error('Email Error:', err))
             );

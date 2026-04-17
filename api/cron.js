@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
             // --- TRƯỜNG HỢP 1: NHẮC NHỞ THANH TOÁN (Sau 30 phút) ---
-            // Nếu status trống và đăng kí trong khoảng 30-90 phút trước
+            // Nếu status trống (mới đăng ký) và đã qua 30 phút
             if (!lead.status && diffInMinutes >= 30 && diffInMinutes <= 90) {
                 const emailData = templates.paymentReminder(lead.fullname, lead.phone);
                 
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
                     })
                 });
 
-                // Cập nhật trạng thái đã nhắc nhở để không gửi lại
+                // Cập nhật trạng thái đã nhắc nhở để không gửi lại lần sau
                 await fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -52,36 +52,6 @@ export default async function handler(req, res) {
                 });
 
                 sentLogs.push({ email: lead.email, type: 'reminder' });
-                continue; // Xử lý xong lead này
-            }
-
-            // --- TRƯỜNG HỢP 2: GỬI BÀI HỌC 7 NGÀY (Dành cho người đã thanh toán) ---
-            // status không trống và không phải là 'REMINDED' hay 'CANCELLED'
-            if (lead.status && lead.status !== 'REMINDED' && lead.status !== 'CANCELLED') {
-                if (diffInDays >= 1 && diffInDays <= 7) {
-                    const day = diffInDays;
-                    const templateKey = `day${day}`;
-                    
-                    if (templates[templateKey]) {
-                        const emailData = templates[templateKey](lead.fullname);
-                        
-                        // Gửi email bài học tương ứng
-                        await fetch(resendUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${RESEND_API_KEY}`
-                            },
-                            body: JSON.stringify({
-                                from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                                to: lead.email,
-                                subject: emailData.subject,
-                                html: emailData.html
-                            })
-                        });
-                        sentLogs.push({ email: lead.email, day: day });
-                    }
-                }
             }
         }
 
