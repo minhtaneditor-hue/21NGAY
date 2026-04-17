@@ -90,12 +90,25 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Sheet Error:', err))
             );
 
-            // 3. Resend Welcome Email - REMOVED (Handled by CRON after 30 mins)
-            /*
-            if (RESEND_API_KEY) {
-                // Email 1 is now handled by api/cron.js after 30 mins
+            // 3. Resend Welcome Email (Gửi ngay lập tức khi đăng ký)
+            if (data.email && RESEND_API_KEY) {
+                const emailData = templates.welcome(data.fullname);
+                promises.push(
+                    fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${RESEND_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            from: 'Minh Tấn <challenge@minhtanacademy.com>',
+                            to: data.email,
+                            subject: emailData.subject,
+                            html: emailData.html
+                        })
+                    }).catch(err => console.error('Immediate Email Error:', err))
+                );
             }
-            */
 
             // 4. Facebook Conversions API (CAPI) - ROBUST VERSION
             const fbPromises = async () => {

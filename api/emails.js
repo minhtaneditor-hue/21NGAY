@@ -1,6 +1,32 @@
 const templates = {
+    // 1. EMAIL CHÀO MỪNG (GỬI NGAY KHI ĐĂNG KÝ)
     // -------------------------------------------------------------------------
-    // 1. EMAIL NHẮC NHỞ THANH TOÁN (30 PHÚT)
+    welcome: (name) => ({
+        subject: "🚀 Chúc mừng! Bạn đã đặt chân vào hành trình Biến Video Thành Tài Sản",
+        html: baseTemplate(name, `
+            <p style="color: #444444; font-size: 17px; line-height: 1.7;">
+                Cảm ơn bạn đã đăng ký tham gia Trại huấn luyện 21 Ngày. Tấn rất hào hứng khi được đồng hành cùng bạn trong hành trình bứt phá này.
+            </p>
+            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 600;">
+                Đây là bước đi đầu tiên để bạn làm chủ kỹ năng xây dựng cỗ máy thu nhập từ Video.
+            </p>
+            <div style="background-color: #fff9c4; border-left: 5px solid #fbc02d; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <p style="margin: 0; font-weight: bold; color: #000;">⚡ Bước tiếp theo dành cho bạn:</p>
+                <p style="margin: 10px 0 0 0; font-size: 16px;">
+                    Để chính thức kích hoạt lộ trình học và nhận đầy đủ bộ công cụ, bạn hãy hoàn tất thủ tục thanh toán theo hướng dẫn trên website hoặc nút bên dưới.
+                </p>
+            </div>
+            <div style="text-align: center; margin: 35px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#register-section" style="background-color: #000000; color: #f5bc1b; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 17px; display: inline-block;">HOÀN TẤT THANH TOÁN</a>
+            </div>
+            <p style="color: #555555; font-size: 15px; font-style: italic;">
+                Nếu bạn cần hỗ trợ nhanh, đừng ngần ngại nhắn tin cho Tấn qua Zalo: 0922255861.
+            </p>
+        `)
+    }),
+
+    // -------------------------------------------------------------------------
+    // 2. EMAIL NHẮC NHỞ THANH TOÁN (30 PHÚT)
     // -------------------------------------------------------------------------
     paymentReminder: (name, phone) => ({
         subject: "⏰ Đừng để sự trì hoãn lặng lẽ lấy mất cơ hội lớn nhất của bạn!",
