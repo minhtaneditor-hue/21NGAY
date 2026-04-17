@@ -5,14 +5,14 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const BOT_TOKEN = '8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs';
-    const CHAT_ID = '7384174497';
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzJu2FbsEhfYEi969iFQoBaKs7ScA_oFdxzGjTynPqMaqa_tCbeNs1fDx7S8RM7qMdi/exec';
-    const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
+    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
     
     // FACEBOOK CAPI CONFIG
-    const FB_PIXEL_ID = '922937023887248';
-    const FB_ACCESS_TOKEN = 'EAAWZABd207FoBROGHtHJXGZCBOgNchxuLs4azmIZByRRk2oo3mKPkbSjYpKyKgrwKZCFCZCmCxKrMiGjkgqOpSkJjzZCvbz03wHjagQBykddVRTtp6c9FIsLDoECZAqLRRtAye4dvWrmN3rGHIzIlPPtINQQmkzbY6sv9ZCSPJ6sI78paMAZA6LEQMXPi2DK4sQZDZD';
+    const FB_PIXEL_ID = process.env.FB_PIXEL_ID;
+    const FB_ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
     const hash = (data) => {
         if (!data) return '';
@@ -233,7 +233,7 @@ export default async function handler(req, res) {
             });
 
             // B. Gửi Email chứa link quà tặng (Email Marketing Chuẩn)
-            const RESEND_API_KEY = 're_Gq7KcaeK_2ar8XM8RhiQxeyNMgnjpEr2o';
+            const RESEND_API_KEY = process.env.RESEND_API_KEY;
             await fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {

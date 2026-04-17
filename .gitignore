@@ -1,1 +1,6 @@
-._*
+node_modules/
+api/.env
+.env
+.DS_Store
+*.log
+.agents/

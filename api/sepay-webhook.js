@@ -3,9 +3,9 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const BOT_TOKEN = '8711452465:AAE6iG51e8yUBn0Fbt09EeMTckWLpRxN0vs';
-    const CHAT_ID = '7384174497';
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzJu2FbsEhfYEi969iFQoBaKs7ScA_oFdxzGjTynPqMaqa_tCbeNs1fDx7S8RM7qMdi/exec';
+    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
 
     try {
         const body = req.body;
