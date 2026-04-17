@@ -6,6 +6,18 @@ const dotenv = require('dotenv');
 // Load environment variables from api/.env for local/VPS consistency
 dotenv.config({ path: path.join(__dirname, 'api', '.env') });
 
+// Log loaded state for diagnostics
+console.log('--- 🛡️ VPS DIAGNOSTICS ---');
+const requiredEnv = ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'RESEND_API_KEY', 'GOOGLE_SHEET_URL'];
+const missing = requiredEnv.filter(key => !process.env[key]);
+if (missing.length > 0) {
+    console.error(`⚠️ MISSING ENV VARS: ${missing.join(', ')}`);
+    console.error('👉 Make sure you have created api/.env on your VPS.');
+} else {
+    console.log('✅ All environment variables loaded successfully.');
+}
+console.log('-------------------------');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -13,6 +25,14 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        console.log(`[${new Date().toLocaleTimeString()}] 📡 API ${req.method} ${req.path}`);
+    }
+    next();
+});
 
 // Serve static files from root
 app.use(express.static(__dirname));
@@ -36,10 +56,11 @@ app.all('/api/:action', async (req, res) => {
         try {
             await handler.default(req, res);
         } catch (error) {
-            console.error(`API Error (${action}):`, error);
-            res.status(500).json({ success: false, error: 'Internal Server Error' });
+            console.error(`❌ API Error (${action}):`, error);
+            res.status(500).json({ success: false, error: 'Internal Server Error', details: error.message });
         }
     } else {
+        console.warn(`⚠️ Endpoint not found: ${action}`);
         res.status(404).json({ success: false, error: 'API Endpoint Not Found' });
     }
 });

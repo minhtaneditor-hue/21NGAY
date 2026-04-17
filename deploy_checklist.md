@@ -2,40 +2,53 @@
 
 Dự án: **21 Ngày Biến Video Thành Tài Sản**
 
-## 1. Phân tích hiện trạng
-- **Ngôn ngữ**: Node.js (Backend) + HTML/CSS/JS (Frontend).
-- **Framework**: Express.js wrap Vercel-style Serverless Functions. 
-- **Cấu trúc**: Phục vụ Frontend dưới dạng static files và Backend qua API Express.
+## 1. Phân tích hiện trạng (ĐÃ FIX XONG)
+- [x] **Secured Secrets**: Chuyển API Keys sang biến môi trường (.env).
+- [x] **Server Ready**: Đã tạo `server.js` để chạy trên Linux.
+- [x] **Diagnostics**: Đã thêm mã đăng nhập lỗi chi tiết trong `server.js`.
 
-## 2. Danh sách cần chuẩn bị (ĐÃ FIX XONG)
-- [x] **Bảo mật**: Đã tách toàn bộ API Keys, Bot Token ra file `.env`.
-- [x] **Quản lý package**: Đã tạo file `package.json` với đầy đủ các thư viện cần thiết.
-- [x] **Server VPS**: Đã tạo file `server.js` (Express) để chạy code trên môi trường Linux thay vì Vercel.
-- [x] **Hướng dẫn**: Đã tạo file `README.md` hướng dẫn các lệnh cài đặt trên Linux.
-- [x] **Cấu hình Git**: Cập nhật `.gitignore` để không đẩy file mật lên GitHub.
-- [x] **Hướng dẫn**: Đã tạo file `README.md` với các bước chi tiết.
+## 2. HƯỚNG DẪN FIX LỖI TỪNG BƯỚC TRÊN VPS
 
-## 3. Thông tin bí mật (Đã được bảo mật)
-Các giá trị sau đã được chuyển vào biến môi trường:
-- `TELEGRAM_BOT_TOKEN`
-- `TELEGRAM_CHAT_ID`
-- `RESEND_API_KEY`
-- `FB_PIXEL_ID`
-- `FB_ACCESS_TOKEN`
-- `GOOGLE_SHEET_URL`
+Nếu Telegram hoặc Email không hoạt động, hãy làm đúng theo các bước sau:
 
-## 4. Các bước Deploy thực tế cho ngày mai
-1. **Cài đặt môi trường**:
-   - Cài Node.js (v18+): `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs`
-   - Cài PM2: `sudo npm install -g pm2`
-2. **Setup Code**:
-   - Clone repo: `git clone <your-repo-url>`
-   - Cài thư viện: `npm install`
-   - Tạo file `.env`: `cp .env.example .env` (Sau đó `nano .env` để điền thông tin thật).
-3. **Chạy ứng dụng**:
-   - Chạy nền: `pm2 start server.js --name "video-advisor"`
-   - Lưu trạng thái: `pm2 save`
-   - Tự khởi động cùng hệ thống: `pm2 startup`
-4. **Proxy ngược (Nginx)**:
-   - Trỏ domain về IP VPS.
-   - Dùng Nginx để map port 80/443 vào port 3000.
+### Bước 1: Kiểm tra phiên bản Node.js
+Mở Terminal trên VPS và gõ:
+```bash
+node -v
+```
+- **Nếu hiện < v18.0.0**: Bạn phải nâng cấp Node.js. Chạy lệnh:
+  `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs`
+
+### Bước 2: Tạo file bí mật (.env)
+Vì file này bị Git chặn, bạn phải tự tạo trên VPS:
+```bash
+cd /đường/dẫn/thư/mục/21NGAY
+nano api/.env
+```
+- Dán nội dung các key (BOT_TOKEN, RESEND_API_KEY,...) vào.
+- Ấn `Ctrl + O`, `Enter` để lưu.
+- Ấn `Ctrl + X` để thoát.
+
+### Bước 3: Cài đặt lại thư viện
+Đảm bảo tất cả thư viện (như Dotenv, Express) đã được cài:
+```bash
+npm install
+```
+
+### Bước 4: Khởi động lại Server
+Để Server nhận diện file `.env` mới và code mới:
+```bash
+pm2 restart all
+# Hoặc nếu chạy trực tiếp để xem lỗi:
+node server.js
+```
+
+### Bước 5: Xem nhật ký lỗi (Logs)
+Nếu vẫn không chạy, hãy gõ lệnh này để xem Server đang báo lỗi gì:
+```bash
+pm2 logs
+```
+
+## 3. Thông tin cấu hình (Dành cho Nginx)
+Tên miền: **srv-gulrj.server.tld**
+Sử dụng file cấu hình: `nginx-video-advisor.conf` đã có sẵn trong dự án.
