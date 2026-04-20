@@ -116,6 +116,26 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, result: sheetData });
         }
 
+        // ===== XÓA LEAD =====
+        if (action === 'delete-lead') {
+            const { phone, orderId } = body;
+            if (!phone && !orderId) {
+                return res.status(400).json({ success: false, message: 'Need phone or orderId to delete' });
+            }
+            const sheetRes = await fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                redirect: 'follow',
+                body: JSON.stringify({
+                    action: 'delete-lead',
+                    phone: phone || '',
+                    orderId: orderId || ''
+                })
+            });
+            const sheetData = await sheetRes.json();
+            return res.status(200).json({ success: true, result: sheetData });
+        }
+
         return res.status(400).json({ success: false, message: 'Unknown action' });
 
     } catch (error) {

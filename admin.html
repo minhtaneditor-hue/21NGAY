@@ -1047,7 +1047,25 @@ function renderTable(leads) {
     document.getElementById('empty-state').style.display = 'none';
     document.getElementById('visible-count').textContent = leads.length;
 
+    const now = new Date();
+
     leads.forEach((lead, idx) => {
+        // Warning 30 mins
+        let warning30m = '';
+        if (lead.status === 'PENDING' && !lead.mailPaymentSent && lead.timestamp) {
+            try {
+                const parts = lead.timestamp.split(', ');
+                if (parts.length === 2) {
+                    const dts = parts[0].split('/');
+                    const tts = parts[1].split(':');
+                    const lDate = new Date(dts[2], dts[1]-1, dts[0], tts[0], tts[1], tts[2]);
+                    if ((now.getTime() - lDate.getTime()) / 60000 > 30) {
+                        warning30m = '<br><span style="color:var(--red-cta);font-size:10px;font-weight:700;margin-top:4px;display:inline-block;"><i class="fas fa-triangle-exclamation"></i> Quá 30p chưa TT</span>';
+                    }
+                }
+            } catch(e){}
+        }
+
         const tr = document.createElement('tr');
         tr.dataset.phone = lead.phone || '';
         tr.dataset.orderId = lead.orderId || '';
@@ -1072,7 +1090,7 @@ function renderTable(leads) {
                     ? `<span style="background:var(--gold-glow);color:var(--gold);border:1px solid var(--border-accent);padding:3px 9px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px;">${esc(lead.promoCode)}</span>`
                     : '<span style="color:var(--text-2);font-size:12px;">—</span>'}
             </td>
-            <td data-label="Trạng Thái">${renderStatusBadge(lead.status)}</td>
+            <td data-label="Trạng Thái">${renderStatusBadge(lead.status)} ${warning30m}</td>
             <td data-label="Welcome">
                 ${renderMailIcon(lead.mailWelcomeSent, 'Welcome')}
             </td>
@@ -1102,6 +1120,11 @@ function renderTable(leads) {
                         title="Gửi xác nhận thanh toán">
                         <i class="fas fa-circle-check"></i> Xác nhận TT
                     </button>` : ''}
+                    <button class="btn-action" style="background:var(--red-cta);color:#fff;border-color:transparent;"
+                        onclick="deleteLead('${esc(lead.phone)}', '${esc(lead.orderId)}')"
+                        title="Xóa Lead">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
                 </div>
             </td>
             <td data-label="Thời Gian" style="font-size:11px;color:var(--text-2);white-space:nowrap;">${esc(lead.timestamp || '—')}</td>
@@ -1210,6 +1233,33 @@ async function confirmSendEmail() {
 function closeModal() {
     document.getElementById('email-modal').classList.remove('active');
     pendingEmailAction = null;
+}
+
+// Xóa Lead
+async function deleteLead(phone, orderId) {
+    if (!confirm('🚫 Bạn có CHẮC CHẮN MUỐN XÓA khách hàng này không? Dữ liệu không thể khôi phục!')) return;
+    
+    showToast('Đang xóa...', 'success');
+    
+    try {
+        const res = await fetch('/api/admin-actions?pw=' + encodeURIComponent(adminPw), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'delete-lead',
+                phone: phone || '',
+                orderId: orderId || ''
+            })
+        });
+
+        const data = await res.json();
+        if(!data.success) throw new Error(data.message || 'Lỗi khi xóa!');
+        
+        showToast('Đã xóa khách hàng thành công!', 'success');
+        loadData();
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
 }
 
 async function updateType(selectEl, idx) {

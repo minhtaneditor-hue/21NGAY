@@ -163,6 +163,29 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ===== XÓA LEAD (Admin Actions) =====
+    if (action === 'delete-lead') {
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+      const phoneCol = headers.indexOf('phone');
+      const orderCol = headers.indexOf('orderId');
+      
+      let deleted = false;
+      for (let i = data.length - 1; i > 0; i--) {
+        const matchPhone = body.phone && data[i][phoneCol] == body.phone;
+        const matchOrder = body.orderId && data[i][orderCol] == body.orderId;
+        
+        if (matchPhone || matchOrder) {
+          sheet.deleteRow(i + 1);
+          deleted = true;
+          break; // Chỉ xóa record đầu tiên match được
+        }
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({ status: deleted ? 'deleted' : 'not_found' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // ===== GHI NHẬN THANH TOÁN TỰ ĐỘNG =====
     if (action === 'payment-received') {
       const data = sheet.getDataRange().getValues();
