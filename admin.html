@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin CRM - 21 Ngày Video Tài Sản | Minh Tấn Academy</title>
+    <meta name="description" content="Trang quản trị CRM nội bộ - Minh Tấn Academy 21 Ngày">
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM
+        ============================================================ */
+        :root {
+            --bg-base:       #0a0a0f;
+            --bg-card:       #12121a;
+            --bg-card-2:     #1a1a26;
+            --bg-hover:      #22223a;
+            --border:        rgba(255,255,255,0.07);
+            --border-accent: rgba(245,188,27,0.3);
+
+            --gold:          #f5bc1b;
+            --gold-dim:      #c99a10;
+            --gold-glow:     rgba(245,188,27,0.15);
+            --green:         #22c55e;
+            --green-dim:     rgba(34,197,94,0.15);
+            --red:           #ef4444;
+            --red-dim:       rgba(239,68,68,0.15);
+            --blue:          #3b82f6;
+            --blue-dim:      rgba(59,130,246,0.15);
+            --purple:        #a855f7;
+            --purple-dim:    rgba(168,85,247,0.15);
+            --orange:        #f97316;
+            --orange-dim:    rgba(249,115,22,0.15);
+
+            --text-1:  #f0f0f5;
+            --text-2:  #9999b5;
+            --text-3:  #5555770;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-card: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 40px rgba(245,188,27,0.1);
+
+            --transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-base);
+            color: var(--text-1);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           LOGIN SCREEN
+        ============================================================ */
+        #login-screen {
+            position: fixed; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-base);
+            z-index: 9999;
+        }
+        .login-card {
+            width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            animation: slideUp 0.4s ease;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .login-logo .brand {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .login-logo h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-1);
+        }
+        .login-logo h1 span { color: var(--gold); }
+
+        .login-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-2);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .login-input {
+            width: 100%;
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            font-size: 15px;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+        .login-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+        .login-btn {
+            width: 100%;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+        .login-btn:hover { background: var(--gold-dim); transform: translateY(-1px); }
+        .login-btn:active { transform: translateY(0); }
+        .login-error {
+            color: var(--red);
+            font-size: 13px;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        /* ============================================================
+           MAIN APP (hidden until login)
+        ============================================================ */
+        #app { display: none; }
+
+        /* TOPBAR */
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .topbar-icon {
+            width: 36px; height: 36px;
+            background: var(--gold);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            color: #000;
+        }
+        .topbar-title { font-size: 17px; font-weight: 700; color: var(--text-1); }
+        .topbar-subtitle { font-size: 12px; color: var(--text-2); margin-top: 1px; }
+
+        .topbar-actions { display: flex; gap: 12px; align-items: center; }
+        .topbar-btn {
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            color: var(--text-2);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .topbar-btn:hover { color: var(--text-1); border-color: var(--gold); }
+        .topbar-refresh-btn {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+            font-weight: 600;
+        }
+        .topbar-refresh-btn:hover { background: var(--gold-dim); color: #000; }
+
+        /* MAIN CONTENT */
+        .main { padding: 28px 32px; max-width: 1600px; margin: 0 auto; }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px;
+            height: 100%;
+            border-radius: 3px 0 0 3px;
+        }
+        .stat-card.gold::after { background: var(--gold); }
+        .stat-card.green::after { background: var(--green); }
+        .stat-card.blue::after { background: var(--blue); }
+        .stat-card.purple::after { background: var(--purple); }
+        .stat-card.orange::after { background: var(--orange); }
+
+        .stat-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-2);
+            margin-bottom: 10px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-1);
+            line-height: 1;
+        }
+        .stat-sub {
+            font-size: 12px;
+            color: var(--text-2);
+            margin-top: 6px;
+        }
+        .stat-icon {
+            position: absolute;
+            right: 18px; top: 18px;
+            font-size: 22px;
+            opacity: 0.15;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .search-input {
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 14px 9px 36px;
+            font-size: 14px;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .search-wrap { position: relative; flex: 1; min-width: 200px; }
+        .search-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-2);
+            font-size: 13px;
+        }
+        .search-wrap input {
+            width: 100%;
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 14px 9px 36px;
+            font-size: 14px;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+        .search-wrap input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+        .filter-select {
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 14px;
+            font-size: 13px;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-select:focus { border-color: var(--gold); }
+        .filter-count {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-left: auto;
+        }
+        .filter-count span { color: var(--gold); font-weight: 700; }
+
+        /* TABLE */
+        .table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-2);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 10;
+        }
+        thead th:first-child { padding-left: 20px; }
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--bg-hover); }
+        td {
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--text-1);
+            vertical-align: middle;
+        }
+        td:first-child { padding-left: 20px; }
+
+        /* IN-TABLE ELEMENTS */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .badge-pending  { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange); }
+        .badge-paid     { background: var(--green-dim);  color: var(--green);  border: 1px solid var(--green);  }
+        .badge-cancelled{ background: var(--red-dim);    color: var(--red);    border: 1px solid var(--red);    }
+        .badge-reminded { background: var(--blue-dim);   color: var(--blue);   border: 1px solid var(--blue);   }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .type-elearn  { background: var(--purple-dim); color: var(--purple); }
+        .type-coaching{ background: var(--gold-glow);  color: var(--gold);   }
+        .type-none    { color: var(--text-2); font-style: italic; }
+
+        .mail-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px; height: 26px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: default;
+        }
+        .mail-sent   { background: var(--green-dim); color: var(--green); }
+        .mail-unsent { background: rgba(255,255,255,0.05); color: var(--text-2); }
+
+        .avatar {
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #000;
+            flex-shrink: 0;
+        }
+        .lead-info { display: flex; align-items: center; gap: 10px; }
+        .lead-name { font-weight: 600; font-size: 14px; }
+        .lead-phone { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+        /* ACTION BUTTONS */
+        .action-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .btn-action {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-action:disabled {
+            opacity: 0.5; cursor: not-allowed;
+        }
+        .btn-welcome {
+            background: var(--blue-dim); color: var(--blue);
+            border-color: rgba(59,130,246,0.3);
+        }
+        .btn-welcome:hover:not(:disabled) { background: rgba(59,130,246,0.25); }
+        .btn-reminder {
+            background: var(--orange-dim); color: var(--orange);
+            border-color: rgba(249,115,22,0.3);
+        }
+        .btn-reminder:hover:not(:disabled) { background: rgba(249,115,22,0.25); }
+        .btn-confirm {
+            background: var(--green-dim); color: var(--green);
+            border-color: rgba(34,197,94,0.3);
+        }
+        .btn-confirm:hover:not(:disabled) { background: rgba(34,197,94,0.25); }
+
+        /* TYPE SELECTOR */
+        .type-select {
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .type-select:focus { border-color: var(--gold); }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-2);
+        }
+        .empty-state i { font-size: 40px; margin-bottom: 16px; opacity: 0.3; }
+        .empty-state p { font-size: 15px; }
+
+        /* TOAST */
+        .toast-container {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            font-size: 14px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: var(--shadow-card);
+            animation: slideInRight 0.3s ease;
+            min-width: 280px;
+            max-width: 360px;
+        }
+        .toast.success { border-color: var(--green); }
+        .toast.error   { border-color: var(--red); }
+        .toast.success i { color: var(--green); }
+        .toast.error i   { color: var(--red); }
+
+        /* LOADING SPINNER */
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .loading-state {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 16px; padding: 60px;
+            color: var(--text-2);
+        }
+
+        /* MODAL EMAIL PREVIEW */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            z-index: 5000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-card);
+            animation: slideUp 0.3s ease;
+        }
+        .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .modal p  { font-size: 14px; color: var(--text-2); margin-bottom: 24px; line-height: 1.6; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-cancel {
+            background: var(--bg-card-2);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            border-radius: var(--radius-sm);
+            padding: 10px 20px;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-cancel:hover { color: var(--text-1); }
+        .btn-send {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-send:hover { background: var(--gold-dim); }
+        .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ANIMATIONS */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(20px); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .main { padding: 16px; }
+            .topbar { padding: 0 16px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .topbar-title { font-size: 14px; }
+            .topbar-subtitle { display: none; }
+        }
+        @media (max-width: 500px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .login-card { padding: 32px 24px; margin: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div id="login-screen">
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="brand">Minh Tấn Academy</div>
+            <h1>CRM Admin<br><span>21 Ngày Video</span></h1>
+        </div>
+        <label class="login-label" for="pw-input">Mật khẩu</label>
+        <input 
+            id="pw-input" 
+            type="password" 
+            class="login-input" 
+            placeholder="Nhập mật khẩu admin…" 
+            autocomplete="current-password"
+        >
+        <button class="login-btn" id="login-btn" onclick="doLogin()">
+            <i class="fas fa-arrow-right-to-bracket"></i> Đăng nhập
+        </button>
+        <div class="login-error" id="login-error">
+            <i class="fas fa-circle-xmark"></i> Sai mật khẩu!
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="app">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-icon"><i class="fas fa-chart-line"></i></div>
+            <div>
+                <div class="topbar-title">CRM Dashboard</div>
+                <div class="topbar-subtitle">21 Ngày Video Tài Sản</div>
+            </div>
+        </div>
+        <div class="topbar-actions">
+            <button class="topbar-btn" onclick="exportCSV()">
+                <i class="fas fa-download"></i> Xuất CSV
+            </button>
+            <button class="topbar-btn topbar-refresh-btn" id="refresh-btn" onclick="loadData()">
+                <i class="fas fa-rotate-right"></i> Làm mới
+            </button>
+            <button class="topbar-btn" onclick="logout()">
+                <i class="fas fa-right-from-bracket"></i> Thoát
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- STATS -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card gold">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-label">Tổng Leads</div>
+                <div class="stat-value" id="stat-total">—</div>
+                <div class="stat-sub">Tất cả đăng ký</div>
+            </div>
+            <div class="stat-card green">
+                <i class="fas fa-circle-check stat-icon"></i>
+                <div class="stat-label">Đã Thanh Toán</div>
+                <div class="stat-value" id="stat-paid">—</div>
+                <div class="stat-sub" id="stat-conversion">—% tỷ lệ chuyển đổi</div>
+            </div>
+            <div class="stat-card blue">
+                <i class="fas fa-money-bill-wave stat-icon"></i>
+                <div class="stat-label">Doanh Thu</div>
+                <div class="stat-value" id="stat-revenue">—</div>
+                <div class="stat-sub">từ đơn PAID</div>
+            </div>
+            <div class="stat-card purple">
+                <i class="fas fa-envelope stat-icon"></i>
+                <div class="stat-label">Mail Chào Mừng</div>
+                <div class="stat-value" id="stat-welcome">—</div>
+                <div class="stat-sub">đã gửi</div>
+            </div>
+            <div class="stat-card orange">
+                <i class="fas fa-clock stat-icon"></i>
+                <div class="stat-label">Chờ Xử Lý</div>
+                <div class="stat-value" id="stat-pending">—</div>
+                <div class="stat-sub">PENDING leads</div>
+            </div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="fas fa-magnifying-glass"></i>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Tìm tên, email, SĐT, mã đơn…"
+                    oninput="filterTable()"
+                >
+            </div>
+            <select class="filter-select" id="filter-status" onchange="filterTable()">
+                <option value="">Tất cả trạng thái</option>
+                <option value="PENDING">⏳ Pending</option>
+                <option value="PAID">✅ Paid</option>
+                <option value="REMINDED">📧 Reminded</option>
+                <option value="CANCELLED">❌ Cancelled</option>
+            </select>
+            <select class="filter-select" id="filter-type" onchange="filterTable()">
+                <option value="">Tất cả loại</option>
+                <option value="E-learning">📚 E-learning</option>
+                <option value="Coaching">💎 Coaching</option>
+            </select>
+            <select class="filter-select" id="filter-mail" onchange="filterTable()">
+                <option value="">Tất cả mail</option>
+                <option value="welcome_sent">✉️ Đã gửi Welcome</option>
+                <option value="welcome_unsent">📭 Chưa gửi Welcome</option>
+                <option value="payment_sent">⏰ Đã gửi Nhắc TT</option>
+                <option value="payment_unsent">📭 Chưa gửi Nhắc TT</option>
+            </select>
+            <div class="filter-count" id="filter-count">Hiển thị <span id="visible-count">0</span> leads</div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+            <div id="table-loading" class="loading-state">
+                <div class="spinner"></div>
+                <p>Đang tải dữ liệu…</p>
+            </div>
+            <table id="leads-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Khách Hàng</th>
+                        <th>Email</th>
+                        <th>Loại Gói</th>
+                        <th>Số Tiền</th>
+                        <th>Trạng Thái</th>
+                        <th>✉ Welcome</th>
+                        <th>⏰ Nhắc TT</th>
+                        <th>Phân Loại</th>
+                        <th>Hành Động</th>
+                        <th>Thời Gian</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-tbody"></tbody>
+            </table>
+            <div id="empty-state" class="empty-state" style="display:none;">
+                <i class="fas fa-magnifying-glass"></i>
+                <p>Không tìm thấy lead nào</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- EMAIL CONFIRM MODAL -->
+<div class="modal-overlay" id="email-modal">
+    <div class="modal">
+        <h3 id="modal-title">Gửi Email?</h3>
+        <p id="modal-desc">Xác nhận gửi email đến khách hàng này.</p>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Huỷ</button>
+            <button class="btn-send" id="modal-confirm-btn" onclick="confirmSendEmail()">
+                <i class="fas fa-paper-plane"></i> Gửi Ngay
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+let adminPw = '';
+let allLeads = [];
+let pendingEmailAction = null; // { emailType, lead }
+
+// ============================================================
+//  LOGIN
+// ============================================================
+document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+});
+
+function doLogin() {
+    const pw = document.getElementById('pw-input').value.trim();
+    if (!pw) return;
+    adminPw = pw;
+
+    // Try fetching with this pw
+    fetch(`/api/admin?pw=${encodeURIComponent(pw)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                allLeads = data.data || [];
+                renderStats(allLeads);
+                renderTable(allLeads);
+            } else {
+                showLoginError();
+            }
+        })
+        .catch(() => showLoginError());
+}
+
+function showLoginError() {
+    const err = document.getElementById('login-error');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 3000);
+}
+
+function logout() {
+    adminPw = '';
+    allLeads = [];
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('pw-input').value = '';
+}
+
+// ============================================================
+//  DATA LOADING
+// ============================================================
+function loadData() {
+    const btn = document.getElementById('refresh-btn');
+    btn.innerHTML = '<i class="fas fa-rotate-right fa-spin"></i> Đang tải…';
+    btn.disabled = true;
+
+    document.getElementById('table-loading').style.display = 'flex';
+    document.getElementById('leads-table').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'none';
+
+    fetch(`/api/admin?pw=${encodeURIComponent(adminPw)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                allLeads = data.data || [];
+                renderStats(allLeads);
+                filterTable();
+                showToast('Dữ liệu đã được cập nhật!', 'success');
+            } else {
+                showToast('Lỗi tải dữ liệu!', 'error');
+            }
+        })
+        .catch(() => showToast('Không thể kết nối server!', 'error'))
+        .finally(() => {
+            btn.innerHTML = '<i class="fas fa-rotate-right"></i> Làm mới';
+            btn.disabled = false;
+            document.getElementById('table-loading').style.display = 'none';
+        });
+}
+
+// ============================================================
+//  STATS
+// ============================================================
+function renderStats(leads) {
+    const total = leads.length;
+    const paid = leads.filter(l => l.status === 'PAID').length;
+    const pending = leads.filter(l => l.status === 'PENDING').length;
+    const welcomeSent = leads.filter(l => l.mailWelcomeSent).length;
+    const revenue = leads
+        .filter(l => l.status === 'PAID')
+        .reduce((s, l) => s + (parseFloat(l.amount) || 0), 0);
+    const conv = total > 0 ? ((paid / total) * 100).toFixed(1) : 0;
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-paid').textContent = paid;
+    document.getElementById('stat-pending').textContent = pending;
+    document.getElementById('stat-welcome').textContent = welcomeSent;
+    document.getElementById('stat-conversion').textContent = `${conv}% tỷ lệ chuyển đổi`;
+
+    if (revenue >= 1e9) {
+        document.getElementById('stat-revenue').textContent = (revenue / 1e9).toFixed(2) + 'B';
+    } else if (revenue >= 1e6) {
+        document.getElementById('stat-revenue').textContent = (revenue / 1e6).toFixed(1) + 'M';
+    } else {
+        document.getElementById('stat-revenue').textContent = new Intl.NumberFormat('vi-VN').format(revenue);
+    }
+}
+
+// ============================================================
+//  FILTER & RENDER TABLE
+// ============================================================
+function filterTable() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const statusF = document.getElementById('filter-status').value;
+    const typeF = document.getElementById('filter-type').value;
+    const mailF = document.getElementById('filter-mail').value;
+
+    const filtered = allLeads.filter(l => {
+        const matchSearch = !search || 
+            (l.fullname || '').toLowerCase().includes(search) ||
+            (l.email || '').toLowerCase().includes(search) ||
+            (l.phone || '').toLowerCase().includes(search) ||
+            (l.orderId || '').toLowerCase().includes(search);
+
+        const matchStatus = !statusF || l.status === statusF;
+        const matchType = !typeF || l.type === typeF;
+
+        let matchMail = true;
+        if (mailF === 'welcome_sent') matchMail = !!l.mailWelcomeSent;
+        else if (mailF === 'welcome_unsent') matchMail = !l.mailWelcomeSent;
+        else if (mailF === 'payment_sent') matchMail = !!l.mailPaymentSent;
+        else if (mailF === 'payment_unsent') matchMail = !l.mailPaymentSent;
+
+        return matchSearch && matchStatus && matchType && matchMail;
+    });
+
+    renderTable(filtered);
+    document.getElementById('visible-count').textContent = filtered.length;
+}
+
+function renderTable(leads) {
+    document.getElementById('table-loading').style.display = 'none';
+    const tbody = document.getElementById('leads-tbody');
+    tbody.innerHTML = '';
+
+    if (leads.length === 0) {
+        document.getElementById('leads-table').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'block';
+        document.getElementById('visible-count').textContent = '0';
+        return;
+    }
+
+    document.getElementById('leads-table').style.display = 'table';
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('visible-count').textContent = leads.length;
+
+    leads.forEach((lead, idx) => {
+        const tr = document.createElement('tr');
+        tr.dataset.phone = lead.phone || '';
+        tr.dataset.orderId = lead.orderId || '';
+        tr.innerHTML = `
+            <td style="color:var(--text-2);font-size:12px;">${idx + 1}</td>
+            <td>
+                <div class="lead-info">
+                    <div class="avatar">${getInitial(lead.fullname)}</div>
+                    <div>
+                        <div class="lead-name">${esc(lead.fullname)}</div>
+                        <div class="lead-phone">${esc(lead.phone || '—')}</div>
+                    </div>
+                </div>
+            </td>
+            <td style="font-size:12px;color:var(--text-2);">${esc(lead.email || '—')}</td>
+            <td>
+                <span style="font-size:11px;color:var(--text-2);">${esc(lead.package || '—')}</span>
+            </td>
+            <td style="font-weight:700;color:var(--gold);">
+                ${lead.amount ? new Intl.NumberFormat('vi-VN').format(lead.amount) + '₫' : '—'}
+            </td>
+            <td>${renderStatusBadge(lead.status)}</td>
+            <td>
+                ${renderMailIcon(lead.mailWelcomeSent, 'Welcome')}
+            </td>
+            <td>
+                ${renderMailIcon(lead.mailPaymentSent, 'Nhắc TT')}
+            </td>
+            <td>
+                ${renderTypeSelect(lead, idx)}
+            </td>
+            <td>
+                <div class="action-group">
+                    <button class="btn-action btn-welcome" 
+                        onclick="openEmailModal('welcome', ${idx}, leads)"
+                        title="Gửi email chào mừng"
+                        ${lead.mailWelcomeSent ? 'style="opacity:0.5"' : ''}>
+                        <i class="fas fa-envelope"></i> Welcome
+                    </button>
+                    <button class="btn-action btn-reminder"
+                        onclick="openEmailModal('payment_reminder', ${idx}, leads)"
+                        title="Gửi email nhắc thanh toán"
+                        ${lead.mailPaymentSent ? 'style="opacity:0.5"' : ''}>
+                        <i class="fas fa-clock"></i> Nhắc TT
+                    </button>
+                    ${lead.status === 'PENDING' ? `
+                    <button class="btn-action btn-confirm"
+                        onclick="openEmailModal('payment_confirmation', ${idx}, leads)"
+                        title="Gửi xác nhận thanh toán">
+                        <i class="fas fa-circle-check"></i> Xác nhận TT
+                    </button>` : ''}
+                </div>
+            </td>
+            <td style="font-size:11px;color:var(--text-2);white-space:nowrap;">${esc(lead.timestamp || '—')}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    // Expose to buttons (use filteredLeads global)
+    window._currentLeads = leads;
+}
+
+function renderStatusBadge(status) {
+    const s = (status || 'PENDING').toUpperCase();
+    if (s === 'PAID') return `<span class="badge badge-paid"><i class="fas fa-circle-check"></i> PAID</span>`;
+    if (s === 'CANCELLED') return `<span class="badge badge-cancelled"><i class="fas fa-circle-xmark"></i> CANCELLED</span>`;
+    if (s === 'REMINDED') return `<span class="badge badge-reminded"><i class="fas fa-clock-rotate-left"></i> REMINDED</span>`;
+    return `<span class="badge badge-pending"><i class="fas fa-hourglass-half"></i> PENDING</span>`;
+}
+
+function renderMailIcon(val, label) {
+    if (val) {
+        return `<span class="mail-icon mail-sent" title="Đã gửi lúc: ${esc(val)}"><i class="fas fa-check"></i></span>`;
+    }
+    return `<span class="mail-icon mail-unsent" title="Chưa gửi ${label}"><i class="fas fa-minus"></i></span>`;
+}
+
+function renderTypeSelect(lead, idx) {
+    const type = lead.type || '';
+    return `
+        <select class="type-select" onchange="updateType(this, ${idx})" title="Phân loại gói">
+            <option value="" ${type === '' ? 'selected' : ''}>— Chọn —</option>
+            <option value="E-learning" ${type === 'E-learning' ? 'selected' : ''}>📚 E-learning</option>
+            <option value="Coaching" ${type === 'Coaching' ? 'selected' : ''}>💎 Coaching</option>
+        </select>
+    `;
+}
+
+// ============================================================
+//  ACTIONS
+// ============================================================
+function openEmailModal(emailType, idx, leadsArr) {
+    const leads = leadsArr || window._currentLeads;
+    const lead = leads[idx];
+    if (!lead) return;
+
+    const typeLabels = {
+        welcome: { title: '📧 Gửi Email Chào Mừng', desc: `Gửi email chào mừng đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
+        payment_reminder: { title: '⏰ Gửi Email Nhắc Thanh Toán', desc: `Gửi email hối thúc thanh toán đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
+        payment_confirmation: { title: '✅ Gửi Xác Nhận Thanh Toán', desc: `Gửi email xác nhận thanh toán đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
+    };
+
+    const info = typeLabels[emailType] || { title: 'Gửi Email', desc: 'Xác nhận gửi email.' };
+    document.getElementById('modal-title').textContent = info.title;
+    document.getElementById('modal-desc').innerHTML = info.desc;
+    document.getElementById('email-modal').classList.add('active');
+
+    pendingEmailAction = { emailType, lead, idx };
+}
+
+async function confirmSendEmail() {
+    if (!pendingEmailAction) return;
+    const { emailType, lead, idx } = pendingEmailAction;
+
+    const btn = document.getElementById('modal-confirm-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Đang gửi…';
+
+    try {
+        const res = await fetch(`/api/admin-actions?pw=${encodeURIComponent(adminPw)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'send-email',
+                emailType,
+                fullname: lead.fullname,
+                email: lead.email,
+                phone: lead.phone,
+                orderId: lead.orderId,
+                amount: lead.amount
+            })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            showToast(`Email "${emailType}" đã gửi thành công! ✓`, 'success');
+            // Update local state
+            if (emailType === 'welcome') {
+                allLeads.find(l => l.phone === lead.phone || l.orderId === lead.orderId).mailWelcomeSent = data.sentAt || 'Đã gửi';
+            } else {
+                allLeads.find(l => l.phone === lead.phone || l.orderId === lead.orderId).mailPaymentSent = data.sentAt || 'Đã gửi';
+            }
+            renderStats(allLeads);
+            filterTable();
+        } else {
+            showToast(`Lỗi: ${data.message || 'Không gửi được'}`, 'error');
+        }
+    } catch (e) {
+        showToast('Lỗi kết nối server!', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Ngay';
+        closeModal();
+    }
+}
+
+function closeModal() {
+    document.getElementById('email-modal').classList.remove('active');
+    pendingEmailAction = null;
+}
+
+async function updateType(selectEl, idx) {
+    const leads = window._currentLeads || [];
+    const lead = leads[idx];
+    if (!lead) return;
+    const newType = selectEl.value;
+
+    try {
+        const res = await fetch(`/api/admin-actions?pw=${encodeURIComponent(adminPw)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'update-field',
+                phone: lead.phone,
+                orderId: lead.orderId,
+                fields: { type: newType }
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            // Update global
+            const gl = allLeads.find(l => l.phone === lead.phone || l.orderId === lead.orderId);
+            if (gl) gl.type = newType;
+            showToast(`Phân loại "${newType || 'Chưa chọn'}" đã cập nhật!`, 'success');
+        } else {
+            showToast('Lỗi cập nhật phân loại!', 'error');
+        }
+    } catch {
+        showToast('Lỗi kết nối!', 'error');
+    }
+}
+
+// ============================================================
+//  CSV EXPORT
+// ============================================================
+function exportCSV() {
+    const headers = ['#', 'Tên', 'SĐT', 'Email', 'Gói', 'Số tiền', 'Trạng thái', 'Loại', 'Mail Welcome', 'Mail Nhắc TT', 'Thời gian', 'Mã đơn'];
+    const rows = allLeads.map((l, i) => [
+        i + 1, l.fullname, l.phone, l.email, l.package, l.amount, l.status, l.type,
+        l.mailWelcomeSent ? 'Đã gửi' : 'Chưa', l.mailPaymentSent ? 'Đã gửi' : 'Chưa',
+        l.timestamp, l.orderId
+    ]);
+
+    const csv = [headers, ...rows].map(r => r.map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `crm-21ngay-${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Đã tải CSV thành công!', 'success');
+}
+
+// ============================================================
+//  UTILS
+// ============================================================
+function esc(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function getInitial(name) {
+    const words = String(name || 'A').trim().split(' ');
+    const last = words[words.length - 1];
+    return (last[0] || 'A').toUpperCase();
+}
+
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'circle-check' : 'circle-xmark'}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+// Close modal on overlay click
+document.getElementById('email-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// Initial render after DOM ready (no data yet - wait for login)
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('pw-input').focus();
+});
+</script>
+</body>
+</html>

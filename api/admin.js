@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
     const { pw } = req.query;
     
-    // Check password (Default is 'admin7day', use env for production)
+    // Check password
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin7day';
     
     if (pw !== ADMIN_PASSWORD) {
@@ -9,20 +9,21 @@ export default async function handler(req, res) {
     }
 
     try {
-        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzJu2FbsEhfYEi969iFQoBaKs7ScA_oFdxzGjTynPqMaqa_tCbeNs1fDx7S8RM7qMdi/exec';
+        const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
         
         // Fetch data from Google Sheet (doGet)
-        const response = await fetch(GOOGLE_SHEET_URL);
+        const response = await fetch(GOOGLE_SHEET_URL, { redirect: 'follow' });
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Apps Script Fetch Failed:', errorText);
             throw new Error(`Google Apps Script returned ${response.status}`);
         }
-        const data = await response.json();
+        const result = await response.json();
+        const rawData = result.data || result;
         
         return res.status(200).json({ 
             success: true, 
-            data: data.map(item => {
+            data: rawData.map(item => {
                 const normalized = { ...item };
                 
                 // Intelligent Mapping Logic
@@ -31,7 +32,6 @@ export default async function handler(req, res) {
                     const val = String(item[key] || "").trim();
                     if (!val) continue;
 
-                    // 1. Map by Header Keyword
                     if (lowerKey.includes('dấu thời gian') || lowerKey.includes('timestamp')) {
                         normalized.timestamp = val;
                     }
@@ -47,26 +47,59 @@ export default async function handler(req, res) {
                     if (lowerKey.includes('status') || lowerKey.includes('trạng thái')) {
                         normalized.status = val;
                     }
-
-                    // 2. Heuristic Overrides (If data is in the wrong column)
-                    // If 'fullname' looks like a phone number, move it to phone
-                    if (normalized.fullname && /^\d+$/.test(normalized.fullname.replace(/[\s\.\-\+]/g, '')) && normalized.fullname.length >= 8) {
-                        if (!normalized.phone || normalized.phone.length < 5) {
-                            normalized.phone = normalized.fullname;
-                            normalized.fullname = item['địa chỉ email'] || item['name'] || 'Khách hàng';
-                        }
+                    if (lowerKey === 'type') {
+                        normalized.type = val;
                     }
-                    
-                    // If 'status' is missing but we discover 'PAID' or 'CANCELLED' in any field
-                    if (val.toUpperCase() === 'PAID' || val.toUpperCase() === 'CANCELLED' || val.toUpperCase() === 'REMINDED') {
-                        normalized.status = val.toUpperCase();
+                    if (lowerKey === 'mail_welcome') {
+                        normalized.mailWelcomeSent = val;
+                    }
+                    if (lowerKey === 'mail_payment') {
+                        normalized.mailPaymentSent = val;
+                    }
+                    if (lowerKey === 'package') {
+                        normalized.package = val;
+                    }
+                    if (lowerKey === 'amount') {
+                        normalized.amount = val;
+                    }
+                    if (lowerKey === 'orderid') {
+                        normalized.orderId = val;
+                    }
+                    if (lowerKey === 'promocode') {
+                        normalized.promoCode = val;
                     }
                 }
 
+                // Heuristic Overrides
+                if (normalized.fullname && /^\d+$/.test(normalized.fullname.replace(/[\s\.\-\+]/g, '')) && normalized.fullname.length >= 8) {
+                    if (!normalized.phone || normalized.phone.length < 5) {
+                        normalized.phone = normalized.fullname;
+                        normalized.fullname = item['địa chỉ email'] || item['name'] || 'Khách hàng';
+                    }
+                }
+                
+                // If status marker found anywhere
+                for (const key in item) {
+                    const val = String(item[key] || "").trim().toUpperCase();
+                    if (['PAID', 'CANCELLED', 'REMINDED', 'PENDING'].includes(val)) {
+                        normalized.status = val;
+                    }
+                }
+
+                // Auto-detect type from package if not set
+                if (!normalized.type) {
+                    const pkg = (normalized.package || '').toUpperCase();
+                    if (pkg.includes('COACHING')) normalized.type = 'Coaching';
+                    else if (pkg.includes('ELEARN') || pkg.includes('21NGAY') || pkg.includes('ONLINE')) normalized.type = 'E-learning';
+                }
+
                 // Final Cleanups
-                normalized.timestamp = normalized.timestamp || item.timestamp || item.ts;
+                normalized.timestamp = normalized.timestamp || item.timestamp || item.ts || '';
                 normalized.fullname = normalized.fullname || 'Ẩn danh';
                 normalized.status = (normalized.status || 'PENDING').toUpperCase();
+                normalized.type = normalized.type || '';
+                normalized.mailWelcomeSent = normalized.mailWelcomeSent || '';
+                normalized.mailPaymentSent = normalized.mailPaymentSent || '';
 
                 return normalized;
             })
