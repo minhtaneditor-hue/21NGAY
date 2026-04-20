@@ -60,7 +60,7 @@ export default async function handler(req, res) {
             if (!sendRes.ok) {
                 const errText = await sendRes.text();
                 console.error('Resend Error:', errText);
-                throw new Error('Failed to send email via Resend');
+                return res.status(400).json({ success: false, message: 'Lỗi gửi mail (Resend): ' + errText });
             }
 
             const sentAt = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
