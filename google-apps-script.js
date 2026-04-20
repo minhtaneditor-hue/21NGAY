@@ -287,24 +287,23 @@ function autoNurtureCoaching() {
     
     if (status === 'PENDING' && isCoaching && timeStr) {
       try {
-        // Parse timeStr 'DD/MM/YYYY, HH:MM:SS'
-        const parts = String(timeStr).split(', ');
-        if(parts.length === 2) {
-          const dParts = parts[0].split('/');
-          const tParts = parts[1].split(':');
-          if (dParts.length === 3) {
-            const rowDate = new Date(dParts[2], dParts[1]-1, dParts[0], tParts[0], tParts[1], tParts[2]);
-            const diffDays = (now.getTime() - rowDate.getTime()) / (1000 * 3600 * 24);
+        // Parse timeStr robustly: Find the piece with slashes
+        const dateMatch = String(timeStr).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if(dateMatch) {
+          // Bỏ qua giờ phút giây, chỉ tính khoảng cách Ngày Dương Lịch (Calendar Day)
+          const rowDateOnly = new Date(dateMatch[3], dateMatch[2]-1, dateMatch[1]).setHours(0,0,0,0);
+          const todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate()).setHours(0,0,0,0);
+          const diffDays = Math.floor((todayOnly - rowDateOnly) / (1000 * 3600 * 24));
+          
+          let emailTypeToTrigger = null;
             
-            let emailTypeToTrigger = null;
-            
-            // Logic Nurture:
-            // Qua 1 ngày & chưa nhận N1 -> gửi N1
-            // Qua 3 ngày & chưa nhận N2 -> gửi N2
-            // Qua 5 ngày & chưa nhận N3 -> gửi N3
-            if (diffDays >= 5 && !data[i][n3Col]) {
+            // Logic Nurture Mới (Khách bận rộn -> Cần dồn dập & liên tục mỗi ngày)
+            // Sang ngày thứ 1 -> gửi N1
+            // Sang ngày thứ 2 -> gửi N2
+            // Sang ngày thứ 3 -> gửi N3
+            if (diffDays >= 3 && !data[i][n3Col]) {
               emailTypeToTrigger = 'coaching_nurture_3';
-            } else if (diffDays >= 3 && !data[i][n2Col] && !data[i][n3Col]) {
+            } else if (diffDays >= 2 && !data[i][n2Col] && !data[i][n3Col]) {
               emailTypeToTrigger = 'coaching_nurture_2';
             } else if (diffDays >= 1 && !data[i][n1Col] && !data[i][n2Col] && !data[i][n3Col]) {
               emailTypeToTrigger = 'coaching_nurture_1';
@@ -331,7 +330,6 @@ function autoNurtureCoaching() {
               // Đợi 2s tránh limit API
               Utilities.sleep(2000);
             }
-          }
         }
       } catch(e) { console.error(e) }
     }
