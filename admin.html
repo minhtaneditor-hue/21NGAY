@@ -599,17 +599,120 @@
             to { opacity: 0; transform: translateX(20px); }
         }
 
-        /* RESPONSIVE */
+        /* ============================================================
+           MOBILE-FIRST RESPONSIVE — ADMIN
+        ============================================================ */
+
+        /* === TABLET (≤ 900px) === */
         @media (max-width: 900px) {
-            .main { padding: 16px; }
-            .topbar { padding: 0 16px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .topbar-title { font-size: 14px; }
+            .main { padding: 16px 12px; }
+            .topbar { padding: 0 14px; height: 56px; }
             .topbar-subtitle { display: none; }
+            .topbar-title { font-size: 14px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+            .stat-value { font-size: 26px; }
+            .filter-bar { padding: 12px 14px; gap: 8px; }
+            .filter-count { width: 100%; text-align: right; margin-left: 0; }
         }
-        @media (max-width: 500px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .login-card { padding: 32px 24px; margin: 16px; }
+
+        /* === MOBILE (≤ 600px) === */
+        @media (max-width: 600px) {
+            /* TOPBAR — Compact Icon-Only Actions */
+            .topbar { padding: 0 12px; height: 52px; }
+            .topbar-icon { width: 30px; height: 30px; font-size: 13px; }
+            .topbar-title { font-size: 13px; }
+            .topbar-btn { padding: 7px 10px; font-size: 12px; gap: 4px; }
+            .topbar-btn span.btn-label { display: none; } /* hide text labels on mobile */
+
+            /* STATS — 2x2 Grid */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+            .stat-card { padding: 14px 12px; }
+            .stat-label { font-size: 9px; letter-spacing: 1px; margin-bottom: 6px; }
+            .stat-value { font-size: 22px; }
+            .stat-sub { font-size: 10px; margin-top: 4px; }
+            .stat-icon { font-size: 18px; right: 10px; top: 10px; }
+
+            /* FILTER BAR — Stacked */
+            .filter-bar { padding: 10px 12px; gap: 8px; }
+            .search-wrap { min-width: auto; }
+            .filter-select {
+                flex: 1;
+                min-width: 0;
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            .filter-count { width: 100%; font-size: 12px; text-align: center; margin-left: 0; }
+
+            /* TABLE — Hide completely, show CARD VIEW instead */
+            #leads-table thead { display: none; }
+            #leads-table tbody tr {
+                display: block;
+                background: var(--bg-card-2);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                margin-bottom: 12px;
+                padding: 14px;
+                position: relative;
+            }
+            #leads-table tbody tr:hover { background: var(--bg-hover); }
+            #leads-table td {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 5px 0;
+                border: none;
+                font-size: 13px;
+            }
+            /* Hide # column and Email column (shown in card differently) */
+            #leads-table td:first-child { display: none; }
+            /* Show label before each data cell */
+            #leads-table td::before {
+                content: attr(data-label);
+                flex-shrink: 0;
+                width: 90px;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                color: var(--text-2);
+                padding-top: 2px;
+            }
+            /* Lead info row — full width no label */
+            #leads-table td.td-lead { flex-direction: column; }
+            #leads-table td.td-lead::before { display: none; }
+            .lead-info { width: 100%; }
+            .lead-name { font-size: 15px; }
+
+            /* Actions — full width stacked */
+            .action-group { flex-wrap: wrap; gap: 6px; }
+            .btn-action { flex: 1; min-width: 80px; justify-content: center; padding: 8px 6px; font-size: 11px; }
+
+            /* Type select — full width */
+            .type-select { width: 100%; padding: 7px 10px; font-size: 12px; }
+
+            /* TOAST — bottom on mobile */
+            .toast-container {
+                top: auto;
+                bottom: 16px;
+                right: 8px;
+                left: 8px;
+            }
+            .toast { min-width: auto; max-width: 100%; font-size: 13px; }
+
+            /* MODAL */
+            .modal { padding: 20px 14px; }
+            .modal h3 { font-size: 16px; }
+            .modal p { font-size: 13px; }
+            .modal-actions { flex-direction: column-reverse; }
+            .btn-cancel, .btn-send { width: 100%; text-align: center; padding: 12px; }
+
+            /* LOGIN */
+            .login-card { padding: 28px 20px; margin: 16px; width: auto; }
+            .login-logo h1 { font-size: 22px; }
         }
     </style>
 </head>
@@ -653,13 +756,13 @@
         </div>
         <div class="topbar-actions">
             <button class="topbar-btn" onclick="exportCSV()">
-                <i class="fas fa-download"></i> Xuất CSV
+                <i class="fas fa-download"></i> <span class="btn-label">Xuất CSV</span>
             </button>
             <button class="topbar-btn topbar-refresh-btn" id="refresh-btn" onclick="loadData()">
-                <i class="fas fa-rotate-right"></i> Làm mới
+                <i class="fas fa-rotate-right"></i> <span class="btn-label">Làm mới</span>
             </button>
             <button class="topbar-btn" onclick="logout()">
-                <i class="fas fa-right-from-bracket"></i> Thoát
+                <i class="fas fa-right-from-bracket"></i> <span class="btn-label">Thoát</span>
             </button>
         </div>
     </header>
@@ -950,7 +1053,7 @@ function renderTable(leads) {
         tr.dataset.orderId = lead.orderId || '';
         tr.innerHTML = `
             <td style="color:var(--text-2);font-size:12px;">${idx + 1}</td>
-            <td>
+            <td class="td-lead">
                 <div class="lead-info">
                     <div class="avatar">${getInitial(lead.fullname)}</div>
                     <div>
@@ -959,29 +1062,27 @@ function renderTable(leads) {
                     </div>
                 </div>
             </td>
-            <td style="font-size:12px;color:var(--text-2);">${esc(lead.email || '—')}</td>
-            <td>
-                <span style="font-size:11px;color:var(--text-2);">${esc(lead.package || '—')}</span>
-            </td>
-            <td style="font-weight:700;color:var(--gold);">
+            <td data-label="Email" style="font-size:12px;color:var(--text-2);">${esc(lead.email || '—')}</td>
+            <td data-label="Gói" style="font-size:11px;color:var(--text-2);">${esc(lead.package || '—')}</td>
+            <td data-label="Số Tiền" style="font-weight:700;color:var(--gold);">
                 ${lead.amount ? new Intl.NumberFormat('vi-VN').format(lead.amount) + '₫' : '—'}
             </td>
-            <td>
+            <td data-label="Mã Giảm Giá">
                 ${lead.promoCode
                     ? `<span style="background:var(--gold-glow);color:var(--gold);border:1px solid var(--border-accent);padding:3px 9px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px;">${esc(lead.promoCode)}</span>`
                     : '<span style="color:var(--text-2);font-size:12px;">—</span>'}
             </td>
-            <td>${renderStatusBadge(lead.status)}</td>
-            <td>
+            <td data-label="Trạng Thái">${renderStatusBadge(lead.status)}</td>
+            <td data-label="Welcome">
                 ${renderMailIcon(lead.mailWelcomeSent, 'Welcome')}
             </td>
-            <td>
+            <td data-label="Nhắc TT">
                 ${renderMailIcon(lead.mailPaymentSent, 'Nhắc TT')}
             </td>
-            <td>
+            <td data-label="Loại Gói">
                 ${renderTypeSelect(lead, idx)}
             </td>
-            <td>
+            <td data-label="Email Actions">
                 <div class="action-group">
                     <button class="btn-action btn-welcome" 
                         onclick="openEmailModal('welcome', ${idx}, leads)"
@@ -1003,7 +1104,7 @@ function renderTable(leads) {
                     </button>` : ''}
                 </div>
             </td>
-            <td style="font-size:11px;color:var(--text-2);white-space:nowrap;">${esc(lead.timestamp || '—')}</td>
+            <td data-label="Thời Gian" style="font-size:11px;color:var(--text-2);white-space:nowrap;">${esc(lead.timestamp || '—')}</td>
         `;
         tbody.appendChild(tr);
     });
