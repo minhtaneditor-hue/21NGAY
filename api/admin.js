@@ -2,7 +2,7 @@ export default async function handler(req, res) {
     const { pw } = req.query;
     
     // Check password
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin7day';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin21day';
     
     if (pw !== ADMIN_PASSWORD) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
