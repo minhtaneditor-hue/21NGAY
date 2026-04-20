@@ -1103,20 +1103,20 @@ function renderTable(leads) {
             <td data-label="Email Actions">
                 <div class="action-group">
                     <button class="btn-action btn-welcome" 
-                        onclick="openEmailModal('welcome', ${idx}, leads)"
+                        onclick="openEmailModal('welcome', ${idx})"
                         title="Gửi email chào mừng"
                         ${lead.mailWelcomeSent ? 'style="opacity:0.5"' : ''}>
                         <i class="fas fa-envelope"></i> Welcome
                     </button>
                     <button class="btn-action btn-reminder"
-                        onclick="openEmailModal('payment_reminder', ${idx}, leads)"
+                        onclick="openEmailModal('payment_reminder', ${idx})"
                         title="Gửi email nhắc thanh toán"
                         ${lead.mailPaymentSent ? 'style="opacity:0.5"' : ''}>
                         <i class="fas fa-clock"></i> Nhắc TT
                     </button>
                     ${lead.status === 'PENDING' ? `
                     <button class="btn-action btn-confirm"
-                        onclick="openEmailModal('payment_confirmation', ${idx}, leads)"
+                        onclick="openEmailModal('payment_confirmation', ${idx})"
                         title="Gửi xác nhận thanh toán">
                         <i class="fas fa-circle-check"></i> Xác nhận TT
                     </button>` : ''}
