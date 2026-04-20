@@ -143,8 +143,7 @@ export default async function handler(req, res) {
                                 currency: 'VND',
                                 value: data.amount || 0
                             }
-                        }],
-                        test_event_code: 'TEST73427'
+                        }]
                     };
 
                     const fbRes = await fetch(`https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`, {
