@@ -56,6 +56,15 @@ export default async function handler(req, res) {
                     if (lowerKey === 'mail_payment') {
                         normalized.mailPaymentSent = val;
                     }
+                    if (lowerKey === 'mail_nurture_1') {
+                        normalized.mailNurture1Sent = val;
+                    }
+                    if (lowerKey === 'mail_nurture_2') {
+                        normalized.mailNurture2Sent = val;
+                    }
+                    if (lowerKey === 'mail_nurture_3') {
+                        normalized.mailNurture3Sent = val;
+                    }
                     if (lowerKey === 'package') {
                         normalized.package = val;
                     }
@@ -100,6 +109,9 @@ export default async function handler(req, res) {
                 normalized.type = normalized.type || '';
                 normalized.mailWelcomeSent = normalized.mailWelcomeSent || '';
                 normalized.mailPaymentSent = normalized.mailPaymentSent || '';
+                normalized.mailNurture1Sent = normalized.mailNurture1Sent || '';
+                normalized.mailNurture2Sent = normalized.mailNurture2Sent || '';
+                normalized.mailNurture3Sent = normalized.mailNurture3Sent || '';
 
                 return normalized;
             })

@@ -38,8 +38,20 @@ export default async function handler(req, res) {
             } else if (emailType === 'payment_confirmation') {
                 emailData = templates.paymentConfirmation(fullname, orderId);
                 mailField = 'mail_payment';
+            } else if (emailType === 'coaching_welcome') {
+                emailData = templates.coachingWelcome(fullname);
+                mailField = 'mail_welcome';
+            } else if (emailType === 'coaching_nurture_1') {
+                emailData = templates.coachingNurture1(fullname);
+                mailField = 'mail_nurture_1';
+            } else if (emailType === 'coaching_nurture_2') {
+                emailData = templates.coachingNurture2(fullname);
+                mailField = 'mail_nurture_2';
+            } else if (emailType === 'coaching_nurture_3') {
+                emailData = templates.coachingNurture3(fullname);
+                mailField = 'mail_nurture_3';
             } else {
-                return res.status(400).json({ success: false, message: 'Invalid emailType. Use: welcome, payment_reminder, payment_confirmation' });
+                return res.status(400).json({ success: false, message: 'Invalid emailType.' });
             }
 
             // 1. Gửi email qua Resend

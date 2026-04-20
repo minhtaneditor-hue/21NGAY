@@ -108,6 +108,66 @@ const templates = {
                 Ngoài ra, Tấn cũng đang chia sẻ rất nhiều kiến thức sâu hơn về xây dựng nhân hiệu và tối ưu video tại cộng đồng <strong>Skool Classroom</strong>. Hãy tham gia cùng Tấn nhé!
             </p>
         `, "QUÀ TẶNG TỪ TẤN")
+    }),
+
+    // -------------------------------------------------------------------------
+    // 4. CHUỖI EMAIL NURTURE: GÓI COACHING
+    // -------------------------------------------------------------------------
+    coachingWelcome: (name) => ({
+        subject: "👑 Kích hoạt gói Coaching: Hành trình làm chủ Video của bạn bắt đầu!",
+        html: baseTemplate(name, `
+            <p style="color: #444444; font-size: 17px; line-height: 1.7;">Chào ${name}, cảm ơn bạn đã quyết định đầu tư vào bản thân với gói <strong>Video Coaching 1:1</strong>.</p>
+            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 600;">Đây không chỉ là một khóa học, đây là sự đồng hành.</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Với gói Coaching, Tấn sẽ trực tiếp theo sát, tối ưu từng thông điệp, từng kịch bản và cách bạn xuất hiện trên khung hình. Bạn không cần phải đoán mò hay đi đường vòng nữa.</p>
+            <div style="background-color: #fff9c4; border-left: 5px solid #fbc02d; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <p style="margin: 0; font-weight: bold; color: #000;">🎯 Việc cần làm ngay bây giờ:</p>
+                <p style="margin: 10px 0 0 0; font-size: 16px;">Hãy kiểm tra tin nhắn Zalo/Telegram, Tấn đã gửi lịch đặt hẹn cho buổi Kick-off đầu tiên của chúng ta. Hãy chọn một khung giờ phù hợp nhất trong tuần này!</p>
+            </div>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Hẹn gặp bạn trong buổi làm việc trực tiếp sắp tới.</p>
+        `, "COACHING PREMIUM")
+    }),
+
+    coachingNurture1: (name) => ({
+        subject: "💡 Sự thật: Người bận rộn không có thời gian để 'tự mò mẫm'",
+        html: baseTemplate(name, `
+            <p style="color: #444444; font-size: 17px; line-height: 1.7;">Chào ${name}, dạo gần đây bạn vẫn theo dõi các video của Tấn chứ?</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Tấn biết bạn là một người rất bận rộn với công việc kinh doanh hiện tại. Việc xuất hiện trên Mạng Xã Hội là bắt buộc để nhân bản doanh thu, nhưng bạn không có thời gian thử sai hay vò đầu bứt tóc dựng từng chiếc video.</p>
+            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 700;">Đó là lý do Coaching 1:1 là con đường tắt rẻ nhất.</p>
+            <p style="color: #555555; font-size: 16px; line-height: 1.7;">Thay vì tốn 6 tháng tự học và làm sai, việc có một Mentor đồng hành nghĩa là bạn cầm trong tay bộ khung chuẩn chỉnh, chỉ việc ráp vào và ra kết quả ngay trong 21 ngày đầu tiên.</p>
+            <div style="text-align: center; margin: 35px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#pricing-section" style="background-color: #000; color: #f5bc1b; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 17px; display: inline-block;">TIẾN HÀNH BẮT ĐẦU NGAY</a>
+            </div>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Đừng để đối thủ cướp khách hàng chỉ vì bạn chậm chân lên xu hướng.</p>
+        `, "VIDEO ADVISOR")
+    }),
+
+    coachingNurture2: (name) => ({
+        subject: "⏳ Đừng để sự trì hoãn cướp đi tệp khách hàng của bạn!",
+        html: baseTemplate(name, `
+            <p style="color: #d32f2f; font-size: 17px; line-height: 1.7; font-weight: bold;">Chỉ còn trống đúng 2 slot Coaching trong tháng này!</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Chào ${name}, tháng vừa rồi học viên của Tấn đã mang về kết quả X3 doanh số chỉ sau chuỗi 15 video ngắn đúng insight.</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Vì tính chất đồng hành 1:1, Tấn không thể nhận quá nhiều học viên cùng lúc để đảm bảo chất lượng. Nếu bạn vẫn đang khao khát thay đổi chiến lược bán hàng của mình, thì đây là lúc bạn cần quyết định.</p>
+            <div style="background-color: #f1f8e9; border-left: 5px solid #2e7d32; padding: 25px; border-radius: 8px; margin: 30px 0;">
+                <p style="color: #444444; font-size: 16px; margin: 0; font-style: italic;">"Hối hận lớn nhất không phải là làm sai, mà là không dám bắt đầu sớm hơn khi cơ hội còn ngay trước mắt."</p>
+            </div>
+            <div style="text-align: center; margin: 35px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#pricing-section" style="background-color: #d32f2f; color: #fff; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 17px; display: inline-block;">GIỮ CHỖ COACHING 1:1 NGAY LÚC NÀY</a>
+            </div>
+        `, "VIDEO ADVISOR")
+    }),
+
+    coachingNurture3: (name) => ({
+        subject: "🔓 Lựa chọn thứ hai dành cho bạn: Tự học với rủi ro bằng 0",
+        html: baseTemplate(name, `
+            <p style="color: #444444; font-size: 17px; line-height: 1.7;">Chào ${name}, Tấn hoàn toàn hiểu nếu hiện tại gói Coaching đang vượt quá ngân sách trải nghiệm của bạn.</p>
+            <p style="color: #1a1a1a; font-size: 16px; line-height: 1.7; font-weight: 600;">Tuy nhiên, mục tiêu quan trọng nhất vẫn là bạn PHẢI HÀNH ĐỘNG.</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Chính vì vậy, Tấn mời bạn trải nghiệm gói <strong>E-Learning (Khóa học 21 Ngày)</strong> với chi phí mềm hơn cực kỳ nhiều. Bạn vẫn sở hữu toàn bộ công thức, kịch bản, và bí quyết tối ưu y hệt như những gì Tấn chia sẻ trong Coaching.</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Hãy dùng gói E-Learning làm bước đệm. Khi bạn ra kết quả và có lợi nhuận, bạn hoàn toàn có thể dùng lợi nhuận đó nâng cấp lên Coaching sau này cũng chưa muộn.</p>
+            <div style="text-align: center; margin: 35px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#pricing-section" style="background-color: #f5bc1b; color: #000; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 17px; display: inline-block;">BẮT ĐẦU VỚI GÓI E-LEARNING</a>
+            </div>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">Đừng chần chừ nữa, đây là lựa chọn an toàn tuyệt đối dành cho bạn.</p>
+        `, "VIDEO ADVISOR")
     })
 };
 

@@ -1102,18 +1102,37 @@ function renderTable(leads) {
             </td>
             <td data-label="Email Actions">
                 <div class="action-group">
-                    <button class="btn-action btn-welcome" 
-                        onclick="openEmailModal('welcome', ${idx})"
-                        title="Gửi email chào mừng"
-                        ${lead.mailWelcomeSent ? 'style="opacity:0.5"' : ''}>
-                        <i class="fas fa-envelope"></i> Welcome
-                    </button>
+                    ${lead.type === 'Coaching' ? `
+                        <button class="btn-action" style="background:var(--gold-glow);color:var(--gold);border:1px solid var(--gold);" 
+                            onclick="openEmailModal('coaching_welcome', ${idx})"
+                            title="Gửi email chào mừng VIP"
+                            ${lead.mailWelcomeSent ? 'style="opacity:0.5"' : ''}>
+                            <i class="fas fa-crown"></i> Welcome VIP
+                        </button>
+                    ` : `
+                        <button class="btn-action btn-welcome" 
+                            onclick="openEmailModal('welcome', ${idx})"
+                            title="Gửi email chào mừng"
+                            ${lead.mailWelcomeSent ? 'style="opacity:0.5"' : ''}>
+                            <i class="fas fa-envelope"></i> Welcome
+                        </button>
+                    `}
                     <button class="btn-action btn-reminder"
                         onclick="openEmailModal('payment_reminder', ${idx})"
                         title="Gửi email nhắc thanh toán"
                         ${lead.mailPaymentSent ? 'style="opacity:0.5"' : ''}>
                         <i class="fas fa-clock"></i> Nhắc TT
                     </button>
+                    
+                    ${lead.type === 'Coaching' && lead.status === 'PENDING' ? `
+                        <div style="width:100%;height:4px;"></div>
+                        <span style="font-size:10px;color:var(--gold);width:100%;text-align:center;display:block;">Nurture Coaching:</span>
+                        <div style="display:flex;gap:4px;width:100%;">
+                            <button class="btn-action" style="flex:1;background:#222;color:${lead.mailNurture1Sent ? '#666' : 'var(--gold)'};padding:6px 0;" onclick="openEmailModal('coaching_nurture_1', ${idx})" title="${lead.mailNurture1Sent ? 'Đã gửi: '+lead.mailNurture1Sent : 'Gửi Nurture 1'}">N1</button>
+                            <button class="btn-action" style="flex:1;background:#222;color:${lead.mailNurture2Sent ? '#666' : 'var(--gold)'};padding:6px 0;" onclick="openEmailModal('coaching_nurture_2', ${idx})" title="${lead.mailNurture2Sent ? 'Đã gửi: '+lead.mailNurture2Sent : 'Gửi Nurture 2'}">N2</button>
+                            <button class="btn-action" style="flex:1;background:#222;color:${lead.mailNurture3Sent ? '#666' : 'var(--gold)'};padding:6px 0;" onclick="openEmailModal('coaching_nurture_3', ${idx})" title="${lead.mailNurture3Sent ? 'Đã gửi: '+lead.mailNurture3Sent : 'Gửi Nurture 3'}">N3</button>
+                        </div>
+                    ` : ''}
                     ${lead.status === 'PENDING' ? `
                     <button class="btn-action btn-confirm"
                         onclick="openEmailModal('payment_confirmation', ${idx})"
@@ -1171,9 +1190,13 @@ function openEmailModal(emailType, idx, leadsArr) {
     if (!lead) return;
 
     const typeLabels = {
-        welcome: { title: '📧 Gửi Email Chào Mừng', desc: `Gửi email chào mừng đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
+        welcome: { title: '📧 Gửi Email Chào Mừng', desc: `Gửi email chào mừng cơ bản đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
         payment_reminder: { title: '⏰ Gửi Email Nhắc Thanh Toán', desc: `Gửi email hối thúc thanh toán đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
         payment_confirmation: { title: '✅ Gửi Xác Nhận Thanh Toán', desc: `Gửi email xác nhận thanh toán đến <strong>${esc(lead.fullname)}</strong> (${esc(lead.email)})?` },
+        coaching_welcome: { title: '👑 Gửi Welcome Coaching VIP', desc: `Khách hàng <strong>${esc(lead.fullname)}</strong> đã đăng ký gói Coaching. Gửi email kích hoạt lộ trình VIP?` },
+        coaching_nurture_1: { title: '🔥 Gửi Nurture 1 (Coaching)', desc: `Gửi email Nurture 1 (Nỗi đau & Sự trì hoãn) đến <strong>${esc(lead.fullname)}</strong>?` },
+        coaching_nurture_2: { title: '⏳ Gửi Nurture 2 (Coaching)', desc: `Gửi email Nurture 2 (FOMO & Case Study) đến <strong>${esc(lead.fullname)}</strong>?` },
+        coaching_nurture_3: { title: '🔓 Gửi Nurture 3 (Coaching)', desc: `Gửi email Nurture 3 (Mời E-Learning) đến <strong>${esc(lead.fullname)}</strong>?` },
     };
 
     const info = typeLabels[emailType] || { title: 'Gửi Email', desc: 'Xác nhận gửi email.' };

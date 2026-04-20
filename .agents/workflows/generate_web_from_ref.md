@@ -19,15 +19,24 @@ Vui lòng cung cấp các thông tin sau để mình tiến hành tạo web:
 ### Bước 2: Phân tích Dữ liệu tham khảo (Research)
 - Tự động sử dụng công cụ đọc URL hoặc mở trình duyệt (browser tool / read_url_content) để đọc nội dung từ link Ref của người dùng.
 - Trích xuất được cấu trúc: Màu sắc chủ đạo, Typography, Hiệu ứng (Animations/Hover) và cách bố trí thông tin.
-- Dùng công cụ đọc file (`view_file`) để xem file khung mẫu của người dùng.
+- Dùng công cụ đọc file (`view_file`) để xem file khung mẫu của người dùng, ĐẶC BIỆT chú ý phần tử ảnh (assets) TRÁNH DÙNG SAI ẢNH LỊCH SỬ.
 
 ### Bước 3: Bắt tay vào Viết Code (Implementation)
 - Tạo ra thư mục và những file cốt lõi: `index.html`, `style.css`, và `/assets`.
-- Viết mã HTML bằng HTML5 Sementic dựa theo nội dung văn bản mà người dùng đã cung cấp ở Bước 1.
-- Viết CSS hoàn chỉnh (không dùng CSS inline, dùng design system với vars nếu được). Áp dụng phong cách thị giác đã học hỏi được từ Bước 2. Cần đặc biệt chú ý đến:
-  - Giao diện phải mang tính "Premium", Responsive (Mobile / Desktop).
-  - Thêm các Micro-animations.
+- Viết mã HTML bằng HTML5 Semantic.
+- **[BẮT BUỘC] TÍCH HỢP HIỆU ỨNG (MOTION ENGINE)**: Chèn luôn đoạn mã JS `IntersectionObserver` cho Scroll Reveal vào cuối trang web. Gán sẵn các class `.reveal, .reveal-left, .reveal-scale, .stagger-1...` vào bố cục để tạo cảm giác Premium lập tức.
+- **[BẮT BUỘC] QUY TẮC CSS (MOBILE-FIRST & AESTHETICS)**:
+  - Cấm sử dụng padding container = `0px` trên mobile. Mặc định `padding: 0 16px`.
+  - Phục hồi & fix lỗi Tràn kích thước: `.hero-title` font-size phải giảm mạnh trên Mobile (vd: `2.3rem`), ảnh hero (`hero-right`) phải limit width/max-width tránh đẩy ngang khung nền.
+  - Ngăn iOS zoom: Mọi tag `<input>`, `<select>` phải áp dụng `font-size: 16px !important`.
+  - Nút bấm (Touch targets) trên Mobile: `min-height: 44px`, padding rộng rãi.
+  - Box Layout: Đối với giá cả (Pricing) / Timeline / Feedback, khi `< 768px` phải lập tức chuyển thành stack (box dọc), flex-direction: column.
 
-### Bước 4: Hoàn thiện & Khởi chạy (Review)
+### Bước 4: Tích hợp Hệ thống Tracking & CSDL (Theo Checklist đã học)
+- Mặc định phải chuẩn bị sẵn khung `api/submit.js` nếu web có thu phễu. 
+- **[LỖI THƯỜNG GẶP - VỀ CAPI FB]**: Đừng bao giờ dính test data hardcode. Gửi qua Conversion API (graph.facebook.com) BẮT BUỘC bỏ dòng `test_event_code` khi đưa vào Live, nếu không sẽ bị miss track quảng cáo thực tế. Dữ liệu đính kèm event phải hash chuẩn SHA256 (cho email, phone).
+- **[LỖI THƯỜNG GẶP - VỀ APP SCRIPT]**: Tuyệt đối không tự sửa URL Script của user trong file ẩn nếu không phải yêu cầu chủ động (Gắn qua `.env` mặc định, nếu User yêu cầu "just do it" thì hardcode trực tiếp vào API file để live nhanh nhất có thể).
+
+### Bước 5: Hoàn thiện & Khởi chạy (Review)
 - Sau khi viết mã xong, hiển thị kết quả cho người dùng.
-- Nêu rõ các thay đổi và hỏi người dùng có muốn chỉnh màu sắc hay khoảng cách (padding/margin) chỗ nào không.
+- Nêu rõ các thay đổi và hỏi người dùng có muốn chỉnh màu sắc hay khoảng cách độ lớn của thành phần quan trọng nào không. Dặn họ test kỹ độ mượt mà trên Mobile (màn hình nhỏ).
