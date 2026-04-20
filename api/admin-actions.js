@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
-    const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbznXhr4jeHaz3UCZ_BtdzVGfdQcCBV_LHPTa-I7EyRkb0oZGHIeA-N72FjsjEbDiDtS/exec';
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
     try {

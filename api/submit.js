@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-    const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_URL;
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbznXhr4jeHaz3UCZ_BtdzVGfdQcCBV_LHPTa-I7EyRkb0oZGHIeA-N72FjsjEbDiDtS/exec';
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
     
     // FACEBOOK CAPI CONFIG
