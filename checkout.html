@@ -14,7 +14,7 @@
         <div class="progress-container">
             <div id="progress-bar-fill" class="progress-bar-fill" style="width: 75%;"></div>
         </div>
-        <p style="text-align: center; font-size: 0.85rem; color: var(--gold); font-weight: 700; margin-bottom: 20px; letter-spacing: 1px;">BẠN CHỈ CÒN 1 BƯỚC NỮA ĐỂ ĐẾN TỰ DO 🚀</p>
+        <p style="text-align: center; font-size: 0.85rem; color: var(--gold); font-weight: 700; margin-bottom: 20px; letter-spacing: 1px; line-height: 1.4;">BẠN CHỈ CÒN 1 BƯỚC NỮA ĐỂ CHẠM ĐƯỢC CƠ HỘI BIẾN CHÍNH ĐIỆN THOẠI CỦA BẠN THÀNH TÀI SẢN! 🚀</p>
 
         <div class="checkout-hero">
             <h1>HƯỚNG DẪN <span class="text-gold">HOÀN TẤT ĐĂNG KÝ</span></h1>
@@ -144,8 +144,8 @@
             document.getElementById('payment-amount').innerText = new Intl.NumberFormat('vi-VN').format(currentAmount) + " VNĐ";
             document.getElementById('payment-desc').innerText = currentOrderId;
 
-            // Generate QR
-            const qrUrl = "https://qr.sepay.vn/img?acc=221898279&bank=ACB&amount=" + currentAmount + "&des=" + currentOrderId + "&template=compact";
+            // Generate QR (VietQR.io - Không hiện chữ SePay)
+            const qrUrl = `https://img.vietqr.io/image/ACB-221898279-compact2.png?amount=${currentAmount}&addInfo=${currentOrderId}&accountName=LE%20MINH%20TAN`;
             document.getElementById('vietqr-qr').src = qrUrl;
 
             // Start Timer
@@ -202,8 +202,34 @@
             }, 1000);
         }
 
-        function sendConfirmation() {
-            window.open('https://zalo.me/0922255861', '_blank');
+        async function sendConfirmation() {
+            const btn = document.querySelector('.btn-cta');
+            const originalText = btn.innerText;
+            btn.innerText = "ĐANG XỬ LÝ...";
+            btn.disabled = true;
+
+            try {
+                // Call API to update Sheet as PAID
+                await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'confirm-payment',
+                        orderId: currentOrderId,
+                        amount: currentAmount,
+                        fullname: localStorage.getItem('user_fullname') || 'Khách hàng',
+                        email: localStorage.getItem('user_email') || '',
+                        phone: localStorage.getItem('user_phone') || ''
+                    })
+                });
+            } catch (e) {
+                console.error("Lỗi xác nhận:", e);
+            } finally {
+                // Always open Zalo regardless of API success to avoid blocking user
+                window.open('https://zalo.me/0922255861', '_blank');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
 
         window.onload = init;

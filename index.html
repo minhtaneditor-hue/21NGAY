@@ -808,6 +808,11 @@
                 } else {
                     submitBtn.innerText = "Đang chuyển hướng...";
                     
+                    // SAVE USER INFO FOR CHECKOUT PAGE
+                    localStorage.setItem('user_fullname', data.fullname || '');
+                    localStorage.setItem('user_email', data.email || '');
+                    localStorage.setItem('user_phone', data.phone || '');
+
                     // REDIRECT TO Trang 2 (Checkout Page)
                     const checkoutUrl = `checkout.html?orderId=${currentOrderId}&amount=${currentAmount}`;
                     

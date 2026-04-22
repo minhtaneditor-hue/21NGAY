@@ -269,8 +269,22 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Email Error:', err))
             );
 
+            // 3. Update Google Sheet (SET STATUS: PAID)
+            promises.push(
+                fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update-status',
+                        orderId: data.orderId,
+                        phone: data.phone,
+                        status: 'PAID'
+                    })
+                }).catch(err => console.error('Sheet Update Error:', err))
+            );
+
             await Promise.allSettled(promises);
-            return res.status(200).json({ success: true, message: 'Confirmation received' });
+            return res.status(200).json({ success: true, message: 'Confirmation received and status updated' });
         }
 
     } catch (error) {
