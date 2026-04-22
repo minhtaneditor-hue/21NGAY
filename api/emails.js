@@ -168,6 +168,40 @@ const templates = {
             </div>
             <p style="color: #444444; font-size: 16px; line-height: 1.7;">Đừng chần chừ nữa, đây là lựa chọn an toàn tuyệt đối dành cho bạn.</p>
         `, "VIDEO ADVISOR")
+    }),
+
+    // -------------------------------------------------------------------------
+    // 5. EMAIL KÍCH HOẠT CHÍNH THỨC (GỬI SAU KHI THANH TOÁN THÀNH CÔNG)
+    // -------------------------------------------------------------------------
+    skoolInvite: (name) => ({
+        subject: "🎉 CHÚC MỪNG! Tài khoản 21 Ngày Biến Video Thành Tài Sản đã sẵn sàng!",
+        html: baseTemplate(name, `
+            <p style="color: #1b5e20; font-size: 18px; font-weight: bold; margin-bottom: 20px;">Xác nhận thành công! Chào mừng bạn gia nhập đội ngũ tinh anh.</p>
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">
+                Tấn đã nhận được học phí của bạn. Rất trân trọng quyết định đầu tư vào bản thân của bạn. Đây chính là thời điểm cỗ máy thu nhập từ Video của bạn bắt đầu được xây dựng.
+            </p>
+            
+            <div style="background-color: #fff9c4; border: 2px dashed #fbc02d; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0;">
+                <p style="margin: 0 0 15px 0; font-weight: bold; color: #000; font-size: 17px;">👇 THAM GIA LỚP HỌC NGAY TẠI ĐÂY:</p>
+                <a href="https://www.skool.com/tan-lab-6821/classroom" style="background-color: #000000; color: #f5bc1b; padding: 20px 45px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">TRUY CẬP SKOOL PRO</a>
+                <p style="margin: 15px 0 0 0; font-size: 14px; color: #666;">
+                    *Vui lòng sử dụng đúng Email này để đăng ký tài khoản Skool*
+                </p>
+            </div>
+
+            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <p style="margin: 0; font-weight: bold; color: #333;">💡 Một vài lưu ý nhỏ:</p>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #555; font-size: 15px; line-height: 1.6;">
+                    <li>Lộ trình 21 ngày sẽ được mở theo từng giai đoạn để bạn không bị ngợp.</li>
+                    <li>Hãy tham gia ngay nhóm Zalo hỗ trợ (link có trong Skool) để trao đổi cùng Tấn.</li>
+                    <li>Mọi thắc mắc kỹ thuật, hãy phản hồi trực tiếp Email này.</li>
+                </ul>
+            </div>
+
+            <p style="color: #444444; font-size: 16px; line-height: 1.7;">
+                Tất cả đã sẵn sàng. Hẹn gặp bạn rực rỡ nhất trong cộng đồng Skool!
+            </p>
+        `, "WELCOME TO THE FUTURE")
     })
 };
 
