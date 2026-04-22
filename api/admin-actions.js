@@ -94,6 +94,24 @@ export default async function handler(req, res) {
                 }).catch(err => console.error('Sheet update error:', err));
             }
 
+            // 3. Gửi thông báo về Telegram
+            const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+            const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+            if (BOT_TOKEN && CHAT_ID) {
+                const teleMsg = `💡 [HỆ THỐNG] ĐÃ TỰ GỬI MAIL NURTURE\n` +
+                    `----------------------------\n` +
+                    `👤 Học viên: ${fullname || 'N/A'}\n` +
+                    `📧 Email: ${email}\n` +
+                    `✉️ Loại mail: ${emailType}\n` +
+                    `✨ Trạng thái: Đã cập nhật Sheet.`;
+
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: teleMsg })
+                }).catch(err => console.error('Telegram Notify Error:', err));
+            }
+
             return res.status(200).json({ 
                 success: true, 
                 message: `Email ${emailType} sent successfully to ${email}`,
