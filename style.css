@@ -2189,3 +2189,99 @@ input, select, textarea, button {
         grid-template-columns: 1fr;
     }
 }
+
+/* ====================================================
+   DEDICATED CHECKOUT PAGE (Trang 2)
+==================================================== */
+.checkout-page-body {
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at 50% 0%, #1a0504 0%, #0d0d0d 100%);
+    min-height: 100vh;
+}
+
+.checkout-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px 100px; /* Extra bottom padding for mobile footer */
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.checkout-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checkout-right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.checkout-qr-box {
+    background: #fff;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.checkout-qr-box img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+}
+
+.checkout-hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.checkout-hero h1 {
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+}
+
+/* Mobile Sticky Footer */
+.mobile-sticky-footer {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(13, 13, 13, 0.98);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 15px 20px;
+    z-index: 1000;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 850px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkout-wrapper {
+        padding-top: 20px;
+        padding-bottom: 120px;
+    }
+
+    .mobile-sticky-footer {
+        display: block;
+    }
+    
+    .desktop-only-btn {
+        display: none;
+    }
+
+    .checkout-hero h1 {
+        font-size: 1.8rem;
+    }
+}
