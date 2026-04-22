@@ -530,9 +530,48 @@
                 <button type="submit" id="submit-btn" class="btn-cta" style="display: block; width: 100%; margin: 10px auto 0; border-radius: 8px;">Hoàn tất đăng ký</button>
             </form>
             
-            <div id="success-msg-page" style="display:none; text-align: center; padding: 30px 10px;">
-                <h3 class="text-gold" style="font-size: 1.5rem; margin-bottom: 10px;">🎉 ĐĂNG KÝ THÀNH CÔNG!</h3>
-                <button onclick="showPaymentModal()" class="btn-cta" style="padding: 10px 30px; margin-top: 20px;">Thanh Toán Ngay</button>
+            <!-- NEW THANK YOU PAGE SECTION -->
+            <div id="thank-you-page" style="display:none;">
+                <div class="thank-you-container">
+                    <div class="success-icon-wrapper">🎉</div>
+                    <h2 class="thank-you-title">CHÚC MỪNG BẠN ĐÃ<br><span class="text-gold">ĐĂNG KÝ THÀNH CÔNG!</span></h2>
+                    <p class="thank-you-msg">Cảm ơn và chỉ còn 1 bước nữa để bạn sở hữu chìa khóa 21 ngày biến video thành điện thoại...</p>
+                    
+                    <div class="free-video-box">
+                        <p style="font-weight: 700; color: #fff;">QUÀ TẶNG BẠN:</p>
+                        <h3 style="margin: 10px 0; font-size: 1.4rem;">10+ VIDEO HỌC THỬ MIỄN PHÍ</h3>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Khám phá ngay bộ bài giảng nền tảng để bắt đầu hành trình của bạn.</p>
+                        <a href="https://www.skool.com/tan-lab-6821/classroom" target="_blank" class="btn-cta btn-free-videos">HỌC THỬ MIỄN PHÍ NGAY</a>
+                    </div>
+
+                    <div class="skool-support-section">
+                        <h3 class="support-title">🛡️ HƯỚNG DẪN VÀO TÀI KHOẢN SKOOL</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem; color: #aaa;">Nếu bạn có bất kỳ khó khăn gì để vào tài khoản Skool thì hãy xem Video bên dưới hoặc liên hệ Zalo để hỗ trợ.</p>
+                        
+                        <div class="video-instruction-wrapper">
+                            <iframe 
+                                src="https://www.youtube.com/embed/UrQ3jbQ1wvQ" 
+                                title="Hướng dẫn vào Skool" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+                            <p style="font-weight: 600; color: #fff;">Cần hỗ trợ trực tiếp?</p>
+                            <a href="https://zalo.me/0922255861" target="_blank" class="zalo-support-btn">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" width="20" alt="Zalo">
+                                LIÊN HỆ ZALO HỖ TRỢ
+                            </a>
+                        </div>
+                    </div>
+
+                    <div id="payment-bridge-container" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <p style="margin-bottom: 15px; color: #aaa;">Bạn chưa hoàn tất thanh toán?</p>
+                        <button onclick="showPaymentModal()" class="btn-cta" style="padding: 10px 30px; width: auto; font-size: 1rem;">THANH TOÁN NGAY</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -847,11 +886,20 @@
                     }, 1000);
                 } else {
                     preparePaymentModal(currentAmount, currentOrderId);
-                    showPaymentModal();
+                    
+                    // NEW FLOW: Show Thank You Page first
+                    registerForm.style.display = 'none';
+                    document.getElementById('thank-you-page').style.display = 'block';
+                    
+                    // Smooth scroll to top of form area
+                    document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
+
                     startStatusPolling(currentOrderId);
-                    registerForm.style.opacity = '0.3';
-                    registerForm.style.pointerEvents = 'none';
-                    submitBtn.innerText = "Đang chờ thanh toán...";
+                    submitBtn.innerText = "Đã đăng ký!";
+                    
+                    // Optionally still show payment modal if user wants immediate action, 
+                    // but the Thank You page now has its own trigger.
+                    // showPaymentModal(); 
                 }
             } catch(error) {
                 console.error("Lỗi:", error);
