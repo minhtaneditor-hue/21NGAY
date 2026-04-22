@@ -533,9 +533,33 @@
             <!-- NEW THANK YOU PAGE SECTION -->
             <div id="thank-you-page" style="display:none;">
                 <div class="thank-you-container">
-                    <div class="success-icon-wrapper">🎉</div>
-                    <h2 class="thank-you-title">CHÚC MỪNG BẠN ĐÃ<br><span class="text-gold">ĐĂNG KÝ THÀNH CÔNG!</span></h2>
-                    <p class="thank-you-msg">Cảm ơn và chỉ còn 1 bước nữa để bạn sở hữu chìa khóa 21 ngày biến video thành điện thoại...</p>
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--gold); font-weight: 700; margin-bottom: 20px; letter-spacing: 1px;">BẠN CHỈ CÒN 1 BƯỚC NỮA ĐỂ ĐẾN TỰ DO 🚀</p>
+
+                    <h2 class="thank-you-title" style="font-size: 2.5rem; margin-bottom: 10px;">HƯỚNG DẪN <span class="text-gold">HOÀN TẤT ĐĂNG KÝ</span></h2>
+                    <p style="color: #888; font-size: 0.95rem; margin-bottom: 40px;">Chuyển hoàn học phí → Gửi xác nhận → Bắt đầu học ngay hôm nay</p>
+
+                    <!-- 3-Step Grid -->
+                    <div class="steps-grid">
+                        <div class="step-box">
+                            <div class="step-num">1</div>
+                            <h4 class="step-title">Chuyển khoản học phí</h4>
+                            <p class="step-desc">Chuyển khoản theo thông tin bên dưới. Ghi đúng nội dung: SĐT để hệ thống xác nhận.</p>
+                        </div>
+                        <div class="step-box">
+                            <div class="step-num">2</div>
+                            <h4 class="step-title">Gửi xác nhận qua Zalo</h4>
+                            <p class="step-desc">Sau khi chuyển khoản thành công, chụp màn hình và gửi vào Zalo: 0922.255.861.</p>
+                        </div>
+                        <div class="step-box">
+                            <div class="step-num">3</div>
+                            <h4 class="step-title">Vào học ngay</h4>
+                            <p class="step-desc">Tài khoản kích hoạt trong 3-10 phút. Nhận link truy cập Skool qua Zalo/Email.</p>
+                        </div>
+                    </div>
                     
                     <div class="free-video-box">
                         <p style="font-weight: 700; color: #fff;">QUÀ TẶNG BẠN:</p>
@@ -618,37 +642,76 @@
 
     <!-- PAYMENT QR MODAL -->
     <div id="payment-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px; padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.4); position: relative;">
+        <div class="modal-content" style="max-width: 550px; padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.4); position: relative; background: #0d0d0d;">
             <span class="close-btn" onclick="closePaymentModal()" style="font-size: 28px; cursor: pointer;">&times;</span>
+            
             <div class="modal-header" style="text-align: center; border-bottom: none; margin-bottom: 5px;">
-                <h3>XÁC NHẬN <span class="text-gold">THANH TOÁN</span></h3>
-                <p style="color: #ccc; font-size: 0.9rem;">Mở App Ngân hàng bất kỳ để quét mã QR</p>
+                <h3 style="font-size: 1.8rem;">THANH TOÁN <span class="text-gold">NGAY</span></h3>
+                <p style="color: #ccc; font-size: 0.9rem;">Quét mã QR hoặc chuyển khoản thủ công</p>
+            </div>
+
+            <!-- Countdown Timer Area -->
+            <div class="countdown-wrapper">
+                <div class="countdown-label">ƯU ĐÃI KẾT THÚC SAU</div>
+                <div id="countdown-timer" class="countdown-timer">30:00</div>
+                <p style="font-size: 0.75rem; color: #888; margin-top: 5px;">Giá sẽ trở về 10,000,000đ sau khi hết thời gian ưu đãi</p>
             </div>
             
-            <div style="text-align: center; padding: 15px 0;">
-                <img id="vietqr-qr" src="" alt="VietQR Code Thanh Toán" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 220px;">
-                
-                <div style="margin-top: 15px; font-size: 0.9rem; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; text-align: left; max-width: 280px; margin-left: auto; margin-right: auto;">
-                    <p style="margin-bottom: 6px;"><strong>Ngân hàng:</strong> ACB</p>
-                    <p style="margin-bottom: 6px;"><strong>Chủ tài khoản:</strong> LE MINH TAN</p>
-                    <p style="margin-bottom: 6px;"><strong>Số tài khoản:</strong> <span style="color: #fff;">221898279</span></p>
-                    <p style="margin-bottom: 6px;"><strong>Số tiền:</strong> <span id="payment-amount" class="text-gold" style="font-weight: bold;"></span></p>
-                    <p style="margin-bottom: 0;"><strong>Nội dung:</strong> <span id="payment-desc" style="color: #fff; font-family: monospace; font-weight: bold;"></span></p>
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; align-items: start; margin-top: 20px;">
+                <!-- Left: QR Code -->
+                <div style="text-align: center;">
+                    <img id="vietqr-qr" src="" alt="VietQR Code" style="width: 100%; height: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                    <div style="margin-top: 10px; background: rgba(0, 229, 255, 0.05); padding: 8px; border-radius: 8px; border: 1px dashed rgba(0, 229, 255, 0.2); font-size: 0.7rem; color: #00e5ff;">
+                        💡 Quét bằng mọi App Ngân hàng
+                    </div>
                 </div>
-                
-                <div style="margin-top: 12px; font-size: 0.8rem; color: #aaa; background: rgba(0, 150, 0, 0.05); padding: 8px; border-radius: 8px; border: 1px dashed rgba(0, 150, 0, 0.2);">
-                    <p>💡 <b>Tự động xác nhận:</b> Hệ thống sẽ gửi tin nhắn báo tiền về cho Admin ngay lập tức sau khi bạn chuyển khoản thành công. Tấn sẽ mời bạn vào Skool Pro qua Email chỉ sau ít phút.</p>
+
+                <!-- Right: Bank details with Copy buttons -->
+                <div>
+                    <div class="bank-detail-group">
+                        <div class="bank-detail-label">NGÂN HÀNG</div>
+                        <div class="bank-detail-card" onclick="copyValue('ACB', 'copy-bank')">
+                            <span class="bank-detail-value">ACB Bank</span>
+                            <button class="copy-btn" id="copy-bank">COPY</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bank-detail-group">
+                        <div class="bank-detail-label">SỐ TÀI KHOẢN</div>
+                        <div class="bank-detail-card" onclick="copyValue('221898279', 'copy-acc')">
+                            <span class="bank-detail-value">221898279</span>
+                            <button class="copy-btn" id="copy-acc">COPY</button>
+                        </div>
+                    </div>
+
+                    <div class="bank-detail-group">
+                        <div class="bank-detail-label">CHỦ TÀI KHOẢN</div>
+                        <div class="bank-detail-card" onclick="copyValue('LE MINH TAN', 'copy-name')">
+                            <span class="bank-detail-value" style="font-size: 0.85rem;">LE MINH TAN</span>
+                            <button class="copy-btn" id="copy-name">COPY</button>
+                        </div>
+                    </div>
+
+                    <div class="bank-detail-group">
+                        <div class="bank-detail-label">SỐ TIỀN</div>
+                        <div class="bank-detail-card" onclick="copyValue(currentAmount, 'copy-amount')">
+                            <span id="payment-amount" class="bank-detail-value text-gold" style="font-size: 1.1rem;"></span>
+                            <button class="copy-btn" id="copy-amount">COPY</button>
+                        </div>
+                    </div>
+
+                    <div class="bank-detail-group">
+                        <div class="bank-detail-label">NỘI DUNG CHUYỂN KHOẢN</div>
+                        <div class="bank-detail-card" onclick="copyValue(currentOrderId, 'copy-desc')">
+                            <span id="payment-desc" class="bank-detail-value" style="font-size: 1rem; color: var(--gold);"></span>
+                            <button class="copy-btn" id="copy-desc">COPY</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- SUCCESS STATUS / POLLING (FROM REMOTE) -->
-            <div id="polling-box" class="status-polling-box" style="display:none; margin-top: 15px; background: rgba(255,165,0,0.1); padding: 10px; border-radius: 8px; font-size: 0.85rem; border: 1px solid rgba(255,165,0,0.3); text-align: center;">
-                <span class="checking-indicator"></span>
-                <span>Hệ thống đang chờ xác nhận thanh toán...</span>
-            </div>
-            
-            <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; font-size: 0.9rem; border: none; cursor: pointer; margin-top: 10px;">
-                Xác nhận mở khóa lộ trình.
+            <button id="confirm-payment-btn" onclick="sendPaymentConfirmation()" class="btn-cta" style="width: 100%; border-radius: 40px; text-transform: uppercase; font-size: 0.9rem; border: none; cursor: pointer; margin-top: 25px; max-width: 100%;">
+                Xác nhận đã chuyển khoản
             </button>
         </div>
     </div>
@@ -891,15 +954,19 @@
                     registerForm.style.display = 'none';
                     document.getElementById('thank-you-page').style.display = 'block';
                     
+                    // Trigger Progress Bar
+                    setTimeout(() => {
+                        document.getElementById('progress-bar-fill').style.width = '75%';
+                    }, 100);
+
+                    // Trigger Countdown
+                    initCountdown(30 * 60);
+
                     // Smooth scroll to top of form area
                     document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
 
                     startStatusPolling(currentOrderId);
                     submitBtn.innerText = "Đã đăng ký!";
-                    
-                    // Optionally still show payment modal if user wants immediate action, 
-                    // but the Thank You page now has its own trigger.
-                    // showPaymentModal(); 
                 }
             } catch(error) {
                 console.error("Lỗi:", error);
@@ -907,6 +974,53 @@
                 submitBtn.disabled = false;
             }
             return false;
+        }
+
+        // --- NEW PREMIUM FUNCTIONS ---
+
+        function copyValue(text, btnId) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById(btnId);
+                const originalText = btn.innerText;
+                btn.innerText = "COPIED!";
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function initCountdown(duration) {
+            let timer = duration;
+            const display = document.getElementById('countdown-timer');
+            
+            // Check persistence
+            const savedEndTime = localStorage.getItem('payment_countdown_end');
+            const now = Math.floor(Date.now() / 1000);
+            
+            if (savedEndTime && parseInt(savedEndTime) > now) {
+                timer = parseInt(savedEndTime) - now;
+            } else {
+                localStorage.setItem('payment_countdown_end', now + duration);
+            }
+
+            const interval = setInterval(() => {
+                let minutes = Math.floor(timer / 60);
+                let seconds = timer % 60;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.textContent = "HẾT HẠN";
+                    localStorage.removeItem('payment_countdown_end');
+                }
+            }, 1000);
         }
 
         async function sendPaymentConfirmation() {
@@ -967,7 +1081,6 @@
         }
 
         function showPolicy(type) {
-            // Hiển thị policy đơn giản
             alert("Đang cập nhật nội dung chính sách...");
         }
 

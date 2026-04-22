@@ -2031,3 +2031,161 @@ input, select, textarea, button {
         transform: translateY(0);
     }
 }
+
+/* ====================================================
+   PREMIUM CHECKOUT UPGRADES (Inspired by reference)
+==================================================== */
+.progress-container {
+    background: rgba(255, 255, 255, 0.05);
+    height: 6px;
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--red-cta) 0%, var(--gold) 100%);
+    box-shadow: 0 0 10px var(--gold-glow);
+    transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.countdown-wrapper {
+    background: rgba(245, 188, 27, 0.05);
+    border: 1px solid rgba(245, 188, 27, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.countdown-label {
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.countdown-timer {
+    font-family: 'Inter', monospace;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px var(--gold-glow);
+}
+
+.bank-detail-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.bank-detail-label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.bank-detail-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.bank-detail-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bank-detail-value {
+    font-family: 'Inter', monospace;
+    font-weight: 700;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.copy-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.copy-btn:active {
+    transform: scale(0.9);
+}
+
+.copy-btn.copied {
+    background: #4CAF50;
+    color: #fff;
+}
+
+/* 3-Step Instructions */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.step-box {
+    background: rgba(40, 40, 40, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 15px;
+    border-radius: 12px;
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.step-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+}
+
+.step-num {
+    background: var(--gold);
+    color: #000;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 900;
+    margin: 0 auto 15px;
+}
+
+.step-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.step-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+}
