@@ -1314,8 +1314,6 @@ input, select, textarea, button {
   100% { transform: translateX(-50%); }
 }
 
-/* Removing old mini-footer styles */
-
 /* CHATBOT WIDGET */
 .chat-widget {
   position: fixed;
@@ -1560,7 +1558,6 @@ input, select, textarea, button {
   50% { transform: translateY(-5px); }
 }
 
-
 @media (max-width: 600px) {
   .chat-window {
     width: 300px;
@@ -1753,7 +1750,6 @@ input, select, textarea, button {
     }
 }
 
-<<<<<<< HEAD
 /* PROMO POPUP */
 .promo-popup-overlay {
     position: fixed;
@@ -1864,7 +1860,9 @@ input, select, textarea, button {
     }
     .promo-code-box span {
         font-size: 1.2rem;
-=======
+    }
+}
+
 /* ============================================================
    PROFESSIONAL MOTION SYSTEM
    - GPU accelerated (transform/opacity only)
@@ -2093,7 +2091,6 @@ input, select, textarea, button {
     transform: none !important;
   }
 }
-
 
 /* ====================================================
    THANK YOU PAGE & SUCCESS STATES
@@ -2476,10 +2473,5 @@ input, select, textarea, button {
     
     .desktop-only-btn {
         display: none;
-    }
-
-    .checkout-hero h1 {
-        font-size: 1.8rem;
->>>>>>> 8e148cf1f9aae431ab995187b0f6e696253c47da
     }
 }
