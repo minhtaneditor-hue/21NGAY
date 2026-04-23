@@ -71,6 +71,7 @@ export default async function handler(req, res) {
                     headers: { 'Content-Type': 'application/json' },
                     redirect: 'follow',
                     body: JSON.stringify({
+                        action: 'add-lead',
                         fullname: data.fullname,
                         phone: data.phone,
                         email: data.email,
@@ -85,7 +86,7 @@ export default async function handler(req, res) {
                         utm_campaign: data.utm?.utm_campaign || '',
                         utm_content: data.utm?.utm_content || '',
                         utm_term: data.utm?.utm_term || '',
-                        teleMessageId: teleMessageId // Đưa xuống cuối để không lệch cột Sheet cũ
+                        teleMessageId: teleMessageId
                     })
                 }).catch(err => console.error('Sheet Error:', err))
             );
@@ -274,6 +275,7 @@ export default async function handler(req, res) {
                 fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    redirect: 'follow',
                     body: JSON.stringify({
                         action: 'update-status',
                         orderId: data.orderId,

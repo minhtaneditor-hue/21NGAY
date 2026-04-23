@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Landing page and API for Video Advisor Challenge",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "deploy": "git add . && git commit -m \"Auto-deploy\" && git push && vercel --prod"
   },
   "dependencies": {
     "cors": "^2.8.6",

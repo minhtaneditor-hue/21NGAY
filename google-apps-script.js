@@ -19,7 +19,7 @@
 const SHEET_NAME = 'customers';
 
 // ===== COLUMN DEFINITIONS =====
-const COLUMNS = ['timestamp', 'fullname', 'phone', 'email', 'package', 'amount', 'promoCode', 'orderId', 'experience', 'goal', 'status', 'teleMessageId', 'type', 'mail_welcome', 'mail_payment', 'mail_nurture_1', 'mail_nurture_2', 'mail_nurture_3'];
+const COLUMNS = ['timestamp', 'fullname', 'phone', 'email', 'package', 'amount', 'promoCode', 'orderId', 'experience', 'goal', 'status', 'teleMessageId', 'type', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'mail_welcome', 'mail_payment', 'mail_nurture_1', 'mail_nurture_2', 'mail_nurture_3'];
 
 function getOrCreateSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -90,6 +90,11 @@ function doPost(e) {
         if (col === 'status') return body.status || 'PENDING';
         if (col === 'teleMessageId') return body.teleMessageId || '';
         if (col === 'type') return type;
+        if (col === 'utm_source') return body.utm_source || '';
+        if (col === 'utm_medium') return body.utm_medium || '';
+        if (col === 'utm_campaign') return body.utm_campaign || '';
+        if (col === 'utm_content') return body.utm_content || '';
+        if (col === 'utm_term') return body.utm_term || '';
         if (col === 'mail_welcome') return body.mail_welcome || '';
         if (col === 'mail_payment') return body.mail_payment || '';
         if (col === 'mail_nurture_1') return body.mail_nurture_1 || '';
@@ -231,6 +236,11 @@ function doPost(e) {
       body.status || 'PENDING',
       body.teleMessageId || '',
       type,
+      body.utm_source || '',
+      body.utm_medium || '',
+      body.utm_campaign || '',
+      body.utm_content || '',
+      body.utm_term || '',
       '',
       '',
       '',
