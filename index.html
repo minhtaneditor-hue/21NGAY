@@ -942,7 +942,7 @@
             }
         }
     </script>
-    
+
     <!-- AI SALES AGENT CHATBOT -->
     <div class="chat-widget">
         <div id="chat-welcome" class="chat-welcome-popup">
@@ -954,16 +954,126 @@
                 <img src="assets/bot_header.jpg" alt="Minh Tấn">
                 <div class="name">Minh Tấn | Video Advisor</div>
             </div>
-            <div id="chat-body" class="chat-body">
-                <div class="chat-msg">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
+            <div id="chat-body" class="chat-body" style="display: flex; flex-direction: column;">
+                <div class="chat-msg bot">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
+                <div class="chat-msg bot">Bạn đang quan tâm đến việc xây dựng kênh video để bán hàng hay muốn nâng tầm kỹ năng quay dựng thế?</div>
+                <div id="faq-menu" class="chat-menu">
+                    <div class="menu-item" onclick="chooseOption('Tìm hiểu khóa học 21 ngày')">🔥 Tìm hiểu khóa học 21 ngày</div>
+                    <div class="menu-item" onclick="chooseOption('Tư vấn gói Coaching 1:1')">🚀 Tư vấn gói Coaching 1:1</div>
+                    <div class="menu-item" onclick="chooseOption('Messenger')">💬 Chat qua Messenger</div>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Nhập câu hỏi của bạn..." onkeypress="if(event.key === 'Enter') handleChatSubmit()">
+                    <button class="chat-send-btn" onclick="handleChatSubmit()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+                <p style="font-size: 0.7rem; color: #888; margin: 0;">Tanlab AI Advisor</p>
             </div>
         </div>
     </div>
 
     <script>
+        let chatHistory = [];
+
         function toggleChat() {
             const win = document.getElementById('chat-window');
-            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+            const welcome = document.getElementById('chat-welcome');
+            const isVisible = win.style.display === 'flex';
+            win.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) welcome.style.display = 'none';
+        }
+
+        function addMessage(text, role) {
+            const body = document.getElementById('chat-body');
+            const msg = document.createElement('div');
+            msg.className = `chat-msg ${role}`;
+            msg.innerText = text;
+            body.appendChild(msg);
+            body.scrollTop = body.scrollHeight;
+            
+            chatHistory.push({ role, text });
+        }
+
+        function showTyping() {
+            const body = document.getElementById('chat-body');
+            const typing = document.createElement('div');
+            typing.id = 'typing-indicator';
+            typing.className = 'typing';
+            typing.innerHTML = '<span></span><span></span><span></span>';
+            body.appendChild(typing);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        async function handleChatSubmit() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            addMessage(text, 'user');
+            
+            const menu = document.getElementById('faq-menu');
+            if (menu) menu.style.display = 'none';
+
+            showTyping();
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, history: chatHistory.slice(-6) })
+                });
+
+                const data = await response.json();
+                hideTyping();
+
+                if (data.reply) {
+                    addMessage(data.reply, 'bot');
+                } else {
+                    addMessage("Xin lỗi, mình đang bận một chút. Bạn có thể nhắn tin qua Messenger cho mình nhé!", 'bot');
+                }
+            } catch (error) {
+                hideTyping();
+                addMessage("Lỗi kết nối. Bạn hãy thử lại sau nhé!", 'bot');
+            }
+        }
+
+        function chooseOption(opt) {
+            if (opt === 'Messenger') {
+                window.open('https://m.me/tanlab.video', '_blank');
+                return;
+            }
+            
+            addMessage(opt, 'user');
+            const menu = document.getElementById('faq-menu');
+            if (menu) menu.style.display = 'none';
+            
+            handleChatAction(opt);
+        }
+
+        async function handleChatAction(text) {
+            showTyping();
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, history: chatHistory.slice(-6) })
+                });
+                const data = await response.json();
+                hideTyping();
+                if (data.reply) addMessage(data.reply, 'bot');
+            } catch (e) {
+                hideTyping();
+                addMessage("Lỗi kết nối.", 'bot');
+            }
         }
     </script>
 </body>
