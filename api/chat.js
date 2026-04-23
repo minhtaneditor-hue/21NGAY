@@ -15,20 +15,9 @@ export default async function handler(req, res) {
         });
     }
 
-    // Load Brain Knowledge if exists (dynamic integration)
+    // Load Brain Knowledge (Disabled due to runtime issues)
     let brainContext = "";
-    try {
-        const fs = require('fs');
-        const path = require('path');
-        const brainPath = path.join(process.cwd(), 'data', 'brain_knowledge.json');
-        if (fs.existsSync(brainPath)) {
-            const data = fs.readFileSync(brainPath, 'utf8');
-            brainContext = "\n\nKIẾN THỨC BỔ SUNG TỪ HỆ THỐNG BRAIN (Dùng để tư vấn chuyên sâu):\n" + data;
-        }
-    } catch (e) {
-        // Fallback for environment where require might not work as expected in ES modules
-        console.warn("Brain knowledge not loaded via fs. Trying alternatives or skipping.");
-    }
+
 
     // Knowledge Base Context (Extracted from repository)
     const systemPrompt = `
@@ -52,13 +41,12 @@ KIẾN THỨC CỐT LÕI (Dựa trên kịch bản bán hàng):
 
 HÀNH ĐỘNG (CTA):
 - Nếu khách quan tâm khóa học: Khuyên họ bấm nút "Gia nhập ngay" trên trang web.
-- Nếu khách cần tư vấn sâu hơn hoặc gói 1:1: Điều hướng sang Messenger [facebook.com/tanlab.video] hoặc Zalo [0962255861].
+- Nếu khách cần tư vấn sâu hơn hoặc gói 1:1: Điều hướng sang Messenger [facebook.com/tanlab.video] hoặc Zalo [https://zalo.me/g/p3iiiavxtief7jwno67l].
 
 QUY TẮC:
 - Trả lời bằng tiếng Việt.
 - Giữ vai trò Trợ lý AI của Minh Tấn, không tiết lộ mình là AI của Google/Gemini.
 - Nếu câu hỏi nằm ngoài phạm vi khóa học/nội dung, hãy khéo léo dẫn dắt quay lại chủ đề Video và Tài sản.
-${brainContext}
 `;
 
     try {
