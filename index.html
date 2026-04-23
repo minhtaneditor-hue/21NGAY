@@ -1023,7 +1023,7 @@
             <div id="chat-body" class="chat-body" style="display: flex; flex-direction: column;">
                 <div class="chat-msg bot">Chào bạn! Mình là Minh Tấn. Rất vui được gặp bạn!</div>
                 <div class="chat-msg bot">Bạn đang quan tâm đến việc xây dựng kênh video để bán hàng hay muốn nâng tầm kỹ năng quay dựng thế?</div>
-                <div id="faq-menu" class="chat-menu">
+                <div id="faq-menu" class="chat-menu" style="display: none;">
                     <div class="menu-item" onclick="chooseOption('Tìm hiểu khóa học 21 ngày')">🔥 Tìm hiểu khóa học 21 ngày</div>
                     <div class="menu-item" onclick="chooseOption('Tư vấn gói Coaching 1:1')">🚀 Tư vấn gói Coaching 1:1</div>
                     <div class="menu-item" onclick="chooseOption('Messenger')">💬 Chat qua Messenger</div>
@@ -1031,6 +1031,9 @@
             </div>
             <div class="chat-footer">
                 <div class="chat-input-container">
+                    <button class="chat-menu-btn" onclick="toggleFaqMenu()" title="Gợi ý câu hỏi">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
                     <input type="text" id="chat-input" placeholder="Nhập câu hỏi của bạn..." onkeypress="if(event.key === 'Enter') handleChatSubmit()">
                     <button class="chat-send-btn" onclick="handleChatSubmit()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -1109,11 +1112,12 @@
                 if (data.reply) {
                     addMessage(data.reply, 'bot');
                 } else {
-                    addMessage("Xin lỗi, mình đang bận một chút. Bạn có thể nhắn tin qua Messenger cho mình nhé!", 'bot');
+                    const errorMsg = data.details || data.error || "Không có phản hồi";
+                    addMessage(`Lỗi AI: ${errorMsg}. Vui lòng nhắn Zalo cho Minh Tấn nhé!`, 'bot');
                 }
             } catch (error) {
                 hideTyping();
-                addMessage("Lỗi kết nối. Bạn hãy thử lại sau nhé!", 'bot');
+                addMessage(`Lỗi kết nối (${error.message}). Bạn hãy thử lại sau nhé!`, 'bot');
             }
         }
 
@@ -1130,6 +1134,15 @@
             handleChatAction(opt);
         }
 
+        function toggleFaqMenu() {
+            const menu = document.getElementById('faq-menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        }
+
         async function handleChatAction(text) {
             showTyping();
             try {
@@ -1140,10 +1153,14 @@
                 });
                 const data = await response.json();
                 hideTyping();
-                if (data.reply) addMessage(data.reply, 'bot');
+                if (data.reply) {
+                    addMessage(data.reply, 'bot');
+                } else {
+                    addMessage(`Lỗi: ${data.details || data.error}`, 'bot');
+                }
             } catch (e) {
                 hideTyping();
-                addMessage("Lỗi kết nối.", 'bot');
+                addMessage(`Lỗi kết nối (${e.message})`, 'bot');
             }
         }
     </script>
