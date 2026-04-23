@@ -55,6 +55,25 @@
 
     <div class="overlay"></div>
 
+    <!-- PROMO POPUP -->
+    <div id="promo-popup" class="promo-popup-overlay">
+        <div class="promo-popup-content">
+            <button class="close-popup" onclick="closePromoPopup()">&times;</button>
+            <div class="promo-header">🎁 ƯU ĐÃI ĐẠI LỄ 30/4</div>
+            <h3 style="margin: 15px 0; color: #fff;">Khóa học 21 Ngày Biến Video Thành Tài Sản</h3>
+            <p style="font-size: 1.1rem; opacity: 0.9;">Chỉ còn <span class="price-highlight">899.000đ</span></p>
+            <p style="text-decoration: line-through; opacity: 0.5; font-size: 0.9rem;">Giá gốc: 2.500.000đ</p>
+            
+            <div class="promo-code-box">
+                <span id="code-text">DAILE3004</span>
+                <button id="copy-btn" onclick="copyPromoCode()">COPY MÃ</button>
+            </div>
+            
+            <p class="promo-note" style="color: var(--gold); font-weight: 600; margin-bottom: 20px;">🔥 Áp dụng cho 50 suất đăng ký sớm nhất!</p>
+            <a href="#register-section" class="btn-cta" onclick="closePromoPopup()" style="display: block; width: 100%; border-radius: 50px;">ĐĂNG KÝ VÀ DÙNG MÃ NGAY</a>
+        </div>
+    </div>
+
     <!-- PREMIUM HERO SECTION -->
     <div class="hero-wrapper">
         <h1 class="bg-text">21 DAYS</h1>
@@ -730,7 +749,8 @@
         const promoCodes = {
             'TANLAB': 500000,
             'GIAM10': 0.1,
-            'CHALLENGE': 1000000
+            'CHALLENGE': 1000000,
+            'DAILE3004': 1601000
         };
 
         function applyPromoCode() {
@@ -940,6 +960,36 @@
             if (event.target == document.getElementById("payment-modal")) {
                 closePaymentModal();
             }
+            if (event.target == document.getElementById("promo-popup")) {
+                closePromoPopup();
+            }
+        }
+
+        // PROMO POPUP LOGIC
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const popup = document.getElementById('promo-popup');
+                if (popup) popup.style.display = 'flex';
+            }, 2000); // Hiện sau 2 giây
+        });
+
+        function closePromoPopup() {
+            document.getElementById('promo-popup').style.display = 'none';
+        }
+
+        function copyPromoCode() {
+            const code = document.getElementById('code-text').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerText = 'ĐÃ COPY!';
+                btn.style.background = '#4CAF50';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.innerText = 'COPY MÃ';
+                    btn.style.background = 'var(--gold)';
+                    btn.style.color = '#000';
+                }, 2000);
+            });
         }
     </script>
 
