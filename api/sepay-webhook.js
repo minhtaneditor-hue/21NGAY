@@ -34,82 +34,100 @@ export default async function handler(req, res) {
             `----------------------------\n` +
             `⏳ Chờ admin xác nhận...`;
 
-        // Tìm thông tin khách từ Sheet để gửi Email & Tele
-        let teleMessageId = null;
-        let customerEmail = null;
-        let customerName = null;
-        
+        // 1. Tìm thông tin khách từ Sheet để tự động kích hoạt
+        let customer = null;
         try {
             const sheetRes = await fetch(GOOGLE_SHEET_URL, { method: 'GET', redirect: 'follow' });
             const sheetData = await sheetRes.json();
             if (sheetData.status === 'ok' && sheetData.data) {
-                const row = sheetData.data.find(r => r.orderId === orderId);
-                if (row) {
-                    teleMessageId = row.teleMessageId;
-                    customerEmail = row.email;
-                    customerName = row.fullname;
-                }
+                customer = sheetData.data.find(r => r.orderId === orderId);
             }
         } catch (e) { console.error('Sheet Fetch Error:', e); }
 
         const promises = [];
         const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-        // 1. Gửi Email Xác nhận tự động (Email 2)
-        if (customerEmail && RESEND_API_KEY) {
-            const emailData = templates.paymentConfirmation(customerName, orderId);
+        if (customer && customer.email) {
+            // ======== LUỒNG TỰ ĐỘNG CHUẨN ELITE ========
+            
+            // 1. Gửi Email Kích hoạt Skool Pro ngay lập tức
+            if (RESEND_API_KEY) {
+                const emailData = templates.skoolInvite(customer.fullname);
+                promises.push(
+                    fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${RESEND_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            from: 'Minh Tấn <challenge@minhtanacademy.com>',
+                            to: customer.email,
+                            subject: emailData.subject,
+                            html: emailData.html
+                        })
+                    }).catch(err => console.error('Auto Activation Email Error:', err))
+                );
+            }
+
+            // 2. Cập nhật Google Sheet sang trạng thái PAID
             promises.push(
-                fetch('https://api.resend.com/emails', {
+                fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${RESEND_API_KEY}`
-                    },
+                    headers: { 'Content-Type': 'application/json' },
+                    redirect: 'follow',
                     body: JSON.stringify({
-                        from: 'Minh Tấn <challenge@minhtanacademy.com>',
-                        to: customerEmail,
-                        subject: emailData.subject,
-                        html: emailData.html
+                        action: 'update-status',
+                        orderId: orderId,
+                        status: 'PAID'
                     })
-                }).catch(err => console.error('Auto Email Error:', err))
+                }).catch(err => console.error('Auto Sheet Update Error:', err))
+            );
+
+            // 3. Thông báo Telegram: ĐÃ XỬ LÝ XONG (Không cần Admin bấm nút)
+            const successMsg = `✅ HỆ THỐNG ĐÃ TỰ ĐỘNG KÍCH HOẠT!\n` +
+                `📅 ${vnTime}\n` +
+                `----------------------------\n` +
+                `👤 Khách hàng: ${customer.fullname}\n` +
+                `📧 Email: ${customer.email}\n` +
+                `💵 Số tiền: ${amountFormatted}\n` +
+                `🆔 Mã đơn: ${orderId}\n` +
+                `✨ Trạng thái: Đã gửi Link Skool & Cập nhật Sheet.`;
+
+            promises.push(
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: successMsg,
+                        reply_to_message_id: customer.teleMessageId
+                    })
+                }).catch(err => console.error('Telegram Success Notice Error:', err))
+            );
+
+        } else {
+            // ======== TRƯỜNG HỢP KHÔNG TÌM THẤY DỮ LIỆU ĐƠN HÀNG ========
+            const errorMsg = `⚠️ CÓ TIỀN VỀ NHƯNG KHÔNG RÕ THÔNG TIN KHÁCH!\n` +
+                `📅 ${vnTime}\n` +
+                `----------------------------\n` +
+                `💵 Số tiền: ${amountFormatted}\n` +
+                `🆔 Mã đơn nhận diện: ${orderId}\n` +
+                `📝 Nội dung: ${content}\n` +
+                `----------------------------\n` +
+                `🔍 Admin hãy kiểm tra lại Sheet thủ công!`;
+
+            promises.push(
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: errorMsg
+                    })
+                }).catch(err => console.error('Telegram Error Notice Error:', err))
             );
         }
-
-        // 1 TIN NHẮN DUY NHẤT với nút xác nhận (GOM BẰNG REPLY)
-        promises.push(
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: telegramMessage,
-                    reply_to_message_id: teleMessageId, // GOM THEO LEAD
-                    reply_markup: {
-                        inline_keyboard: [[
-                            { text: "✅ KHỚP LỆNH", callback_data: `payok_${orderId}` },
-                            { text: "❌ KHÔNG KHỚP", callback_data: `payno_${orderId}` }
-                        ]]
-                    }
-                })
-            }).catch(err => console.error('Telegram Error:', err))
-        );
-
-        // Ghi vào Sheet
-        promises.push(
-            fetch(GOOGLE_SHEET_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                redirect: 'follow',
-                body: JSON.stringify({
-                    action: 'payment-received',
-                    orderId: orderId,
-                    amount: amount,
-                    gateway: body.gateway,
-                    content: content,
-                    timestamp: vnTime
-                })
-            }).catch(err => console.error('Sheet Error:', err))
-        );
 
         await Promise.allSettled(promises);
         return res.status(200).json({ success: true });
