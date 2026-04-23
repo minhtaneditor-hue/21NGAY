@@ -15,43 +15,64 @@ export default async function handler(req, res) {
         }
 
         const systemPrompt = `
-Bạn là Trợ lý AI của Minh Tấn (Tanlab). Nhiệm vụ của bạn là tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản".
-Zalo nhóm: https://zalo.me/g/p3iiiavxtief7jwno67l
-Trả lời ngắn gọn, thân thiện bằng tiếng Việt.
+Bạn là Trợ lý AI của Minh Tấn (Tanlab).
+Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản".
+Link Zalo hỗ trợ: https://zalo.me/g/p3iiiavxtief7jwno67l
+Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.
+Hành động: Luôn hướng khách hàng tham gia khóa học hoặc nhắn Zalo tư vấn.
 `;
 
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // Sử dụng v1beta và đưa System Prompt vào nội dung tin nhắn để đảm bảo tương thích 100%
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        const contents = (history || []).map(h => ({
-            role: h.role === 'user' ? 'user' : 'model',
-            parts: [{ text: h.text }]
-        }));
-        contents.push({ role: 'user', parts: [{ text: message }] });
+        // Tạo nội dung chat
+        let contents = [];
+        
+        // Nếu là tin nhắn đầu tiên (chưa có lịch sử), ta chèn System Prompt vào trước
+        if (!history || history.length === 0) {
+            contents.push({
+                role: 'user',
+                parts: [{ text: `HỆ THỐNG: ${systemPrompt}\n\nKHÁCH HÀNG: ${message}` }]
+            });
+        } else {
+            // Nếu đã có lịch sử, ta format theo chuẩn Gemini
+            contents = history.map(h => ({
+                role: h.role === 'user' ? 'user' : 'model',
+                parts: [{ text: h.text }]
+            }));
+            contents.push({
+                role: 'user',
+                parts: [{ text: message }]
+            });
+        }
 
-        // Sử dụng global fetch (Node 18+)
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                system_instruction: { parts: [{ text: systemPrompt }] },
                 contents: contents,
-                generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 800,
+                }
             })
         });
 
         const data = await response.json();
         
         if (!response.ok) {
+            console.error('Gemini Error:', data);
             return res.status(response.status).json({ 
                 error: 'Gemini API Error', 
-                details: data.error?.message || 'Lỗi API' 
+                details: data.error?.message || 'Lỗi không xác định' 
             });
         }
 
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Mình chưa hiểu ý bạn lắm.";
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Mình đang gặp chút trục trặc, bạn nhắn lại nhé!";
         return res.status(200).json({ reply: aiText });
 
     } catch (error) {
+        console.error('Crash Error:', error);
         return res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
