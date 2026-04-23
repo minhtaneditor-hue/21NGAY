@@ -20,7 +20,7 @@ Zalo nhóm: https://zalo.me/g/p3iiiavxtief7jwno67l
 Trả lời ngắn gọn, thân thiện bằng tiếng Việt.
 `;
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         const contents = (history || []).map(h => ({
             role: h.role === 'user' ? 'user' : 'model',
