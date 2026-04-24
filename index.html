@@ -199,6 +199,69 @@
                 </iframe>
             </div>
         </div>
+
+    <!-- FREE LEARNING TEASERS SECTION -->
+    <div class="free-learning-section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h2 class="reveal"><span class="text-gold">HỌC THỬ MIỄN PHÍ:</span> 4 BƯỚC ĐỘT PHÁ DOANH THU TỪ VIDEO</h2>
+                <p class="reveal" style="max-width: 800px; margin: 15px auto 0; opacity: 0.8;">Khám phá ngay bộ video hướng dẫn thực chiến giúp bạn bẻ khóa tư duy và bắt đầu hành trình triệu view.</p>
+            </div>
+
+            <div class="free-learning-grid">
+                <!-- Video 1 -->
+                <div class="teaser-card reveal-scale stagger-1" onclick="window.open('https://youtu.be/990wKc7Xh3M', '_blank')">
+                    <div class="teaser-thumb-wrapper">
+                        <img src="https://img.youtube.com/vi/990wKc7Xh3M/maxresdefault.jpg" alt="Video 1">
+                        <div class="teaser-play-btn">▶</div>
+                    </div>
+                    <div class="teaser-info">
+                        <span class="teaser-tag">BƯỚC 1: TƯ DUY</span>
+                        <h4 class="teaser-title">Bẻ khóa tư duy Video triệu View</h4>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="teaser-card reveal-scale stagger-2" onclick="window.open('https://youtu.be/SgHClW7AJLY', '_blank')">
+                    <div class="teaser-thumb-wrapper">
+                        <img src="https://img.youtube.com/vi/SgHClW7AJLY/maxresdefault.jpg" alt="Video 2">
+                        <div class="teaser-play-btn">▶</div>
+                    </div>
+                    <div class="teaser-info">
+                        <span class="teaser-tag">BƯỚC 2: KỸ THUẬT</span>
+                        <h4 class="teaser-title">Kỹ thuật Smartphone Cinema căn bản</h4>
+                    </div>
+                </div>
+
+                <!-- Video 3 -->
+                <div class="teaser-card reveal-scale stagger-3" onclick="window.open('https://youtu.be/stJDrkcaBT4', '_blank')">
+                    <div class="teaser-thumb-wrapper">
+                        <img src="https://img.youtube.com/vi/stJDrkcaBT4/maxresdefault.jpg" alt="Video 3">
+                        <div class="teaser-play-btn">▶</div>
+                    </div>
+                    <div class="teaser-info">
+                        <span class="teaser-tag">BƯỚC 3: NỘI DUNG</span>
+                        <h4 class="teaser-title">Công thức Hook "Giữ chân" 3 giây đầu</h4>
+                    </div>
+                </div>
+
+                <!-- Locked Item 4 -->
+                <div class="teaser-card teaser-locked reveal-scale stagger-4" onclick="preparePaymentModal(2500000, 'OPEN_SECRET_VIDEO'); showPaymentModal();">
+                    <div class="teaser-thumb-wrapper">
+                        <img src="assets/teaser_lock.png" onerror="this.src='https://img.youtube.com/vi/UrQ3jbQ1wvQ/maxresdefault.jpg'; this.style.filter='blur(10px)';" alt="Video 4">
+                        <div class="teaser-lock-overlay">
+                            <div class="teaser-lock-icon">🔒</div>
+                            <div class="teaser-lock-text">BẤM ĐỂ MỞ KHÓA</div>
+                        </div>
+                    </div>
+                    <div class="teaser-info">
+                        <span class="teaser-tag">BƯỚC 4: CHUYỂN ĐỔI</span>
+                        <h4 class="teaser-title">Bí mật: Cỗ máy thu nhập tự động 24/7</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
     <!-- ROADMAP SECTION -->
@@ -1252,6 +1315,45 @@
 
     })();
     </script>
+    <!-- PAYMENT MODAL -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
+            <div style="text-align: center;">
+                <h3 style="color: var(--gold); margin-bottom: 10px;">BẺ KHÓA BÍ MẬT</h3>
+                <p style="font-size: 0.9rem; color: #aaa;">Thanh toán học phí để mở khóa toàn bộ khóa học và nhận ưu đãi ngay hôm nay.</p>
+            </div>
+            
+            <div class="payment-qr-container">
+                <img id="vietqr-qr" src="assets/loading_qr.png" alt="Payment QR">
+            </div>
+
+            <div class="payment-details">
+                <div class="payment-row">
+                    <span class="payment-label">NGÂN HÀNG</span>
+                    <span class="payment-value">ACB BANK</span>
+                </div>
+                <div class="payment-row">
+                    <span class="payment-label">SỐ TÀI KHOẢN</span>
+                    <span class="payment-value">221898279</span>
+                </div>
+                <div class="payment-row">
+                    <span class="payment-label">SỐ TIỀN</span>
+                    <span id="payment-amount" class="payment-value text-gold">2.500.000 VNĐ</span>
+                </div>
+                <div class="payment-row">
+                    <span class="payment-label">NỘI DUNG</span>
+                    <span id="payment-desc" class="payment-value" style="color: var(--gold);">OPEN_SECRET</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <button onclick="window.location.href='#register-section'; closePaymentModal();" class="btn-cta" style="width: 100%; border-radius: 30px; font-size: 1rem; padding: 15px;">ĐĂNG KÝ NGAY</button>
+                <p style="text-align: center; font-size: 0.7rem; color: #666; margin-top: 10px;">Hoặc liên hệ Zalo: 0922255861</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
