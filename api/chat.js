@@ -6,59 +6,46 @@ export default async function handler(req, res) {
         const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim();
 
         if (!GEMINI_API_KEY) {
-            return res.status(200).json({ reply: "Lỗi: Thiếu GEMINI_API_KEY trên Vercel." });
-        }
-
-        const systemPrompt = `Bạn là Trợ lý AI của Thầy Tấn (Tanlab). Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản". Zalo hỗ trợ: https://zalo.me/g/p3iiiavxtief7jwno67l. Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.`;
-
-        // Sử dụng Gemini 1.5 Pro theo yêu cầu (Gama/Gemini Pro)
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
-        
-        let contents = [];
-        if (history && history.length > 0) {
-            history.forEach(h => {
-                contents.push({
-                    role: h.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: h.text }]
-                });
-            });
-        }
-        contents.push({
-            role: 'user',
-            parts: [{ text: message }]
-        });
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                contents: contents,
-                generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
-            })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-            // Nếu Pro lỗi, thử lại lần cuối với Flash để cứu vãn
-            const flashUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-            const flashRes = await fetch(flashUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ systemInstruction: { parts: [{ text: systemPrompt }] }, contents: contents })
-            });
-            const flashData = await flashRes.json();
-            
-            if (flashRes.ok) return res.status(200).json({ reply: flashData.candidates?.[0]?.content?.parts?.[0]?.text });
-
             return res.status(200).json({ 
-                reply: `Lỗi kết nối AI: ${data.error?.message || 'Không xác định'}. Bạn nhắn Zalo cho Thầy Tấn nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
+                reply: "⚠️ Lỗi: Bạn chưa cấu hình GEMINI_API_KEY trên Vercel. Hãy dán API Key vào Vercel (mục Environment Variables) để kích hoạt con bot Gemma/Gemini này nhé!" 
             });
         }
 
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Mình đang bận chút, nhắn lại sau nhé!";
-        return res.status(200).json({ reply: aiText });
+        const systemPrompt = `Bạn là Trợ lý AI của Thầy Tấn (Tanlab). Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản". Link Zalo: https://zalo.me/g/p3iiiavxtief7jwno67l. Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.`;
+
+        // Thử model Gemma 2 nếu có, hoặc Gemini 1.5 Pro
+        // Lưu ý: Gemma 2 27B-IT là bản mạnh mẽ tương đương yêu cầu của bạn
+        const modelsToTry = ['gemma-2-27b-it', 'gemini-1.5-pro', 'gemini-1.5-flash'];
+        let lastError = '';
+
+        for (const modelName of modelsToTry) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        contents: history && history.length > 0 
+                            ? [...history.map(h => ({ role: h.role === 'user' ? 'user' : 'model', parts: [{ text: h.text }] })), { role: 'user', parts: [{ text: message }] }]
+                            : [{ role: 'user', parts: [{ text: message }] }],
+                        generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+                }
+                lastError = data.error?.message || 'Lỗi model';
+            } catch (e) {
+                lastError = e.message;
+            }
+        }
+
+        return res.status(200).json({ 
+            reply: `Lỗi kết nối AI: ${lastError}. Bạn hãy nhắn Zalo hỗ trợ nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
+        });
 
     } catch (error) {
         console.error('Crash Error:', error);
