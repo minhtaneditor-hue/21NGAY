@@ -3,55 +3,61 @@ export default async function handler(req, res) {
 
     try {
         const { message, history } = req.body;
-        const OPENAI_API_KEY = process.env.OPENAI_API_KEY?.trim();
+        const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim();
 
-        if (!OPENAI_API_KEY) {
-            return res.status(200).json({ 
-                reply: "Hệ thống đang chuyển đổi sang ChatGPT. Vui lòng cấu hình OPENAI_API_KEY trên Vercel để bắt đầu trò chuyện." 
-            });
+        if (!GEMINI_API_KEY) {
+            return res.status(200).json({ reply: "Lỗi: Thiếu GEMINI_API_KEY trên Vercel." });
         }
 
         const systemPrompt = `Bạn là Trợ lý AI của Thầy Tấn (Tanlab). Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản". Zalo hỗ trợ: https://zalo.me/g/p3iiiavxtief7jwno67l. Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.`;
 
-        let messages = [
-            { role: "system", content: systemPrompt }
-        ];
-
+        // Sử dụng Gemini 1.5 Pro theo yêu cầu (Gama/Gemini Pro)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+        
+        let contents = [];
         if (history && history.length > 0) {
             history.forEach(h => {
-                messages.push({
-                    role: h.role === 'user' ? 'user' : 'assistant',
-                    content: h.text
+                contents.push({
+                    role: h.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: h.text }]
                 });
             });
         }
+        contents.push({
+            role: 'user',
+            parts: [{ text: message }]
+        });
 
-        messages.push({ role: "user", content: message });
-
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: messages,
-                temperature: 0.7,
-                max_tokens: 800
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                contents: contents,
+                generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
             })
         });
 
         const data = await response.json();
         
         if (!response.ok) {
-            console.error('OpenAI Error:', data);
+            // Nếu Pro lỗi, thử lại lần cuối với Flash để cứu vãn
+            const flashUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            const flashRes = await fetch(flashUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ systemInstruction: { parts: [{ text: systemPrompt }] }, contents: contents })
+            });
+            const flashData = await flashRes.json();
+            
+            if (flashRes.ok) return res.status(200).json({ reply: flashData.candidates?.[0]?.content?.parts?.[0]?.text });
+
             return res.status(200).json({ 
-                reply: `Lỗi kết nối ChatGPT: ${data.error?.message || 'Không xác định'}. Bạn hãy nhắn Zalo hỗ trợ nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
+                reply: `Lỗi kết nối AI: ${data.error?.message || 'Không xác định'}. Bạn nhắn Zalo cho Thầy Tấn nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
             });
         }
 
-        const aiText = data.choices?.[0]?.message?.content || "Mình đang bận chút, nhắn lại sau nhé!";
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Mình đang bận chút, nhắn lại sau nhé!";
         return res.status(200).json({ reply: aiText });
 
     } catch (error) {
