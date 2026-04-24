@@ -22,29 +22,37 @@ Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng ti
 Hành động: Luôn hướng khách hàng tham gia khóa học hoặc nhắn Zalo tư vấn.
 `;
 
-        // Sử dụng v1beta và đưa System Prompt vào nội dung tin nhắn để đảm bảo tương thích 100%
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // Sử dụng v1 thay vì v1beta để ổn định hơn
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         // Tạo nội dung chat
         let contents = [];
         
-        // Nếu là tin nhắn đầu tiên (chưa có lịch sử), ta chèn System Prompt vào trước
-        if (!history || history.length === 0) {
-            contents.push({
-                role: 'user',
-                parts: [{ text: `HỆ THỐNG: ${systemPrompt}\n\nKHÁCH HÀNG: ${message}` }]
-            });
-        } else {
-            // Nếu đã có lịch sử, ta format theo chuẩn Gemini
-            contents = history.map(h => ({
-                role: h.role === 'user' ? 'user' : 'model',
-                parts: [{ text: h.text }]
-            }));
-            contents.push({
-                role: 'user',
-                parts: [{ text: message }]
+        // Luôn gửi System Prompt để AI không bị "quên"
+        contents.push({
+            role: 'user',
+            parts: [{ text: `HỆ THỐNG (BẮT BUỘC TUÂN THỦ): ${systemPrompt}` }]
+        });
+        contents.push({
+            role: 'model',
+            parts: [{ text: "Tôi đã hiểu nhiệm vụ là Trợ lý AI của Minh Tấn (Tanlab). Tôi sẽ tư vấn nhiệt tình, ngắn gọn và hướng khách hàng đăng ký khóa học hoặc nhắn Zalo." }]
+        });
+
+        // Thêm lịch sử chat nếu có
+        if (history && history.length > 0) {
+            history.forEach(h => {
+                contents.push({
+                    role: h.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: h.text }]
+                });
             });
         }
+
+        // Thêm tin nhắn hiện tại
+        contents.push({
+            role: 'user',
+            parts: [{ text: message }]
+        });
 
         const response = await fetch(url, {
             method: 'POST',
@@ -52,8 +60,8 @@ Hành động: Luôn hướng khách hàng tham gia khóa học hoặc nhắn Za
             body: JSON.stringify({
                 contents: contents,
                 generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 800,
+                    temperature: 0.8, // Tăng nhẹ để trả lời tự nhiên hơn
+                    maxOutputTokens: 1000,
                 }
             })
         });

@@ -2761,9 +2761,12 @@ input, select, textarea, button {
 
 .free-learning-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px; /* Tăng gap một chút cho thoáng */
     margin-top: 50px;
+    max-width: 1000px; /* Giới hạn chiều rộng để card to hơn */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .teaser-card {
