@@ -22,51 +22,78 @@ Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng ti
 Hành động: Luôn hướng khách hàng tham gia khóa học hoặc nhắn Zalo tư vấn.
 `;
 
-        // Sử dụng v1 thay vì v1beta để ổn định hơn
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // Sử dụng v1beta và model gemini-1.5-flash
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        // Tạo nội dung chat
         let contents = [];
         
-        // Luôn gửi System Prompt để AI không bị "quên"
-        contents.push({
-            role: 'user',
-            parts: [{ text: `HỆ THỐNG (BẮT BUỘC TUÂN THỦ): ${systemPrompt}` }]
-        });
-        contents.push({
-            role: 'model',
-            parts: [{ text: "Tôi đã hiểu nhiệm vụ là Trợ lý AI của Minh Tấn (Tanlab). Tôi sẽ tư vấn nhiệt tình, ngắn gọn và hướng khách hàng đăng ký khóa học hoặc nhắn Zalo." }]
-        });
+        // Gộp System Prompt vào tin nhắn đầu tiên để tránh lỗi role liên tiếp
+        // và đảm bảo AI luôn tuân thủ chỉ dẫn
+        const fullSystemPrompt = `HỆ THỐNG: ${systemPrompt}\n\n`;
 
-        // Thêm lịch sử chat nếu có
-        if (history && history.length > 0) {
-            history.forEach(h => {
+        if (!history || history.length === 0) {
+            contents.push({
+                role: 'user',
+                parts: [{ text: fullSystemPrompt + "Chào bạn, hãy bắt đầu tư vấn cho tôi." }]
+            });
+            contents.push({
+                role: 'model',
+                parts: [{ text: "Chào bạn! Mình là Minh Tấn đây. Rất vui được hỗ trợ bạn về khóa học '21 Ngày Biến Video Thành Tài Sản'. Bạn đang quan tâm đến phần nào của khóa học nhỉ?" }]
+            });
+        } else {
+            // Thêm System Prompt vào tin nhắn cũ nhất trong lịch sử hoặc tin nhắn hiện tại
+            history.forEach((h, index) => {
                 contents.push({
                     role: h.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: h.text }]
+                    parts: [{ text: (index === 0 && h.role === 'user' ? fullSystemPrompt : "") + h.text }]
                 });
             });
         }
 
         // Thêm tin nhắn hiện tại
+        // Kiểm tra xem tin nhắn cuối cùng trong contents có phải là 'user' không
+        if (contents.length > 0 && contents[contents.length - 1].role === 'user') {
+            // Nếu cuối là user, ta chèn một câu trả lời mẫu của model để duy trì thứ tự user-model-user
+            contents.push({
+                role: 'model',
+                parts: [{ text: "Tôi đang lắng nghe bạn, mời bạn tiếp tục." }]
+            });
+        }
+
         contents.push({
             role: 'user',
             parts: [{ text: message }]
         });
 
-        const response = await fetch(url, {
+        let response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: contents,
                 generationConfig: {
-                    temperature: 0.8, // Tăng nhẹ để trả lời tự nhiên hơn
-                    maxOutputTokens: 1000,
+                    temperature: 0.7,
+                    maxOutputTokens: 800,
                 }
             })
         });
 
-        const data = await response.json();
+        let data = await response.json();
+        
+        // --- FALLBACK LOGIC ---
+        if (!response.ok && (data.error?.message?.includes('not found') || data.error?.message?.includes('not supported'))) {
+            console.warn('Gemini 1.5 Flash failed, trying fallback to Gemini Pro...');
+            const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+            const fallbackResponse = await fetch(fallbackUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: contents })
+            });
+            const fallbackData = await fallbackResponse.json();
+            if (fallbackResponse.ok) {
+                response = fallbackResponse;
+                data = fallbackData;
+            }
+        }
         
         if (!response.ok) {
             console.error('Gemini Error:', data);
