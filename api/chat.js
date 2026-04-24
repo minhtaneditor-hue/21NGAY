@@ -7,15 +7,14 @@ export default async function handler(req, res) {
 
         if (!GEMINI_API_KEY) {
             return res.status(200).json({ 
-                reply: "⚠️ Lỗi: Bạn chưa cấu hình GEMINI_API_KEY trên Vercel. Hãy dán API Key vào Vercel (mục Environment Variables) để kích hoạt con bot Gemma/Gemini này nhé!" 
+                reply: "⚠️ Lỗi: Bạn chưa cấu hình GEMINI_API_KEY trên Vercel. Hãy dán API Key vào Vercel để kích hoạt model Gemma 4 31B IT này nhé!" 
             });
         }
 
         const systemPrompt = `Bạn là Trợ lý AI của Thầy Tấn (Tanlab). Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản". Link Zalo: https://zalo.me/g/p3iiiavxtief7jwno67l. Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.`;
 
-        // Thử model Gemma 2 nếu có, hoặc Gemini 1.5 Pro
-        // Lưu ý: Gemma 2 27B-IT là bản mạnh mẽ tương đương yêu cầu của bạn
-        const modelsToTry = ['gemma-2-27b-it', 'gemini-1.5-pro', 'gemini-1.5-flash'];
+        // Sử dụng Gemma 4 31B IT theo yêu cầu chính xác của bạn
+        const modelsToTry = ['gemma-4-31b-it', 'gemma-4-31b', 'gemini-1.5-pro'];
         let lastError = '';
 
         for (const modelName of modelsToTry) {
