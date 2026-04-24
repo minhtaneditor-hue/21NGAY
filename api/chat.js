@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
         return res.status(500).json({ 
             error: 'AI Error', 
-            details: `Đã thử ${models.join(', ')} nhưng đều thất bại. Lỗi cuối: ${lastError}. Vui lòng kiểm tra lại API Key hoặc quyền truy cập model.` 
+            details: `V1Beta: ${lastError}. Key starts with: ${GEMINI_API_KEY ? GEMINI_API_KEY.substring(0, 4) : 'NONE'}` 
         });
 
     } catch (error) {
