@@ -11,44 +11,32 @@ export default async function handler(req, res) {
 
         const systemPrompt = `Bạn là Trợ lý AI của Thầy Tấn (Tanlab). Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản". Zalo hỗ trợ: https://zalo.me/g/p3iiiavxtief7jwno67l. Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt. Hành động: Luôn hướng khách hàng tham gia khóa học hoặc nhắn Zalo tư vấn.`;
 
-        // Sử dụng v1beta và gemini-1.5-flash (đã xác nhận là khả dụng)
+        // Sử dụng v1beta với systemInstruction chuẩn
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        let contents = [];
-        const fullSystemPrompt = `HỆ THỐNG: ${systemPrompt}\n\n`;
+        const systemInstruction = {
+            parts: [{ text: systemPrompt }]
+        };
 
-        if (!history || history.length === 0) {
-            contents.push({
-                role: 'user',
-                parts: [{ text: fullSystemPrompt + "Chào bạn, hãy bắt đầu tư vấn cho tôi." }]
-            });
-            contents.push({
-                role: 'model',
-                parts: [{ text: "Chào bạn! Mình là Trợ Lý AI của Thầy Tấn. Rất vui được hỗ trợ bạn. Bạn đang quan tâm đến việc xây dựng kênh video hay kỹ năng quay dựng nào nhỉ?" }]
-            });
-        } else {
-            history.forEach((h, index) => {
+        let contents = [];
+        if (history && history.length > 0) {
+            history.forEach(h => {
                 contents.push({
                     role: h.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: (index === 0 && h.role === 'user' ? fullSystemPrompt : "") + h.text }]
+                    parts: [{ text: h.text }]
                 });
             });
         }
-
-        // Đảm bảo user-model-user
-        if (contents.length > 0 && contents[contents.length - 1].role === 'user') {
-            contents[contents.length - 1].parts[0].text += `\n\nKHÁCH HÀNG: ${message}`;
-        } else {
-            contents.push({
-                role: 'user',
-                parts: [{ text: message }]
-            });
-        }
+        contents.push({
+            role: 'user',
+            parts: [{ text: message }]
+        });
 
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                systemInstruction: systemInstruction,
                 contents: contents,
                 generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
             })
@@ -58,9 +46,9 @@ export default async function handler(req, res) {
         
         if (!response.ok) {
             console.error('Gemini Error:', data);
-            return res.status(response.status).json({ 
-                error: 'Gemini API Error', 
-                details: data.error?.message || 'Lỗi không xác định' 
+            // HƯỚNG KHÁC: Nếu AI lỗi, trả về tin nhắn điều hướng Zalo ngay lập tức
+            return res.status(200).json({ 
+                reply: "Xin lỗi bạn, trợ lý AI đang bận tư vấn cho nhiều học viên khác. Để được hỗ trợ nhanh nhất và nhận ưu đãi, bạn hãy nhắn trực tiếp cho Thầy Tấn qua Zalo này nhé: https://zalo.me/g/p3iiiavxtief7jwno67l" 
             });
         }
 
