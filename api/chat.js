@@ -4,11 +4,12 @@ export default async function handler(req, res) {
     try {
         const { message, history } = req.body;
         
-        // Cấu hình GoClaw từ thông tin bạn cung cấp
+        // Cấu hình GoClaw CHÍNH XÁC từ Dashboard của bạn
         const GOCLAW_API_KEY = "goclaw_fdbd13cc8b9ef960f6c4830b9011a735";
-        const GOCLAW_API_URL = "https://agent.minhtanacademy.com/api/v1/chat/completions"; 
+        const GOCLAW_API_URL = "https://agent.minhtanacademy.com/v1/chat/completions"; 
+        const AGENT_ID = "tro-ly-minh-tan"; // Agent ID đã được xác thực
 
-        // Gửi thông báo về Telegram (Nếu bạn có cấu hình TELEGRAM_BOT_TOKEN và TELEGRAM_CHAT_ID)
+        // Gửi thông báo về Telegram
         if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
             try {
                 const tgUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Gọi API GoClaw để lấy câu trả lời từ AI Agent
+        // Gọi API GoClaw với cấu trúc payload chuẩn
         const response = await fetch(GOCLAW_API_URL, {
             method: 'POST',
             headers: {
@@ -33,9 +34,8 @@ export default async function handler(req, res) {
                 'Authorization': `Bearer ${GOCLAW_API_KEY}`
             },
             body: JSON.stringify({
-                model: "gemma-4-31b-it", // Hoặc model mặc định của Agent bạn đã tạo
+                agent: AGENT_ID,
                 messages: [
-                    { role: "system", content: "Bạn là Trợ lý AI của Thầy Tấn. Tư vấn khóa học 21 Ngày." },
                     ...(history || []).map(h => ({
                         role: h.role === 'user' ? 'user' : 'assistant',
                         content: h.text
@@ -51,10 +51,11 @@ export default async function handler(req, res) {
         if (!response.ok) {
             console.error('GoClaw Error:', data);
             return res.status(200).json({ 
-                reply: `Hệ thống GoClaw đang xử lý. Bạn hãy nhắn Zalo hỗ trợ nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
+                reply: `Hệ thống GoClaw đang bận. Bạn hãy nhắn Zalo hỗ trợ nhé: https://zalo.me/g/p3iiiavxtief7jwno67l` 
             });
         }
 
+        // Trích xuất câu trả lời từ cấu trúc OpenAI-compatible của GoClaw
         const aiText = data.choices?.[0]?.message?.content || data.reply || "Bot đang xử lý dữ liệu...";
         return res.status(200).json({ reply: aiText });
 
