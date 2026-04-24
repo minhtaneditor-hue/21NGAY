@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         }
 
         const systemPrompt = `
-Bạn là Trợ lý AI của Minh Tấn (Tanlab).
+Bạn là Trợ lý AI của Thầy Tấn (Tanlab).
 Nhiệm vụ: Tư vấn khóa học "21 Ngày Biến Video Thành Tài Sản".
 Link Zalo hỗ trợ: https://zalo.me/g/p3iiiavxtief7jwno67l
 Phong cách: Thân thiện, chuyên nghiệp, trả lời ngắn gọn bằng tiếng Việt.
