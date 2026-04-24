@@ -210,7 +210,7 @@
 
             <div class="free-learning-grid">
                 <!-- Video 1 -->
-                <div class="teaser-card reveal-scale stagger-1" onclick="window.open('https://youtu.be/990wKc7Xh3M', '_blank')">
+                <div class="teaser-card reveal-scale stagger-1" onclick="openVideoLightbox('990wKc7Xh3M')">
                     <div class="teaser-thumb-wrapper">
                         <img src="https://img.youtube.com/vi/990wKc7Xh3M/maxresdefault.jpg" alt="Video 1">
                         <div class="teaser-play-btn">▶</div>
@@ -222,7 +222,7 @@
                 </div>
 
                 <!-- Video 2 -->
-                <div class="teaser-card reveal-scale stagger-2" onclick="window.open('https://youtu.be/SgHClW7AJLY', '_blank')">
+                <div class="teaser-card reveal-scale stagger-2" onclick="openVideoLightbox('SgHClW7AJLY')">
                     <div class="teaser-thumb-wrapper">
                         <img src="https://img.youtube.com/vi/SgHClW7AJLY/maxresdefault.jpg" alt="Video 2">
                         <div class="teaser-play-btn">▶</div>
@@ -234,7 +234,7 @@
                 </div>
 
                 <!-- Video 3 -->
-                <div class="teaser-card reveal-scale stagger-3" onclick="window.open('https://youtu.be/stJDrkcaBT4', '_blank')">
+                <div class="teaser-card reveal-scale stagger-3" onclick="openVideoLightbox('stJDrkcaBT4')">
                     <div class="teaser-thumb-wrapper">
                         <img src="https://img.youtube.com/vi/stJDrkcaBT4/maxresdefault.jpg" alt="Video 3">
                         <div class="teaser-play-btn">▶</div>
@@ -1017,6 +1017,30 @@
             }
         }
 
+        // --- VIDEO LIGHTBOX FUNCTIONS ---
+        function openVideoLightbox(videoId) {
+            const modal = document.getElementById("video-lightbox");
+            const iframe = document.getElementById("lightbox-iframe");
+            if (modal && iframe) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                modal.style.display = "flex";
+                setTimeout(() => modal.classList.add("show"), 10);
+            }
+        }
+
+        function closeVideoLightbox(e) {
+            if (e) e.stopPropagation();
+            const modal = document.getElementById("video-lightbox");
+            const iframe = document.getElementById("lightbox-iframe");
+            if (modal) {
+                modal.classList.remove("show");
+                setTimeout(() => {
+                    modal.style.display = "none";
+                    if (iframe) iframe.src = ""; // Stop video
+                }, 300);
+            }
+        }
+
         function showPolicy(type) {
             alert("Đang cập nhật nội dung chính sách...");
         }
@@ -1315,6 +1339,16 @@
 
     })();
     </script>
+    <!-- VIDEO LIGHTBOX MODAL -->
+    <div id="video-lightbox" class="modal" onclick="closeVideoLightbox(event)">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeVideoLightbox(event)">&times;</button>
+            <div class="lightbox-video-container">
+                <iframe id="lightbox-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- PAYMENT MODAL -->
     <div id="payment-modal" class="modal">
         <div class="modal-content">
