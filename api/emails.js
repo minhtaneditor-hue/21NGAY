@@ -178,30 +178,75 @@ const templates = {
         html: baseTemplate(name, `
             <p style="color: #1b5e20; font-size: 18px; font-weight: bold; margin-bottom: 20px;">Xác nhận thành công! Chào mừng bạn gia nhập đội ngũ tinh anh.</p>
             <p style="color: #444444; font-size: 16px; line-height: 1.7;">
-                Tấn đã nhận được học phí của bạn. Rất trân trọng quyết định đầu tư vào bản thân của bạn. Đây chính là thời điểm cỗ máy thu nhập từ Video của bạn bắt đầu được xây dựng.
+                Tấn đã nhận được học phí của bạn. Rất trân trọng quyết định đầu t�    // -------------------------------------------------------------------------
+    // 6. EMAIL ƯU ĐÃI ĐẠI LỄ 30/4 — MÃ DAILE3004 — IMMEDIATE URGENCY
+    // -------------------------------------------------------------------------
+    holidayPromotion: (name) => ({
+        subject: `[QUÀ TẶNG 30/4] 🎁 Tặng bạn 1.600.000đ khi kích hoạt lộ trình 21 Ngày ngay bây giờ!`,
+        html: baseTemplate(name, `
+            <p style="color: #444444; font-size: 17px; line-height: 1.7;">
+                Chào ${name}, Tấn viết email này vì đây là cơ hội đặc biệt nhất trong năm để bạn sở hữu lộ trình <strong>21 Ngày Biến Video Thành Tài Sản</strong> với mức phí không tưởng.
+            </p>
+            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 600;">
+                Ưu đãi này dành riêng cho bạn — người đã đăng ký nhưng chưa chính thức bắt đầu. Đừng để kỳ nghỉ lễ trôi qua mà không tạo ra bước ngoặt nào cho sự nghiệp của mình.
+            </p>
+
+            <div style="background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); border: 2px solid #f5bc1b; padding: 35px; border-radius: 16px; margin: 30px 0; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <p style="margin: 0; font-weight: bold; color: #f5bc1b; font-size: 20px; letter-spacing: 1px;">🔥 ƯU ĐÃI ĐẠI LỄ 30/4</p>
+                <div style="margin: 20px 0;">
+                    <span style="color: #aaa; text-decoration: line-through; font-size: 18px;">2.500.000đ</span>
+                    <span style="color: #ffffff; font-size: 42px; font-weight: 900; margin-left: 15px;">899.000đ</span>
+                </div>
+                <p style="margin: 0; font-size: 15px; color: #f5bc1b; font-weight: 700; text-transform: uppercase;">Tiết kiệm ngay 1.600.000đ (Giảm >60%)</p>
+            </div>
+
+            <div style="background-color: #fffde7; border: 2px dashed #f5bc1b; padding: 25px; border-radius: 12px; text-align: center; margin: 25px 0;">
+                <p style="margin: 0 0 10px; font-size: 14px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Sử dụng Mã Ưu Đãi Ngay</p>
+                <p style="margin: 0; font-size: 38px; font-weight: 900; color: #000; letter-spacing: 6px; background: #fff; display: inline-block; padding: 5px 20px; border-radius: 8px;">DAILE3004</p>
+            </div>
+
+            <p style="color: #d32f2f; font-size: 17px; line-height: 1.7; font-weight: bold; text-align: center;">
+                ⚠️ CHỈ DÀNH CHO 50 SUẤT ĐẦU TIÊN — Hệ thống sẽ tự động đóng mã khi đủ số lượng.
+            </p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#register-section" style="background: linear-gradient(135deg, #f5bc1b, #f39c12); color: #000; padding: 22px 50px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 19px; display: inline-block; box-shadow: 0 6px 25px rgba(245,188,27,0.4); text-transform: uppercase;">Kích hoạt ưu đãi & Bắt đầu ngay</a>
+            </div>
+
+            <p style="color: #555555; font-size: 16px; line-height: 1.7;">
+                Cơ hội này sẽ không lặp lại. Hãy biến Video thành tài sản thực thụ mang lại giá trị bền vững cho bạn ngay từ hôm nay.
             </p>
             
-            <div style="background-color: #fff9c4; border: 2px dashed #fbc02d; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0;">
-                <p style="margin: 0 0 15px 0; font-weight: bold; color: #000; font-size: 17px;">👇 THAM GIA LỚP HỌC NGAY TẠI ĐÂY:</p>
-                <a href="https://www.skool.com/tan-lab-6821/classroom" style="background-color: #000000; color: #f5bc1b; padding: 20px 45px; text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">TRUY CẬP SKOOL PRO</a>
-                <p style="margin: 15px 0 0 0; font-size: 14px; color: #666;">
-                    *Vui lòng sử dụng đúng Email này để đăng ký tài khoản Skool*
+            <p style="color: #333; font-size: 16px; line-height: 1.7; font-weight: 700; margin-top: 25px;">
+                Hẹn gặp bạn bên trong chương trình! 🚀
+            </p>
+        `, "ƯU ĐÃI ĐẠI LỄ 30/4")
+    })
+}; tham gia hành trình <strong>21 Ngày Biến Video Thành Tài Sản</strong> nhưng chưa chính thức kích hoạt.
+            </p>
+            <p style="color: #1a1a1a; font-size: 17px; line-height: 1.7; font-weight: 600;">
+                Nhân dịp lễ 30/4 này, Tấn muốn dành tặng bạn một bất ngờ cực lớn để giúp bạn bứt phá ngay trong kỳ nghỉ!
+            </p>
+            <div style="background-color: #fff3e0; border-left: 5px solid #ff9800; padding: 25px; border-radius: 8px; margin: 30px 0;">
+                <p style="margin: 0; font-weight: bold; color: #e65100; font-size: 20px; text-align: center;">🔥 ƯU ĐÃI KHỦNG: GIẢM HƠN 60%</p>
+                <p style="margin: 15px 0 0 0; font-size: 16px; color: #444444; text-align: center;">
+                    Chỉ dành cho những bạn đăng ký sớm nhất trong hôm nay. 
+                    Cơ hội để bạn sở hữu toàn bộ lộ trình chuyên sâu với mức phí <strong>không tưởng</strong>.
                 </p>
             </div>
-
-            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 25px 0;">
-                <p style="margin: 0; font-weight: bold; color: #333;">💡 Một vài lưu ý nhỏ:</p>
-                <ul style="margin: 10px 0 0 0; padding-left: 20px; color: #555; font-size: 15px; line-height: 1.6;">
-                    <li>Lộ trình 21 ngày sẽ được mở theo từng giai đoạn để bạn không bị ngợp.</li>
-                    <li>Hãy tham gia ngay nhóm Zalo hỗ trợ (link có trong Skool) để trao đổi cùng Tấn.</li>
-                    <li>Mọi thắc mắc kỹ thuật, hãy phản hồi trực tiếp Email này.</li>
-                </ul>
-            </div>
-
-            <p style="color: #444444; font-size: 16px; line-height: 1.7;">
-                Tất cả đã sẵn sàng. Hẹn gặp bạn rực rỡ nhất trong cộng đồng Skool!
+            <p style="color: #d32f2f; font-size: 16px; line-height: 1.7; font-weight: bold; text-align: center;">
+                ⚠️ LƯU Ý: Số lượng suất ưu đãi có hạn và sẽ đóng lại ngay khi đủ người.
             </p>
-        `, "WELCOME TO THE FUTURE")
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="https://khoahoc.minhtanacademy.com#register-section" style="background-color: #ff9800; color: #ffffff; padding: 20px 45px; text-decoration: none; border-radius: 8px; font-weight: 800; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(255,152,0,0.3);">NHẬN ƯU ĐÃI & THANH TOÁN NGAY</a>
+            </div>
+            <p style="color: #555555; font-size: 16px; line-height: 1.7;">
+                Đừng để kỳ nghỉ này trôi qua lãng phí. Hãy biến nó thành bước ngoặt để xây dựng cỗ máy thu nhập bền vững từ Video.
+            </p>
+            <p style="color: #555555; font-size: 15px; font-style: italic; margin-top: 20px;">
+                Hẹn gặp bạn bên trong chương trình!
+            </p>
+        `, "QUÀ TẶNG LỄ 30/4")
     })
 };
 

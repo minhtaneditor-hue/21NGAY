@@ -755,6 +755,9 @@
             </div>
         </div>
         <div class="topbar-actions">
+            <button class="topbar-btn" style="background:linear-gradient(135deg,#ff9800,#f44336);color:#fff;border-color:#ff9800;font-weight:700;" id="promo-btn" onclick="sendPromoEmail()">
+                <i class="fas fa-fire"></i> <span class="btn-label">Mail 30/4 🎁</span>
+            </button>
             <button class="topbar-btn" onclick="exportCSV()">
                 <i class="fas fa-download"></i> <span class="btn-label">Xuất CSV</span>
             </button>
@@ -937,6 +940,37 @@ function logout() {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
     document.getElementById('pw-input').value = '';
+}
+
+// ============================================================
+//  SEND PROMO EMAIL 30/4
+// ============================================================
+async function sendPromoEmail() {
+    const pendingCount = allLeads.filter(l => (l.status || '').toUpperCase() === 'PENDING').length;
+    if (pendingCount === 0) {
+        showToast('Không có khách PENDING nào!', 'error');
+        return;
+    }
+    if (!confirm(`🎁 Gửi mail Ưu đãi 30/4 (giảm >60%) cho ${pendingCount} khách PENDING?\n\nHành động này sẽ gửi email ngay lập tức!`)) return;
+
+    const btn = document.getElementById('promo-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+
+    try {
+        const res = await fetch(`/api/send-promo?pw=${encodeURIComponent(adminPw)}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+            showToast(`✅ Đã gửi ${data.sent}/${data.total_pending} mail thành công!`, 'success');
+        } else {
+            showToast('Lỗi: ' + (data.message || data.error), 'error');
+        }
+    } catch (err) {
+        showToast('Lỗi kết nối server!', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-fire"></i> <span class="btn-label">Mail 30/4 🎁</span>';
+    }
 }
 
 // ============================================================
