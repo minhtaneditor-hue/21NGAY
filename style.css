@@ -477,6 +477,86 @@ input, select, textarea, button {
   line-height: 1.6;
 }
 
+/* MODULE LESSON LIST */
+.module-lessons {
+  list-style: none;
+  padding: 0;
+  margin-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+}
+
+.module-lessons li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  font-size: 0.88rem;
+  color: #ccc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: color 0.3s, padding-left 0.3s;
+}
+
+.module-lessons li:last-child {
+  border-bottom: none;
+}
+
+.module-lessons li:hover {
+  color: #fff;
+  padding-left: 6px;
+}
+
+.lesson-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(227, 38, 54, 0.15) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 6px;
+  color: var(--gold);
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Right-aligned modules: keep lesson text left */
+.timeline-row:nth-child(even) .module-lessons {
+  text-align: left;
+}
+
+/* Module 6 final glow */
+.module-final {
+  border-color: rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 10px 40px rgba(255, 215, 0, 0.08), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.module-final .module-title {
+  color: var(--gold);
+}
+
+/* Summary badge at bottom of timeline */
+.module-summary-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+}
+
+.module-summary-badge span {
+  font-size: 1.4rem;
+}
+
 /* CHECKLIST SECTIONS */
 .flex-section {
   display: flex;
@@ -1104,6 +1184,10 @@ input, select, textarea, button {
   .module-tag { font-size: 0.75rem; }
   .module-desc { font-size: 0.85rem; }
   .timeline-module { padding: 16px 14px; }
+  .module-lessons li { font-size: 0.82rem; padding: 7px 0; gap: 10px; }
+  .lesson-num { min-width: 24px; height: 24px; font-size: 0.65rem; }
+  .module-summary-badge { font-size: 0.85rem; padding: 12px 20px; gap: 8px; }
+  .module-summary-badge span { font-size: 1.2rem; }
 
   /* Video section */
   .section-video { padding: 60px 0 !important; }
