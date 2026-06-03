@@ -3,10 +3,6 @@
     {
       "path": "/api/cron",
       "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/send-lastcall",
-      "schedule": "30 12 30 4 *"
     }
   ]
 }
